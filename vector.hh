@@ -7,15 +7,13 @@
 
 struct Vector : Tuple {
     Vector() = default;
-    // Tuple.w == 0 is a vector
-    Vector(double x_, double y_, double z_) : Tuple{x_, y_, z_, 0.0} {}
+    using Tuple::Tuple;
 
     // vector += vector (= vector)
     Vector& operator+=(Vector const& rhs) {
         x += rhs.x;
         y += rhs.y;
         z += rhs.z;
-        w += rhs.w;
         return *this;
     }
 

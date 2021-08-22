@@ -9,19 +9,14 @@ struct Tuple {
     double x{};
     double y{};
     double z{};
-    double w{};
 
     Tuple() = default;
-    Tuple(double x_, double y_, double z_, double w_) : x{x_}, y{y_}, z{z_}, w{w_} {}
-
-    [[nodiscard]] bool is_point() const { return w == 1.0; }
-    [[nodiscard]] bool is_vector() const { return !is_point(); }
+    Tuple(double x_, double y_, double z_) : x{x_}, y{y_}, z{z_} {}
 
     Tuple& operator+=(Tuple const& rhs) {
         x += rhs.x;
         y += rhs.y;
         z += rhs.z;
-        w += rhs.w;
         return *this;
     }
 
@@ -31,8 +26,8 @@ struct Tuple {
     }
 
     friend bool operator==(Tuple const& l, Tuple const& r) {
-        return almost_equal(l.x, r.x) && almost_equal(l.y, r.y) && almost_equal(l.z, r.z) &&
-               almost_equal(l.w, r.w);
+        // floating-point comparison through epsilon
+        return almost_equal(l.x, r.x) && almost_equal(l.y, r.y) && almost_equal(l.z, r.z);
     }
 };
 static_assert(std::is_trivially_copyable_v<Tuple>);

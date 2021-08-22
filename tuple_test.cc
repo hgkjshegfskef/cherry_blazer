@@ -50,10 +50,10 @@ TEST(TupleTest, VectorCtorCreatesVectors) {
 
 // tuple + tuple = tuple
 TEST(TupleTest, TuplePlusTuple) {
-    Tuple t1{3, -2, 5, 1};
-    Tuple t2{-2, 3, 1, 0};
+    Tuple t1{3, -2, 5};
+    Tuple t2{-2, 3, 1};
     auto t3 = t1 + t2;
-    EXPECT_EQ(t3, Tuple(1, 1, 6, 1));
+    EXPECT_EQ(t3, Tuple(1, 1, 6));
 }
 
 // point += vector (= point)
@@ -91,7 +91,8 @@ TEST(TupleTest, VectorPlusVector) {
 #pragma clang diagnostic pop
 
 // TODO: disallow comparisons of point,vector with tuple, get rid of 4th member?
-// TODO: compile-time test that point and vector don't have 4-member ctors
 // TODO: compile-time test that adding point and tuple is not allowed
 // TODO: compile-time test that adding vector and tuple is not allowed
 // TODO: compile-time test that adding two points is not allowed
+// TODO: compile-time test that point doesn't compare to vector
+// TODO: maybe explicit conversion operator to Tuple?
