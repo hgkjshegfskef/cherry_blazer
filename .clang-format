@@ -1,0 +1,9 @@
+---
+BasedOnStyle: LLVM
+ColumnLimit: 100
+Standard: 'c++17'
+IndentWidth: 4
+PointerAlignment: Left
+#BreakStringLiterals: false
+#AlwaysBreakTemplateDeclarations: Yes
+...

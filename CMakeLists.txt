@@ -1,0 +1,67 @@
+cmake_minimum_required(VERSION 3.15) # whatever
+
+project(cherry_blazer LANGUAGES CXX)
+
+if(CMAKE_BUILD_TYPE)
+    message(FATAL_ERROR "Don't set CMAKE_BUILD_TYPE for this project.")
+endif()
+
+if(NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+    message(FATAL_ERROR "Direct inclusion of ${PROJECT_NAME} as a subproject is not supported.")
+endif()
+
+if(NOT (UNIX AND NOT APPLE))
+    message(FATAL_ERROR "${PROJECT_NAME} only supports Linux.")
+endif()
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG origin/master)
+FetchContent_MakeAvailable(googletest)
+
+add_library(${PROJECT_NAME}_default_compile_options INTERFACE)
+target_compile_options(${PROJECT_NAME}_default_compile_options INTERFACE -Wall -Wextra -pedantic)
+
+option(DEBUG OFF)
+add_library(${PROJECT_NAME}_debug_compile_options INTERFACE)
+target_compile_options(${PROJECT_NAME}_debug_compile_options INTERFACE -g)
+
+option(NDEBUG OFF)
+add_library(${PROJECT_NAME}_ndebug_compile_options INTERFACE)
+target_compile_options(${PROJECT_NAME}_ndebug_compile_options INTERFACE -O2)
+target_compile_definitions(${PROJECT_NAME}_ndebug_compile_options INTERFACE NDEBUG)
+
+option(ASAN OFF)
+add_library(${PROJECT_NAME}_asan_compile_options INTERFACE)
+target_compile_options(${PROJECT_NAME}_asan_compile_options INTERFACE -fsanitize=address
+                                                                      -fno-omit-frame-pointer)
+target_link_options(${PROJECT_NAME}_asan_compile_options INTERFACE -fsanitize=address)
+
+add_executable(${PROJECT_NAME} main.cc)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_default_compile_options)
+
+if(DEBUG AND NDEBUG)
+    message(FATAL_ERROR "Cannot have both DEBUG and NDEBUG set.")
+elseif(DEBUG)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_debug_compile_options)
+elseif(NDEBUG)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_ndebug_compile_options)
+endif()
+
+if(ASAN)
+    target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_asan_compile_options)
+endif()
+
+enable_testing()
+add_executable(${PROJECT_NAME}_test ${PROJECT_NAME}_test.cc)
+target_link_libraries(${PROJECT_NAME}_test PRIVATE gtest_main)
+
+include(GoogleTest)
+gtest_discover_tests(${PROJECT_NAME}_test)

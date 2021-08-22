@@ -1,0 +1,19 @@
+---
+# *: enable all checks. every other check below is disabled
+# [-abseil-*,...]: all checks of specific projects
+# -hicpp-braces-around-statements: duplicate
+
+#Checks: '*,-abseil-*,-altera-*,-android-*,-darwin-*,-fuchsia-*,-google-*,-linuxkernel-*,-llvm-*,-llvmlibc-*,-mpi-*,-objc-*,-openmp-*,-zircon-*,-modernize-use-trailing-return-type,-cppcoreguidelines-avoid-magic-numbers,-readability-magic-numbers,-readability-function-cognitive-complexity,-hicpp-braces-around-statements,-readability-implicit-bool-conversion,-hicpp-special-member-functions,-misc-non-private-member-variables-in-classes,-modernize-loop-convert,-hicpp-use-auto,-modernize-use-auto'
+Checks: '*,-abseil-*,-altera-*,-android-*,-darwin-*,-fuchsia-*,-google-*,-linuxkernel-*,-llvm-*,-llvmlibc-*,-mpi-*,-objc-*,-openmp-*,-zircon-*,-modernize-use-trailing-return-type,-hicpp-braces-around-statements'
+WarningsAsErrors: ''
+FormatStyle: 'file' # use .clang-format
+UseColor: true # force colors, since release 11
+CheckOptions:
+  # minimum 2 lines to suggest {} around if/for
+  - key: readability-braces-around-statements.ShortStatementLines
+    value: '2'
+
+# TODO: naming conventions:
+# https://releases.llvm.org/11.1.0/tools/clang/tools/extra/docs/clang-tidy/checks/readability-identifier-naming.html
+# https://sarcasm.github.io/notes/dev/clang-tidy.html
+...
