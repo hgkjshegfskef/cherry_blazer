@@ -12,40 +12,12 @@
 #include "tuple.hh"
 #include "vector.hh"
 
-// Tuple.w == 1 is a point
-TEST(TupleTest, IsAPoint) {
-    Tuple t{4.3, -4.2, 3.1, 1.0};
-    EXPECT_DOUBLE_EQ(t.x, 4.3);
-    EXPECT_DOUBLE_EQ(t.y, -4.2);
-    EXPECT_DOUBLE_EQ(t.z, 3.1);
-    EXPECT_DOUBLE_EQ(t.w, 1.0);
-    EXPECT_TRUE(t.is_point());
-    EXPECT_FALSE(t.is_vector());
-}
-
-// Tuple.w == 0 is a vector
-TEST(TupleTest, IsAVector) {
-    Tuple t{4.3, -4.2, 3.1, 0.0};
-    EXPECT_DOUBLE_EQ(t.x, 4.3);
-    EXPECT_DOUBLE_EQ(t.y, -4.2);
-    EXPECT_DOUBLE_EQ(t.z, 3.1);
-    EXPECT_DOUBLE_EQ(t.w, 0.0);
-    EXPECT_TRUE(t.is_vector());
-    EXPECT_FALSE(t.is_point());
-}
-
-// Point() creates tuples with w=1
-TEST(TupleTest, PointCtorCreatesPoints) {
-    Point p{4, -4, 3};
-    Tuple t{4, -4, 3, 1};
-    EXPECT_EQ(p, t);
-}
-
-// Vector() creates tuples with w=0
-TEST(TupleTest, VectorCtorCreatesVectors) {
-    Vector v{4, -4, 3};
-    Tuple t{4, -4, 3, 0};
-    EXPECT_EQ(v, t);
+// tuple += tuple (= tuple)
+TEST(TupleTest, TuplePlusEqualsTuple) {
+    Tuple t1{3, -2, 5};
+    Tuple t2{-2, 3, 1};
+    t1 += t2;
+    EXPECT_EQ(t1, Tuple(1, 1, 6));
 }
 
 // tuple + tuple = tuple
