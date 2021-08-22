@@ -43,9 +43,10 @@ target_compile_options(${PROJECT_NAME}_asan_compile_options INTERFACE -fsanitize
                                                                       -fno-omit-frame-pointer)
 target_link_options(${PROJECT_NAME}_asan_compile_options INTERFACE -fsanitize=address)
 
-add_executable(${PROJECT_NAME} main.cc)
+add_executable(${PROJECT_NAME} main.cc tuple.cc point.cc vector.cc)
+target_include_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_default_compile_options)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${PROJECT_NAME}_default_compile_options m)
 
 if(DEBUG AND NDEBUG)
     message(FATAL_ERROR "Cannot have both DEBUG and NDEBUG set.")
@@ -60,8 +61,13 @@ if(ASAN)
 endif()
 
 enable_testing()
-add_executable(${PROJECT_NAME}_test ${PROJECT_NAME}_test.cc)
-target_link_libraries(${PROJECT_NAME}_test PRIVATE gtest_main)
+add_library(${PROJECT_NAME}_testing_default_compile_options INTERFACE)
+target_compile_options(${PROJECT_NAME}_testing_default_compile_options
+                       INTERFACE -Wno-unknown-pragmas)
+add_executable(${PROJECT_NAME}_test ${PROJECT_NAME}_test.cc tuple.cc point.cc vector.cc
+                                    tuple_test.cc)
+target_link_libraries(${PROJECT_NAME}_test PRIVATE ${PROJECT_NAME}_testing_default_compile_options
+                                                   gtest_main)
 
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME}_test)

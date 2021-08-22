@@ -1,5 +1,7 @@
 # Project
 
+- [ ] Addition of tuples: prohibit addition of points. check that vec+vec=vec, vec+p=p
+
 # Toolchain
 
 ## Build system
