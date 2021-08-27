@@ -115,8 +115,9 @@ if(BUILD_TESTING OR CHERRY_BLAZER_TEST)
     add_executable(cherry_blazer_test point.cc point_test.cc tuple.cc tuple_test.cc vector.cc
                                       vector_test.cc)
     # ##############################################################################################
-    target_link_libraries(cherry_blazer_test PRIVATE cherry_blazer_flags_final
-                                                     cherry_blazer_test_flags_final gtest_main)
+    target_link_libraries(
+        cherry_blazer_test PRIVATE cherry_blazer_flags_final cherry_blazer_test_flags_final
+                                   GTest::gtest_main)
 
     include(GoogleTest)
     gtest_discover_tests(cherry_blazer_test)
