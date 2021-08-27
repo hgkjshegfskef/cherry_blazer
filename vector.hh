@@ -39,6 +39,12 @@ struct Vector : Tuple {
 
     // Vector + Point is defined in point.hh
 };
-static_assert(std::is_trivially_copyable_v<Vector>);
+
+static_assert(
+    std::is_trivially_copyable_v<Vector>,
+    "Being trivially copyable means that compiler can optimize a bit better when this struct is "
+    "used. For example, it can memcpy it instead of calling copy constructor. Or it can pass the "
+    "struct inside a register, instead of passing a pointer to the struct. Considering how often "
+    "this struct will be used in the project, it is preferable to keep it trivially copyable.");
 
 #endif // CHERRY_BLAZER__VECTOR_HH_
