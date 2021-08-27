@@ -13,6 +13,7 @@ struct Tuple {
     Tuple() = default;
     Tuple(double x_, double y_, double z_) : x{x_}, y{y_}, z{z_} {}
 
+    // Tuple += Tuple (= Tuple)
     Tuple& operator+=(Tuple const& rhs) {
         x += rhs.x;
         y += rhs.y;
@@ -20,6 +21,7 @@ struct Tuple {
         return *this;
     }
 
+    // Tuple + Tuple = Tuple
     friend Tuple operator+(Tuple lhs, Tuple const& rhs) {
         lhs += rhs;
         return lhs;

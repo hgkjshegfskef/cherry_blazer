@@ -5,7 +5,8 @@
 #include <limits>
 #include <type_traits>
 
-// https://en.cppreference.com/w/cpp/types/numeric_limits/epsilon
+// Taken from: https://en.cppreference.com/w/cpp/types/numeric_limits/epsilon
+// ULP=4 was chosen arbitrarily as common value.
 template <class T>
 typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type almost_equal(T x, T y,
                                                                                       int ulp = 4) {

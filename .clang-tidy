@@ -12,8 +12,8 @@ CheckOptions:
   # minimum 2 lines to suggest {} around if/for
   - key: readability-braces-around-statements.ShortStatementLines
     value: '2'
+...
 
-# TODO: naming conventions:
+# * TODO: naming conventions:
 # https://releases.llvm.org/11.1.0/tools/clang/tools/extra/docs/clang-tidy/checks/readability-identifier-naming.html
 # https://sarcasm.github.io/notes/dev/clang-tidy.html
-...

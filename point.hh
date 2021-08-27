@@ -10,7 +10,7 @@ struct Point : Tuple {
     Point() = default;
     using Tuple::Tuple;
 
-    // point += vector (= point)
+    // Point += Vector (= Point)
     Point& operator+=(Vector const& rhs) {
         x += rhs.x;
         y += rhs.y;
@@ -18,14 +18,15 @@ struct Point : Tuple {
         return *this;
     }
 
-    // point + vector = point
+    // Point + Vector = Point
     friend Point operator+(Point lhs, Vector const& rhs) {
         lhs += rhs;
         return lhs;
     }
 
-    // point + point = makes no sense
+    // Point + Point = ERROR
     Point& operator+=(Point const& rhs) = delete;
+    // operator+ is implemented as member to delete the operation
     Point operator+(Point const& rhs) const = delete;
 };
 static_assert(std::is_trivially_copyable_v<Point>);

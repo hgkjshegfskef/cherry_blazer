@@ -1,10 +1,13 @@
-# * target_link_options: 3.13
 cmake_minimum_required(VERSION 3.15)
 
 project(cherry_blazer LANGUAGES CXX)
 
 if(CMAKE_BUILD_TYPE)
-    message(FATAL_ERROR "Don't set CMAKE_BUILD_TYPE for this project.")
+    message(
+        FATAL_ERROR
+            "Don't set CMAKE_BUILD_TYPE for this project. \
+Instead, set more granular options specific to cherry_blazer. To get them:
+    cmake -S . -B build -LH | grep -B2 CHERRY_BLAZER")
 endif()
 
 if(NOT CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
@@ -28,69 +31,92 @@ FetchContent_Declare(
 set(BUILD_GMOCK
     OFF
     CACHE BOOL "" FORCE)
-message("Downloading Google Test...")
+set(INSTALL_GTEST
+    OFF
+    CACHE BOOL "" FORCE)
+message(STATUS "Downloading Google Test...")
 FetchContent_MakeAvailable(googletest)
 
-add_library(cherry_blazer_default_compile_options INTERFACE)
-target_compile_options(cherry_blazer_default_compile_options INTERFACE -Wall -Wextra -pedantic)
+# Default set of flags used to build sources of every target defined by this project.
+add_library(cherry_blazer_flags_default INTERFACE)
+target_compile_options(cherry_blazer_flags_default INTERFACE -Wall -Wextra -pedantic)
+
+# Final set of flags used to build sources of every target defined by this project.
+add_library(cherry_blazer_flags_final INTERFACE)
+# Other flags will be collected throughout the listfiles and linked to the final flags.
+# Consequently, targets defined by this project only link to the final flags.
+target_link_libraries(cherry_blazer_flags_final INTERFACE cherry_blazer_flags_default)
 
 option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
-add_library(cherry_blazer_debug_compile_options INTERFACE)
-target_compile_options(cherry_blazer_debug_compile_options INTERFACE -g)
+add_library(cherry_blazer_flags_debug INTERFACE)
+target_compile_options(cherry_blazer_flags_debug INTERFACE -g)
 
 option(CHERRY_BLAZER_NDEBUG "Disable asserts" OFF)
-add_library(cherry_blazer_ndebug_compile_options INTERFACE)
-target_compile_definitions(cherry_blazer_ndebug_compile_options INTERFACE NDEBUG)
+add_library(cherry_blazer_flags_ndebug INTERFACE)
+target_compile_definitions(cherry_blazer_flags_ndebug INTERFACE NDEBUG)
 
 option(CHERRY_BLAZER_OPTIMIZE "Enable optimizations" OFF)
-add_library(cherry_blazer_optimize_compile_options INTERFACE)
-include(CheckCXXCompilerFlag)
-check_cxx_compiler_flag("-Og" cherry_blazer_compiler_has_og)
-if(CHERRY_BLAZER_DEBUG AND cherry_blazer_compiler_has_og)
-    target_compile_options(cherry_blazer_optimize_compile_options INTERFACE -Og)
-else()
-    target_compile_options(cherry_blazer_optimize_compile_options INTERFACE -O2)
-endif()
+add_library(cherry_blazer_flags_optimize INTERFACE)
+target_compile_options(cherry_blazer_flags_optimize INTERFACE -O2)
 
 option(CHERRY_BLAZER_ASAN "Enable address sanitizer" OFF)
-add_library(cherry_blazer_asan_compile_options INTERFACE)
-target_compile_options(cherry_blazer_asan_compile_options INTERFACE -fsanitize=address
-                                                                    -fno-omit-frame-pointer)
-target_link_options(cherry_blazer_asan_compile_options INTERFACE -fsanitize=address)
+add_library(cherry_blazer_flags_asan INTERFACE)
+target_compile_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address
+                                                          -fno-omit-frame-pointer)
+target_link_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address)
 
 # ##################################################################################################
 add_executable(cherry_blazer main.cc)
 # ##################################################################################################
 target_include_directories(cherry_blazer PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
 
-target_link_libraries(cherry_blazer PRIVATE cherry_blazer_default_compile_options m)
+target_link_libraries(cherry_blazer PRIVATE cherry_blazer_flags_final m)
 
 if(CHERRY_BLAZER_DEBUG)
-    target_link_libraries(cherry_blazer PRIVATE cherry_blazer_debug_compile_options)
+    if(NOT CHERRY_BLAZER_OPTIMIZE)
+        include(CheckCXXCompilerFlag)
+        check_cxx_compiler_flag("-Og" cherry_blazer_compiler_has_og)
+        if(cherry_blazer_compiler_has_og)
+            target_compile_options(cherry_blazer_flags_debug INTERFACE -Og)
+        endif()
+        target_link_libraries(cherry_blazer_flags_final INTERFACE cherry_blazer_flags_debug)
+    else()
+        # Optimization flags will clash.
+    endif()
 endif()
+
 if(CHERRY_BLAZER_NDEBUG)
-    target_link_libraries(cherry_blazer PRIVATE cherry_blazer_ndebug_compile_options)
+    target_link_libraries(cherry_blazer_flags_final INTERFACE cherry_blazer_flags_ndebug)
 endif()
+
 if(CHERRY_BLAZER_OPTIMIZE)
-    target_link_libraries(cherry_blazer PRIVATE cherry_blazer_optimize_compile_options)
+    target_link_libraries(cherry_blazer_flags_final INTERFACE cherry_blazer_flags_optimize)
 endif()
+
 if(CHERRY_BLAZER_ASAN)
-    target_link_libraries(cherry_blazer PRIVATE cherry_blazer_asan_compile_options)
+    target_link_libraries(cherry_blazer_flags_default INTERFACE cherry_blazer_flags_asan)
 endif()
 
 if(BUILD_TESTING OR CHERRY_BLAZER_TEST)
     enable_testing()
-    add_library(cherry_blazer_testing_default_compile_options INTERFACE)
-    target_compile_options(cherry_blazer_testing_default_compile_options
-                           INTERFACE -Wno-unknown-pragmas)
+
+    # Default set of flags used to build tests defined by this project.
+    add_library(cherry_blazer_test_flags_default INTERFACE)
+    target_compile_options(cherry_blazer_test_flags_default INTERFACE -Wno-unknown-pragmas)
+
+    # Final set of flags used to build tests defined by this project.
+    add_library(cherry_blazer_test_flags_final INTERFACE)
+    # Other test flags will be collected throughout the listfiles and linked to the final test
+    # flags. Consequently, tests defined by this project only link to the final test flags and the
+    # final flags for every target defined by this project.
+    target_link_libraries(cherry_blazer_test_flags_final INTERFACE cherry_blazer_test_flags_default)
 
     # ##############################################################################################
     add_executable(cherry_blazer_test point.cc point_test.cc tuple.cc tuple_test.cc vector.cc
                                       vector_test.cc)
     # ##############################################################################################
-    target_link_libraries(
-        cherry_blazer_test PRIVATE cherry_blazer_default_compile_options
-                                   cherry_blazer_testing_default_compile_options gtest_main)
+    target_link_libraries(cherry_blazer_test PRIVATE cherry_blazer_flags_final
+                                                     cherry_blazer_test_flags_final gtest_main)
 
     include(GoogleTest)
     gtest_discover_tests(cherry_blazer_test)
@@ -98,7 +124,11 @@ endif()
 
 # * TODO: rename cherry_blazer_*_compile_options to cherry_blazer_compile_options_*
 # * TODO: use FETCHCONTENT_FULLY_DISCONNECTED with previously downloaded dependencies
-# * TODO: perhaps disable C in googleproject (using cmake script mode)
+# * TODO: perhaps disable C in googletest (using cmake script mode)
+# * TODO: perhaps googletest doesn't need python if building without gmock
 # * TODO: use FETCHCONTENT_QUIET OFF on CI build
 # * TODO: specify external dependencies. for example, git 1.6.5+ for ExternalProject (via
 #   FetchContent)
+# * TODO: CI: create configurations for different kinds of builds: w/ or wo/ flags
+# * TODO: add check target (will be useful for compile-time tests too)
+# * TODO: add cmake presets

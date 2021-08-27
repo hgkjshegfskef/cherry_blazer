@@ -11,7 +11,13 @@
 #include "point.hh"
 #include "vector.hh"
 
-// point += vector (= point)
+// Point is default constructable and zero-initialized.
+TEST(PointTest, PointDefaultConstructable) {
+    Point p;
+    EXPECT_EQ(p, Point(0, 0, 0));
+}
+
+// Point += Vector (= Point)
 TEST(PointTest, PointPlusEqualsVector) {
     Point p{3, -2, 5};
     Vector v{-2, 3, 1};
@@ -19,7 +25,7 @@ TEST(PointTest, PointPlusEqualsVector) {
     EXPECT_EQ(p, Point(1, 1, 6));
 }
 
-// point + vector = point
+// Point + Vector = Point
 TEST(PointTest, PointPlusVector) {
     Point p{3, -2, 5};
     Vector v{-2, 3, 1};
