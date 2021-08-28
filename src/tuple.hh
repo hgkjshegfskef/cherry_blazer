@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER__TUPLE_HH_
-#define CHERRY_BLAZER__TUPLE_HH_
+#ifndef CHERRY_BLAZER_SRC_TUPLE_HH_
+#define CHERRY_BLAZER_SRC_TUPLE_HH_
 
 #include <type_traits>
 
@@ -31,4 +31,4 @@ Tuple operator+(Tuple lhs, Tuple const& rhs);
 
 bool operator!=(Tuple const& lhs, Tuple const& rhs);
 
-#endif // CHERRY_BLAZER__TUPLE_HH_
+#endif // CHERRY_BLAZER_SRC_TUPLE_HH_

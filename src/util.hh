@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER__UTIL_HH_
-#define CHERRY_BLAZER__UTIL_HH_
+#ifndef CHERRY_BLAZER_SRC_UTIL_HH_
+#define CHERRY_BLAZER_SRC_UTIL_HH_
 
 #include <cmath>
 #include <limits>
@@ -17,4 +17,4 @@ typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type almost_
            || std::fabs(x - y) < std::numeric_limits<T>::min();
 }
 
-#endif // CHERRY_BLAZER__UTIL_HH_
+#endif // CHERRY_BLAZER_SRC_UTIL_HH_

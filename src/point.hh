@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER__POINT_HH_
-#define CHERRY_BLAZER__POINT_HH_
+#ifndef CHERRY_BLAZER_SRC_POINT_HH_
+#define CHERRY_BLAZER_SRC_POINT_HH_
 
 #include <type_traits>
 
@@ -36,4 +36,4 @@ static_assert(
     "struct inside a register, instead of passing a pointer to the struct. Considering how often "
     "this struct will be used in the project, it is preferable to keep it trivially copyable.");
 
-#endif // CHERRY_BLAZER__POINT_HH_
+#endif // CHERRY_BLAZER_SRC_POINT_HH_
