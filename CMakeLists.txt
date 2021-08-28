@@ -32,21 +32,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG origin/master
-    GIT_PROGRESS ON)
-set(BUILD_GMOCK
-    OFF
-    CACHE BOOL "" FORCE)
-set(INSTALL_GTEST
-    OFF
-    CACHE BOOL "" FORCE)
-message(STATUS "Downloading Google Test...")
-FetchContent_MakeAvailable(googletest)
-
 # Set of flags built up piecewise to be used to build sources of every target defined by this
 # project.
 add_library(cherry_blazer_flags INTERFACE)

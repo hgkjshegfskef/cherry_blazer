@@ -3,16 +3,17 @@
 # [-abseil-*,...]: all checks of specific projects
 # -hicpp-braces-around-statements: duplicate
 # -modernize-use-trailing-return-type: ugly
+# -cppcoreguidelines-avoid-magic-numbers: duplicate
 
-Checks: '*,-abseil-*,-altera-*,-android-*,-darwin-*,-fuchsia-*,-google-*,-linuxkernel-*,-llvm-*,-llvmlibc-*,-mpi-*,-objc-*,-openmp-*,-zircon-*,-modernize-use-trailing-return-type,-hicpp-braces-around-statements'
+Checks: '*,-abseil-*,-altera-*,-android-*,-darwin-*,-fuchsia-*,-google-*,-linuxkernel-*,-llvm-*,-llvmlibc-*,-mpi-*,-objc-*,-openmp-*,-zircon-*,-modernize-use-trailing-return-type,-hicpp-braces-around-statements,-cppcoreguidelines-avoid-magic-numbers'
 WarningsAsErrors: ''
 FormatStyle: 'file' # use .clang-format
 UseColor: true # force colors, since release 11
 CheckOptions:
-  # minimum 2 lines to suggest {} around if/for
+  # Minimum 2 lines to suggest {} around if/for.
   - { key: readability-braces-around-statements.ShortStatementLines, value: '2' }
 
-  # don't diagnose when all members are public (such as in structs)
+  # Don't diagnose when all members are public (such as in structs).
   - { key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic, value: '1' }
 
   # Naming convention (keys from [1]):
