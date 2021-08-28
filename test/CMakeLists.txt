@@ -1,6 +1,6 @@
 add_executable(cherry_blazer_test point_test.cc tuple_test.cc vector_test.cc)
-target_link_libraries(cherry_blazer_test PRIVATE cherry_blazer_test_flags_final libcherryblazer
-                                                 GTest::gtest_main)
+target_link_libraries(cherry_blazer_test PRIVATE libcherryblazer GTest::gtest_main
+                                                 cherry_blazer_test_flags_final)
 
 include(GoogleTest)
 gtest_discover_tests(cherry_blazer_test)

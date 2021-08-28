@@ -46,7 +46,7 @@ FetchContent_MakeAvailable(googletest)
 
 # Default set of flags used to build sources of every target defined by this project.
 add_library(cherry_blazer_flags_default INTERFACE)
-target_compile_options(cherry_blazer_flags_default INTERFACE -Wall -Wextra -pedantic)
+target_compile_options(cherry_blazer_flags_default INTERFACE -Wall -Wextra -Wpedantic)
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     target_compile_options(cherry_blazer_flags_default INTERFACE -fdiagnostics-color=always)
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
