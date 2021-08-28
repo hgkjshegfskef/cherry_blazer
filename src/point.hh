@@ -11,23 +11,22 @@ struct Point : Tuple {
     using Tuple::Tuple;
 
     // Point += Vector (= Point)
-    Point& operator+=(Vector const& rhs) {
-        x += rhs.x;
-        y += rhs.y;
-        z += rhs.z;
-        return *this;
-    }
+    Point& operator+=(Vector const& rhs);
 
     // Point + Vector = Point
-    friend Point operator+(Point lhs, Vector const& rhs) {
-        lhs += rhs;
-        return lhs;
-    }
+    friend Point operator+(Point lhs, Vector const& rhs);
+
+    // Point += Point (= ERROR)
+    Point& operator+=(Point const& rhs) = delete;
 
     // Point + Point = ERROR
-    Point& operator+=(Point const& rhs) = delete;
     // operator+ is implemented as member to delete the operation
     Point operator+(Point const& rhs) const = delete;
+
+    // Point cannot be compared to Vector. Explicit deletion is required due to inherited operators
+    // from Tuple.
+    bool operator==(Vector const& rhs) = delete;
+    bool operator!=(Vector const& rhs) = delete;
 };
 
 static_assert(

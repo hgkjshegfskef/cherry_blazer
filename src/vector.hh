@@ -19,18 +19,10 @@ struct Vector : Tuple {
     // substitution principle. However, in order to disallow Vector += Point (= ERROR), the
     // operator+=(Point const&) has to be deleted. In which case operator+=(Vector const&) stops
     // working. Therefore, it has to be explicitly implemented:
-    Vector& operator+=(Vector const& rhs) {
-        x += rhs.x;
-        y += rhs.y;
-        z += rhs.z;
-        return *this;
-    }
+    Vector& operator+=(Vector const& rhs);
 
     // Vector + Vector = Vector
-    friend Vector operator+(Vector lhs, Vector const& rhs) {
-        lhs += rhs;
-        return lhs;
-    }
+    friend Vector operator+(Vector lhs, Vector const& rhs);
 
     // Point-related operations:
 

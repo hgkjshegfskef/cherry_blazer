@@ -33,6 +33,7 @@ TEST(VectorTest, VectorPlusVector) {
     EXPECT_EQ(v3, Vector(1, 1, 6));
 }
 
+// Vector + Point = Point
 TEST(VectorTest, VectorPlusPoint) {
     Vector v{3, -2, 5};
     Point p{-2, 3, 1};

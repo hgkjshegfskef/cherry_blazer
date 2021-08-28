@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.15)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+include(CherryBlazerUtil)
+
 project(cherry_blazer LANGUAGES CXX)
 
 if(CMAKE_BUILD_TYPE)
@@ -17,6 +20,10 @@ endif()
 if(NOT (UNIX AND NOT APPLE))
     message(FATAL_ERROR "cherry_blazer only supports Linux.")
 endif()
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -40,6 +47,11 @@ FetchContent_MakeAvailable(googletest)
 # Default set of flags used to build sources of every target defined by this project.
 add_library(cherry_blazer_flags_default INTERFACE)
 target_compile_options(cherry_blazer_flags_default INTERFACE -Wall -Wextra -pedantic)
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+    target_compile_options(cherry_blazer_flags_default INTERFACE -fdiagnostics-color=always)
+elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+    target_compile_options(cherry_blazer_flags_default INTERFACE -fcolor-diagnostics)
+endif()
 
 # Final set of flags used to build sources of every target defined by this project.
 add_library(cherry_blazer_flags_final INTERFACE)
@@ -65,13 +77,6 @@ target_compile_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address
                                                           -fno-omit-frame-pointer)
 target_link_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address)
 
-# ##################################################################################################
-add_executable(cherry_blazer main.cc)
-# ##################################################################################################
-target_include_directories(cherry_blazer PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}")
-
-target_link_libraries(cherry_blazer PRIVATE cherry_blazer_flags_final m)
-
 if(CHERRY_BLAZER_DEBUG)
     if(NOT CHERRY_BLAZER_OPTIMIZE)
         include(CheckCXXCompilerFlag)
@@ -94,8 +99,10 @@ if(CHERRY_BLAZER_OPTIMIZE)
 endif()
 
 if(CHERRY_BLAZER_ASAN)
-    target_link_libraries(cherry_blazer_flags_default INTERFACE cherry_blazer_flags_asan)
+    target_link_libraries(cherry_blazer_flags_final INTERFACE cherry_blazer_flags_asan)
 endif()
+
+add_subdirectory(src)
 
 if(BUILD_TESTING OR CHERRY_BLAZER_TEST)
     enable_testing()
@@ -111,16 +118,7 @@ if(BUILD_TESTING OR CHERRY_BLAZER_TEST)
     # final flags for every target defined by this project.
     target_link_libraries(cherry_blazer_test_flags_final INTERFACE cherry_blazer_test_flags_default)
 
-    # ##############################################################################################
-    add_executable(cherry_blazer_test point.cc point_test.cc tuple.cc tuple_test.cc vector.cc
-                                      vector_test.cc)
-    # ##############################################################################################
-    target_link_libraries(
-        cherry_blazer_test PRIVATE cherry_blazer_flags_final cherry_blazer_test_flags_final
-                                   GTest::gtest_main)
-
-    include(GoogleTest)
-    gtest_discover_tests(cherry_blazer_test)
+    add_subdirectory(test)
 endif()
 
 # * TODO: rename cherry_blazer_*_compile_options to cherry_blazer_compile_options_*
