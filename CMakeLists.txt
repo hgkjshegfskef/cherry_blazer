@@ -50,10 +50,13 @@ add_library(cherry_blazer_flags INTERFACE)
 
 target_compile_options(cherry_blazer_flags INTERFACE -Wall -Wextra -Wpedantic)
 
-if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
-    target_compile_options(cherry_blazer_flags INTERFACE -fdiagnostics-color=always)
-elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-    target_compile_options(cherry_blazer_flags INTERFACE -fcolor-diagnostics)
+# Force colors in Ninja: https://github.com/ninja-build/ninja/wiki/FAQ
+if("${CMAKE_GENERATOR}" MATCHES "Ninja")
+    if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+        target_compile_options(cherry_blazer_flags INTERFACE -fdiagnostics-color=always)
+    elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+        target_compile_options(cherry_blazer_flags INTERFACE -fcolor-diagnostics)
+    endif()
 endif()
 
 option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
