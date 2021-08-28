@@ -10,8 +10,10 @@ FormatStyle: 'file' # use .clang-format
 UseColor: true # force colors, since release 11
 CheckOptions:
   # minimum 2 lines to suggest {} around if/for
-  - key: readability-braces-around-statements.ShortStatementLines
-    value: '2'
+  - { key: readability-braces-around-statements.ShortStatementLines, value: '2' }
+
+  # don't diagnose when all members are public (such as in structs)
+  - { key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic, value: '1' }
 ...
 
 # * TODO: naming conventions:
