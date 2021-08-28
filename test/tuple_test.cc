@@ -8,7 +8,6 @@
 
 #include <gtest/gtest.h>
 
-#include "point.hh"
 #include "tuple.hh"
 
 // Tuple is default constructable and zero-initialized.
