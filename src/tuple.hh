@@ -11,7 +11,7 @@ struct Tuple {
     double z{};
 
     Tuple() = default;
-    Tuple(double x_, double y_, double z_);
+    Tuple(double x, double y, double z);
 
     // Tuple += Tuple (= Tuple)
     Tuple& operator+=(Tuple const& rhs);

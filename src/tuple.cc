@@ -1,6 +1,6 @@
 #include "tuple.hh"
 
-Tuple::Tuple(double x_, double y_, double z_) : x{x_}, y{y_}, z{z_} {}
+Tuple::Tuple(double x, double y, double z) : x{x}, y{y}, z{z} {}
 
 // Tuple += Tuple (= Tuple)
 Tuple& Tuple::operator+=(const Tuple& rhs) {
