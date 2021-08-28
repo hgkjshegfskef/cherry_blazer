@@ -44,20 +44,17 @@ set(INSTALL_GTEST
 message(STATUS "Downloading Google Test...")
 FetchContent_MakeAvailable(googletest)
 
-# Default set of flags used to build sources of every target defined by this project.
-add_library(cherry_blazer_flags_default INTERFACE)
-target_compile_options(cherry_blazer_flags_default INTERFACE -Wall -Wextra -Wpedantic)
-if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
-    target_compile_options(cherry_blazer_flags_default INTERFACE -fdiagnostics-color=always)
-elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
-    target_compile_options(cherry_blazer_flags_default INTERFACE -fcolor-diagnostics)
-endif()
+# Set of flags built up piecewise to be used to build sources of every target defined by this
+# project.
+add_library(cherry_blazer_flags INTERFACE)
 
-# Final set of flags used to build sources of every target defined by this project.
-add_library(cherry_blazer_flags_final INTERFACE)
-# Other flags will be collected throughout the listfiles and linked to the final flags.
-# Consequently, targets defined by this project only link to the final flags.
-target_link_libraries(cherry_blazer_flags_final INTERFACE cherry_blazer_flags_default)
+target_compile_options(cherry_blazer_flags INTERFACE -Wall -Wextra -Wpedantic)
+
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+    target_compile_options(cherry_blazer_flags INTERFACE -fdiagnostics-color=always)
+elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+    target_compile_options(cherry_blazer_flags INTERFACE -fcolor-diagnostics)
+endif()
 
 option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
 add_library(cherry_blazer_flags_debug INTERFACE)
@@ -84,22 +81,22 @@ if(CHERRY_BLAZER_DEBUG)
         if(cherry_blazer_compiler_has_og)
             target_compile_options(cherry_blazer_flags_debug INTERFACE -Og)
         endif()
-        target_link_libraries(cherry_blazer_flags_final INTERFACE cherry_blazer_flags_debug)
+        target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_debug)
     else()
         # Optimization flags will clash.
     endif()
 endif()
 
 if(CHERRY_BLAZER_NDEBUG)
-    target_link_libraries(cherry_blazer_flags_final INTERFACE cherry_blazer_flags_ndebug)
+    target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_ndebug)
 endif()
 
 if(CHERRY_BLAZER_OPTIMIZE)
-    target_link_libraries(cherry_blazer_flags_final INTERFACE cherry_blazer_flags_optimize)
+    target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_optimize)
 endif()
 
 if(CHERRY_BLAZER_ASAN)
-    target_link_libraries(cherry_blazer_flags_final INTERFACE cherry_blazer_flags_asan)
+    target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_asan)
 endif()
 
 add_subdirectory(src)
@@ -107,21 +104,16 @@ add_subdirectory(src)
 if(BUILD_TESTING OR CHERRY_BLAZER_TEST)
     enable_testing()
 
-    # Default set of flags used to build tests defined by this project.
-    add_library(cherry_blazer_test_flags_default INTERFACE)
-    target_compile_options(cherry_blazer_test_flags_default INTERFACE -Wno-unknown-pragmas)
+    # Set of flags built up piecewise to be used to build tests defined by this project. For tests,
+    # they stack (through libcherryblazer) on top of cherry_blazer_flags.
+    add_library(cherry_blazer_test_flags INTERFACE)
 
-    # Final set of flags used to build tests defined by this project.
-    add_library(cherry_blazer_test_flags_final INTERFACE)
-    # Other test flags will be collected throughout the listfiles and linked to the final test
-    # flags. Consequently, tests defined by this project only link to the final test flags and the
-    # final flags for every target defined by this project.
-    target_link_libraries(cherry_blazer_test_flags_final INTERFACE cherry_blazer_test_flags_default)
+    # To silence clang-tidy warnings from IDE, #pragma ide is used, which compilers complain about.
+    target_compile_options(cherry_blazer_test_flags INTERFACE -Wno-unknown-pragmas)
 
     add_subdirectory(test)
 endif()
 
-# * TODO: rename cherry_blazer_*_compile_options to cherry_blazer_compile_options_*
 # * TODO: use FETCHCONTENT_FULLY_DISCONNECTED with previously downloaded dependencies
 # * TODO: perhaps disable C in googletest (using cmake script mode)
 # * TODO: perhaps googletest doesn't need python if building without gmock
