@@ -25,8 +25,8 @@ struct Point : Tuple {
 
     // Point cannot be compared to Vector. Explicit deletion is required due to inherited operators
     // from Tuple.
-    bool operator==(Vector const& rhs) = delete;
-    bool operator!=(Vector const& rhs) = delete;
+    bool operator==(Vector const& rhs) const = delete;
+    bool operator!=(Vector const& rhs) const = delete;
 };
 
 static_assert(

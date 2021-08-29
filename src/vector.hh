@@ -28,10 +28,13 @@ struct Vector : Tuple {
 
     // Vector + Point is defined in point.hh
 
+    // Vector - Point = ERROR
+    Vector operator-(Point const& rhs) const = delete;
+
     // Vector cannot be compared to Point. Explicit deletion is required due to inherited operators
     // from Tuple.
-    bool operator==(Point const& rhs) = delete;
-    bool operator!=(Point const& rhs) = delete;
+    bool operator==(Point const& rhs) const = delete;
+    bool operator!=(Point const& rhs) const = delete;
 };
 
 static_assert(
