@@ -30,6 +30,11 @@ struct Vector : Tuple {
     Vector& operator+=(Point const& rhs) = delete;
 
     // Vector + Point is defined in point.hh
+
+    // Vector cannot be compared to Point. Explicit deletion is required due to inherited operators
+    // from Tuple.
+    bool operator==(Point const& rhs) = delete;
+    bool operator!=(Point const& rhs) = delete;
 };
 
 static_assert(

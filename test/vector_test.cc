@@ -32,3 +32,17 @@ TEST(VectorTest, VectorPlusPoint) { // NOLINT
     auto p2 = v + p;
     EXPECT_EQ(p2, Point(1, 1, 6));
 }
+
+// Vectors can be compared for equality.
+TEST(VectorTest, VectorComparedToVectorEquals) { // NOLINT
+    Vector v1{3, -2, 5};
+    Vector v2{3, -2, 5};
+    EXPECT_EQ(v1, v2);
+}
+
+// Vectors can be compared for inequality.
+TEST(VectorTest, VectorComparedToVectorDoesntEqual) { // NOLINT
+    Vector v1{3, -2, 5};
+    Vector v2{-2, 3, 1};
+    EXPECT_NE(v1, v2);
+}
