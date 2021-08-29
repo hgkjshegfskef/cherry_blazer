@@ -21,9 +21,6 @@ struct Vector : Tuple {
     // working. Therefore, it has to be explicitly implemented:
     Vector& operator+=(Vector const& rhs);
 
-    // Vector + Vector = Vector
-    friend Vector operator+(Vector lhs, Vector const& rhs);
-
     // Point-related operations:
 
     // Vector += Point (= ERROR)
@@ -43,5 +40,8 @@ static_assert(
     "used. For example, it can memcpy it instead of calling copy constructor. Or it can pass the "
     "struct inside a register, instead of passing a pointer to the struct. Considering how often "
     "this struct will be used in the project, it is preferable to keep it trivially copyable.");
+
+// Vector + Vector = Vector
+Vector operator+(Vector lhs, Vector const& rhs);
 
 #endif // CHERRY_BLAZER_SRC_VECTOR_HH_
