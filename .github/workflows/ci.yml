@@ -17,8 +17,14 @@ jobs:
         run: sudo apt-get update && sudo apt-get -y install cmake clang-tidy-12
 
       - name: Configure
-        # TODO: this string is unsplittable through simple >, figure something out
-        run: cmake -S . -B ${{github.workspace}}/build -DCHERRY_BLAZER_CI=1 -DCHERRY_BLAZER_DEBUG=1 -DCHERRY_BLAZER_TEST=1 -DCHERRY_BLAZER_OPTIMIZE=1 -DCHERRY_BLAZER_ASAN=1 -DCMAKE_CXX_CLANG_TIDY='clang-tidy-12;-warnings-as-errors=*'
+        run: >-
+          cmake -S . -B ${{github.workspace}}/build
+          -D CHERRY_BLAZER_CI=1
+          -D CHERRY_BLAZER_DEBUG=1
+          -D CHERRY_BLAZER_TEST=1
+          -D CHERRY_BLAZER_OPTIMIZE=1
+          -D CHERRY_BLAZER_ASAN=1
+          -D CMAKE_CXX_CLANG_TIDY='clang-tidy-12;-warnings-as-errors=*'
 
       - name: Build
         run: cmake --build ${{github.workspace}}/build -- VERBOSE=1
