@@ -3,13 +3,15 @@
 #include "point.hh"
 #include "vector.hh"
 
+// Everything marked as (=ERROR) is tested to not compile in vector_test.cmake.
+
 // Vector is default constructable and zero-initialized.
 TEST(VectorTest, VectorDefaultConstructable) { // NOLINT
     Vector v;
     EXPECT_EQ(v, Vector(0, 0, 0));
 }
 
-// Vector += Vector (= Vector)
+// Vector += Vector
 TEST(VectorTest, VectorPlusEqualsVector) { // NOLINT
     Vector v1{3, -2, 5};
     Vector v2{-2, 3, 1};
@@ -25,7 +27,7 @@ TEST(VectorTest, VectorPlusVector) { // NOLINT
     EXPECT_EQ(v3, Vector(1, 1, 6));
 }
 
-// Vector -= Vector (= Vector)
+// Vector -= Vector
 TEST(VectorTest, VectorMinusEqualsVector) { // NOLINT
     Vector v1{3, 2, 1};
     Vector v2{5, 6, 7};
@@ -41,6 +43,24 @@ TEST(VectorTest, VectorMinusVector) { // NOLINT
     EXPECT_EQ(v3, Vector(-2, -4, -6));
 }
 
+// Vector == Vector
+TEST(VectorTest, VectorComparedToVectorEquals) { // NOLINT
+    Vector v1{3, -2, 5};
+    Vector v2{3, -2, 5};
+    EXPECT_EQ(v1, v2);
+}
+
+// Vector != Vector
+TEST(VectorTest, VectorComparedToVectorDoesntEqual) { // NOLINT
+    Vector v1{3, -2, 5};
+    Vector v2{-2, 3, 1};
+    EXPECT_NE(v1, v2);
+}
+
+// Point-related:
+
+// Vector += Point (= ERROR)
+
 // Vector + Point = Point
 TEST(VectorTest, VectorPlusPoint) { // NOLINT
     Vector v{3, -2, 5};
@@ -49,16 +69,10 @@ TEST(VectorTest, VectorPlusPoint) { // NOLINT
     EXPECT_EQ(p2, Point(1, 1, 6));
 }
 
-// Vectors can be compared for equality.
-TEST(VectorTest, VectorComparedToVectorEquals) { // NOLINT
-    Vector v1{3, -2, 5};
-    Vector v2{3, -2, 5};
-    EXPECT_EQ(v1, v2);
-}
+// Vector -= Point (= ERROR)
 
-// Vectors can be compared for inequality.
-TEST(VectorTest, VectorComparedToVectorDoesntEqual) { // NOLINT
-    Vector v1{3, -2, 5};
-    Vector v2{-2, 3, 1};
-    EXPECT_NE(v1, v2);
-}
+// Vector - Point (= ERROR)
+
+// Vector == Point (= ERROR)
+
+// Vector != Point (= ERROR)

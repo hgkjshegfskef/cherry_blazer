@@ -20,6 +20,8 @@ struct Vector : Tuple {
     // operator+=(Point const&) has to be deleted. In which case operator+=(Vector const&) stops
     // working. Therefore, it has to be explicitly implemented:
     Vector& operator+=(Vector const& rhs);
+    // Same reason as above.
+    Vector& operator-=(Vector const& rhs);
 
     // Point-related operations:
 
@@ -27,6 +29,8 @@ struct Vector : Tuple {
     Vector& operator+=(Point const& rhs) = delete;
     // Vector + Point is defined in point.hh
 
+    // Vector -= Point (= ERROR)
+    Vector& operator-=(Point const& rhs) = delete;
     // Vector - Point = ERROR
     Vector operator-(Point const& rhs) const = delete;
 

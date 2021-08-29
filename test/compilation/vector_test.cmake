@@ -1,3 +1,5 @@
+# Point-related:
+
 # Vector += Point (= ERROR)
 cherry_blazer_add_compilation_test(
     VectorTest_VectorPlusEqualsPoint
@@ -8,6 +10,32 @@ int main() {
     Point p;
     Vector v;
     v += p;
+}
+]])
+
+# Vector -= Point (= ERROR)
+cherry_blazer_add_compilation_test(
+    VectorTest_VectorMinusEqualsPoint
+    [[
+#include <point.hh>
+#include <vector.hh>
+int main() {
+    Point p;
+    Vector v;
+    v -= p;
+}
+]])
+
+# Vector - Point (= ERROR)
+cherry_blazer_add_compilation_test(
+    VectorTest_VectorMinusPoint
+    [[
+#include <point.hh>
+#include <vector.hh>
+int main() {
+    Point p;
+    Vector v;
+    v - p;
 }
 ]])
 
@@ -24,7 +52,7 @@ int main() {
 }
 ]])
 
-# Point != Vector (= ERROR)
+# Vector != Point (= ERROR)
 cherry_blazer_add_compilation_test(
     VectorTest_VectorNotEqualsPoint
     [[
