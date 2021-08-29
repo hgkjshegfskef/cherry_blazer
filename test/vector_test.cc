@@ -25,6 +25,22 @@ TEST(VectorTest, VectorPlusVector) { // NOLINT
     EXPECT_EQ(v3, Vector(1, 1, 6));
 }
 
+// Vector -= Vector (= Vector)
+TEST(VectorTest, VectorMinusEqualsVector) { // NOLINT
+    Vector v1{3, 2, 1};
+    Vector v2{5, 6, 7};
+    v1 -= v2;
+    EXPECT_EQ(v1, Vector(-2, -4, -6));
+}
+
+// Vector - Vector = Vector
+TEST(VectorTest, VectorMinusVector) { // NOLINT
+    Vector v1{3, 2, 1};
+    Vector v2{5, 6, 7};
+    auto v3 = v1 - v2;
+    EXPECT_EQ(v3, Vector(-2, -4, -6));
+}
+
 // Vector + Point = Point
 TEST(VectorTest, VectorPlusPoint) { // NOLINT
     Vector v{3, -2, 5};

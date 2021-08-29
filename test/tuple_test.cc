@@ -24,6 +24,22 @@ TEST(TupleTest, TuplePlusTuple) { // NOLINT
     EXPECT_EQ(t3, Tuple(1, 1, 6));
 }
 
+// Tuple -= Tuple (= Tuple)
+TEST(TupleTest, TupleMinusEqualsTuple) { // NOLINT
+    Tuple t1{3, 2, 1};
+    Tuple t2{5, 6, 7};
+    t1 -= t2;
+    EXPECT_EQ(t1, Tuple(-2, -4, -6));
+}
+
+// Tuple - Tuple = Tuple
+TEST(TupleTest, TupleMinusTuple) { // NOLINT
+    Tuple t1{3, 2, 1};
+    Tuple t2{5, 6, 7};
+    auto t3 = t1 - t2;
+    EXPECT_EQ(t3, Tuple(-2, -4, -6));
+}
+
 // Tuples can be compared for equality.
 TEST(TupleTest, TupleComparedToTupleEquals) { // NOLINT
     Tuple t1{3, -2, 5};

@@ -1,8 +1,8 @@
 #include "tuple.hh"
+#include "util.hh"
 
 Tuple::Tuple(double x, double y, double z) : x{x}, y{y}, z{z} {}
 
-// Tuple += Tuple (= Tuple)
 Tuple& Tuple::operator+=(const Tuple& rhs) {
     x += rhs.x;
     y += rhs.y;
@@ -10,8 +10,20 @@ Tuple& Tuple::operator+=(const Tuple& rhs) {
     return *this;
 }
 
+Tuple& Tuple::operator-=(const Tuple& rhs) {
+    x -= rhs.x;
+    y -= rhs.y;
+    z -= rhs.z;
+    return *this;
+}
+
 Tuple operator+(Tuple lhs, const Tuple& rhs) {
     lhs += rhs;
+    return lhs;
+}
+
+Tuple operator-(Tuple lhs, const Tuple& rhs) {
+    lhs -= rhs;
     return lhs;
 }
 

@@ -3,8 +3,6 @@
 
 #include <type_traits>
 
-#include "util.hh"
-
 struct Tuple {
     double x{};
     double y{};
@@ -16,6 +14,10 @@ struct Tuple {
     // Tuple += Tuple (= Tuple)
     Tuple& operator+=(Tuple const& rhs);
 
+    // Tuple -= Tuple (= Tuple)
+    Tuple& operator-=(Tuple const& rhs);
+
+    // Tuples can be compared for equality.
     friend bool operator==(Tuple const& lhs, Tuple const& rhs);
 };
 
@@ -29,6 +31,10 @@ static_assert(
 // Tuple + Tuple = Tuple
 Tuple operator+(Tuple lhs, Tuple const& rhs);
 
+// Tuple - Tuple = Tuple
+Tuple operator-(Tuple lhs, Tuple const& rhs);
+
+// Tuples can be compared for inequality.
 bool operator!=(Tuple const& lhs, Tuple const& rhs);
 
 #endif // CHERRY_BLAZER_SRC_TUPLE_HH_
