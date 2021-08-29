@@ -25,7 +25,6 @@ struct Vector : Tuple {
 
     // Vector += Point (= ERROR)
     Vector& operator+=(Point const& rhs) = delete;
-
     // Vector + Point is defined in point.hh
 
     // Vector - Point = ERROR
@@ -43,8 +42,5 @@ static_assert(
     "used. For example, it can memcpy it instead of calling copy constructor. Or it can pass the "
     "struct inside a register, instead of passing a pointer to the struct. Considering how often "
     "this struct will be used in the project, it is preferable to keep it trivially copyable.");
-
-// Vector + Vector = Vector
-Vector operator+(Vector lhs, Vector const& rhs);
 
 #endif // CHERRY_BLAZER_SRC_VECTOR_HH_

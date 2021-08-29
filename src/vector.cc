@@ -8,8 +8,4 @@ Vector& Vector::operator+=(const Vector& rhs) {
     return *this;
 }
 
-// Vector + Vector = Vector
-Vector operator+(Vector lhs, const Vector& rhs) {
-    lhs += rhs;
-    return lhs;
 }
