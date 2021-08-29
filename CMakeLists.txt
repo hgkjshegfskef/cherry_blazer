@@ -21,6 +21,8 @@ if(NOT (UNIX AND NOT APPLE))
     message(FATAL_ERROR "cherry_blazer only supports Linux.")
 endif()
 
+option(CHERRY_BLAZER_CI "Set ON if building in CI" OFF)
+
 # Compilation database for code completion.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
