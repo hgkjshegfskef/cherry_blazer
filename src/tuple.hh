@@ -11,12 +11,6 @@ struct Tuple {
 
     Tuple() = default;
     Tuple(double x, double y, double z);
-
-    // Tuple += Tuple (= Tuple)
-    Tuple& operator+=(Tuple const& rhs);
-
-    // Tuple -= Tuple (= Tuple)
-    Tuple& operator-=(Tuple const& rhs);
 };
 
 static_assert(
@@ -28,6 +22,12 @@ static_assert(
 
 // -Tuple
 Tuple operator-(Tuple const& t);
+
+// Tuple += Tuple (= Tuple)
+Tuple& operator+=(Tuple& lhs, Tuple const& rhs);
+
+// Tuple -= Tuple (= Tuple)
+Tuple& operator-=(Tuple& lhs, Tuple const& rhs);
 
 // Tuple + Tuple = Tuple
 Tuple operator+(Tuple lhs, Tuple const& rhs);

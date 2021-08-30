@@ -16,14 +16,6 @@ struct Vector : Tuple {
     Vector(Point const& begin, Point const& end);
     using Tuple::Tuple;
 
-    // Vector::operator+=(Vector const&) is inherited from Tuple and works due to Liskov
-    // substitution principle. However, in order to disallow Vector += Point (= ERROR), the
-    // operator+=(Point const&) has to be deleted. In which case operator+=(Vector const&) stops
-    // working. Therefore, it has to be explicitly implemented:
-    Vector& operator+=(Vector const& rhs);
-    // Same reason as above.
-    Vector& operator-=(Vector const& rhs);
-
     // Point-related operations:
 
     // Vector += Point (= ERROR)

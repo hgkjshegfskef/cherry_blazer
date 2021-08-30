@@ -10,9 +10,6 @@ struct Point : Tuple {
     Point() = default;
     using Tuple::Tuple;
 
-    // Point += Vector
-    Point& operator+=(Vector const& rhs);
-
     // Point += Point (= ERROR)
     Point& operator+=(Point const& rhs) = delete;
 
@@ -22,11 +19,9 @@ struct Point : Tuple {
     // Point + Point (= ERROR)
     Point operator+(Point const& rhs) const = delete;
 
-    // Point -= Vector
-    Point& operator-=(Vector const& rhs);
+    // Vector-related operations:
 
-    // Point cannot be compared to Vector. Explicit deletion is required due to inherited operators
-    // from Tuple.
+    // Point cannot be compared to Vector.
     bool operator==(Vector const& rhs) const = delete;
     bool operator!=(Vector const& rhs) const = delete;
 };
@@ -37,6 +32,12 @@ static_assert(
     "used. For example, it can memcpy it instead of calling copy constructor. Or it can pass the "
     "struct inside a register, instead of passing a pointer to the struct. Considering how often "
     "this struct will be used in the project, it is preferable to keep it trivially copyable.");
+
+// Point += Vector
+Point& operator+=(Point& lhs, Vector const& rhs);
+
+// Point -= Vector
+Point& operator-=(Point& lhs, Vector const& rhs);
 
 // Point + Vector = Point
 Point operator+(Point lhs, Vector const& rhs);

@@ -3,21 +3,21 @@
 
 Tuple::Tuple(double x, double y, double z) : x{x}, y{y}, z{z} {}
 
-Tuple& Tuple::operator+=(const Tuple& rhs) {
-    x += rhs.x;
-    y += rhs.y;
-    z += rhs.z;
-    return *this;
-}
-
-Tuple& Tuple::operator-=(const Tuple& rhs) {
-    x -= rhs.x;
-    y -= rhs.y;
-    z -= rhs.z;
-    return *this;
-}
-
 Tuple operator-(Tuple const& t) { return {-t.x, -t.y, -t.z}; }
+
+Tuple& operator+=(Tuple& lhs, const Tuple& rhs) {
+    lhs.x += rhs.x;
+    lhs.y += rhs.y;
+    lhs.z += rhs.z;
+    return lhs;
+}
+
+Tuple& operator-=(Tuple& lhs, const Tuple& rhs) {
+    lhs.x -= rhs.x;
+    lhs.y -= rhs.y;
+    lhs.z -= rhs.z;
+    return lhs;
+}
 
 Tuple operator+(Tuple lhs, const Tuple& rhs) {
     lhs += rhs;
