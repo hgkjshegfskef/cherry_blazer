@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <sstream>
+
 #include "point.hh"
 #include "vector.hh"
 
@@ -63,6 +65,14 @@ TEST(VectorTest, VectorComparedToVectorDoesntEqual) { // NOLINT
     Vector v1{3, -2, 5};
     Vector v2{-2, 3, 1};
     EXPECT_NE(v1, v2);
+}
+
+// Vector can be printed out.
+TEST(VectorTest, VectorPrintOut) { // NOLINT
+    Vector v{1, 2, 3};
+    std::stringstream ss;
+    ss << v;
+    EXPECT_EQ(ss.str(), std::string{"{1, 2, 3}"});
 }
 
 // Point-related:

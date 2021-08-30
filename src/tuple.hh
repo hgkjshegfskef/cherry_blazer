@@ -1,6 +1,7 @@
 #ifndef CHERRY_BLAZER_SRC_TUPLE_HH_
 #define CHERRY_BLAZER_SRC_TUPLE_HH_
 
+#include <ostream>
 #include <type_traits>
 
 struct Tuple {
@@ -36,5 +37,7 @@ bool operator==(Tuple const& lhs, Tuple const& rhs);
 
 // Tuples can be compared for inequality.
 bool operator!=(Tuple const& lhs, Tuple const& rhs);
+
+std::ostream& operator<<(std::ostream& os, Tuple const& t);
 
 #endif // CHERRY_BLAZER_SRC_TUPLE_HH_

@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <sstream>
+
 #include "tuple.hh"
 
 // Tuple is default constructable and zero-initialized.
@@ -52,4 +54,12 @@ TEST(TupleTest, TupleComparedToTupleDoesntEqual) { // NOLINT
     Tuple t1{3, -2, 5};
     Tuple t2{-2, 3, 1};
     EXPECT_NE(t1, t2);
+}
+
+// Tuple can be printed out.
+TEST(TupleTest, TuplePrintOut) { // NOLINT
+    Tuple t{1, 2, 3};
+    std::stringstream ss;
+    ss << t;
+    EXPECT_EQ(ss.str(), std::string{"{1, 2, 3}"});
 }

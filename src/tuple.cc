@@ -33,3 +33,7 @@ bool operator==(const Tuple& lhs, const Tuple& rhs) {
 }
 
 bool operator!=(const Tuple& lhs, const Tuple& rhs) { return !(lhs == rhs); }
+
+std::ostream& operator<<(std::ostream& os, const Tuple& t) {
+    return os << "{" << t.x << ", " << t.y << ", " << t.z << "}";
+}
