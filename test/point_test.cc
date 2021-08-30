@@ -13,6 +13,13 @@ TEST(PointTest, PointDefaultConstructable) { // NOLINT
     EXPECT_EQ(p, Point(0, 0, 0));
 }
 
+// -Point
+TEST(PointTest, PointNegate) { // NOLINT
+    Point p1{3, -2, 5};
+    auto p2{-p1};
+    EXPECT_EQ(p2, Point(-3, 2, -5));
+}
+
 // Point += Point (= ERROR)
 
 // Point + Point (= ERROR)

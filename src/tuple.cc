@@ -17,6 +17,8 @@ Tuple& Tuple::operator-=(const Tuple& rhs) {
     return *this;
 }
 
+Tuple operator-(Tuple const& t) { return {-t.x, -t.y, -t.z}; }
+
 Tuple operator+(Tuple lhs, const Tuple& rhs) {
     lhs += rhs;
     return lhs;

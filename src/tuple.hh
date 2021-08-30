@@ -26,6 +26,9 @@ static_assert(
     "struct inside a register, instead of passing a pointer to the struct. Considering how often "
     "this struct will be used in the project, it is preferable to keep it trivially copyable.");
 
+// -Tuple
+Tuple operator-(Tuple const& t);
+
 // Tuple + Tuple = Tuple
 Tuple operator+(Tuple lhs, Tuple const& rhs);
 

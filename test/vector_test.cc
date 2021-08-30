@@ -21,6 +21,13 @@ TEST(VectorTest, VectorCtorTwoPoints) { // NOLINT
     EXPECT_EQ(v, Vector(-5, 5, -4));
 }
 
+// -Vector
+TEST(VectorTest, VectorNegate) { // NOLINT
+    Vector v1{3, -2, 5};
+    auto v2{-v1};
+    EXPECT_EQ(v2, Vector(-3, 2, -5));
+}
+
 // Vector += Vector
 TEST(VectorTest, VectorPlusEqualsVector) { // NOLINT
     Vector v1{3, -2, 5};

@@ -10,6 +10,13 @@ TEST(TupleTest, TupleDefaultConstructable) { // NOLINT
     EXPECT_EQ(t, Tuple(0, 0, 0));
 }
 
+// -Tuple
+TEST(TupleTest, TupleNegate) { // NOLINT
+    Tuple t1{3, -2, 5};
+    auto t2{-t1};
+    EXPECT_EQ(t2, Tuple(-3, 2, -5));
+}
+
 // Tuple += Tuple (= Tuple)
 TEST(TupleTest, TuplePlusEqualsTuple) { // NOLINT
     Tuple t1{3, -2, 5};
