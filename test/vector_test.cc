@@ -11,6 +11,14 @@ TEST(VectorTest, VectorDefaultConstructable) { // NOLINT
     EXPECT_EQ(v, Vector(0, 0, 0));
 }
 
+// Vector can be constructed from 2 Points
+TEST(VectorTest, VectorCtorTwoPoints) { // NOLINT
+    Point p1{3, -2, 5};
+    Point p2{-2, 3, 1};
+    Vector v{p1, p2};
+    EXPECT_EQ(v, Vector(-5, 5, -4));
+}
+
 // Vector += Vector
 TEST(VectorTest, VectorPlusEqualsVector) { // NOLINT
     Vector v1{3, -2, 5};

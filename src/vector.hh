@@ -13,6 +13,7 @@ struct Point;
 
 struct Vector : Tuple {
     Vector() = default;
+    Vector(Point const& begin, Point const& end);
     using Tuple::Tuple;
 
     // Vector::operator+=(Vector const&) is inherited from Tuple and works due to Liskov
