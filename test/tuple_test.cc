@@ -1,8 +1,8 @@
-#include <gtest/gtest.h>
-
-#include <sstream>
-
 #include "tuple.hh"
+
+#include <gtest/gtest.h>
+#include <sstream> // IWYU pragma: keep
+#include <string>
 
 // Tuple is default constructable and zero-initialized.
 TEST(TupleTest, TupleDefaultConstructable) { // NOLINT

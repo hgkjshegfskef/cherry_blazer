@@ -4,6 +4,7 @@ ColumnLimit: 100
 Standard: 'c++17'
 IndentWidth: 4
 PointerAlignment: Left
+IncludeBlocks: Regroup
 #BreakStringLiterals: false
 #AlwaysBreakTemplateDeclarations: Yes
 ...

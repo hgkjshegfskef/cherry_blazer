@@ -1,9 +1,9 @@
 #ifndef CHERRY_BLAZER_SRC_VECTOR_HH_
 #define CHERRY_BLAZER_SRC_VECTOR_HH_
 
-#include <type_traits>
-
 #include "tuple.hh"
+
+#include <type_traits>
 
 // Point and Vector are siblings. Due to circular inclusion problem one of them has to be
 // forward-declared. Due to `Point += Vector (= Point)` being implemented in point.hh, which uses

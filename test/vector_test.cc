@@ -1,9 +1,10 @@
-#include <gtest/gtest.h>
-
-#include <sstream>
-
 #include "point.hh"
+#include "tuple.hh"
 #include "vector.hh"
+
+#include <gtest/gtest.h>
+#include <sstream> // IWYU pragma: keep
+#include <string>
 
 // Everything marked as (=ERROR) is tested to not compile in vector_test.cmake.
 

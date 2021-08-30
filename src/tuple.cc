@@ -1,4 +1,5 @@
 #include "tuple.hh"
+
 #include "util.hh"
 
 Tuple::Tuple(double x, double y, double z) : x{x}, y{y}, z{z} {}

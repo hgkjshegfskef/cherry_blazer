@@ -1,0 +1,9 @@
+# This file is a helper for include-what-you-use tool. It maps undesired
+# symbols/headers to desired ones.
+
+[
+    # Replace suggested private GTest headers with public one.
+    {include: ["@<gtest/gtest-.*>", "private", "<gtest/gtest.h>", "public"]}
+]
+
+# vim: set ft=python :

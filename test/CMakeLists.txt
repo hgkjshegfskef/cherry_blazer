@@ -12,9 +12,14 @@ set(INSTALL_GTEST
     CACHE BOOL "" FORCE)
 message(STATUS "Downloading Google Test...")
 FetchContent_MakeAvailable(googletest)
+
 if(CMAKE_CXX_CLANG_TIDY)
     # Deselect GTest targets from being checked by clang-tidy.
     set_target_properties(gtest gtest_main PROPERTIES CXX_CLANG_TIDY "")
+endif()
+if(CMAKE_CXX_INCLUDE_WHAT_YOU_USE)
+    # Deselect compilation tests from being checked by include-what-you-use.
+    set_target_properties(gtest gtest_main PROPERTIES CXX_INCLUDE_WHAT_YOU_USE "")
 endif()
 
 add_executable(cherry_blazer_test point_test.cc tuple_test.cc vector_test.cc)
@@ -37,9 +42,14 @@ function(cherry_blazer_add_compilation_test test_name test_contents)
     set_target_properties(
         ${test_name} PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test/compilation-bin"
                                 ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test/compilation-bin")
+
     if(CMAKE_CXX_CLANG_TIDY)
         # Deselect compilation tests from being checked by clang-tidy.
         set_target_properties(${test_name} PROPERTIES CXX_CLANG_TIDY "")
+    endif()
+    if(CMAKE_CXX_INCLUDE_WHAT_YOU_USE)
+        # Deselect compilation tests from being checked by include-what-you-use.
+        set_target_properties(${test_name} PROPERTIES CXX_INCLUDE_WHAT_YOU_USE "")
     endif()
 
     if(CHERRY_BLAZER_CI)
