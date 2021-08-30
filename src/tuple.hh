@@ -16,9 +16,6 @@ struct Tuple {
 
     // Tuple -= Tuple (= Tuple)
     Tuple& operator-=(Tuple const& rhs);
-
-    // Tuples can be compared for equality.
-    friend bool operator==(Tuple const& lhs, Tuple const& rhs);
 };
 
 static_assert(
@@ -33,6 +30,9 @@ Tuple operator+(Tuple lhs, Tuple const& rhs);
 
 // Tuple - Tuple = Tuple
 Tuple operator-(Tuple lhs, Tuple const& rhs);
+
+// Tuples can be compared for equality.
+bool operator==(Tuple const& lhs, Tuple const& rhs);
 
 // Tuples can be compared for inequality.
 bool operator!=(Tuple const& lhs, Tuple const& rhs);
