@@ -140,6 +140,14 @@ TEST(VectorTest, VectorDotProduct) { // NOLINT
     EXPECT_EQ(dot(v1, v2), 20);
 }
 
+// Vectors can have a cross product.
+TEST(VectorTest, VectorCrossProduct) { // NOLINT
+    Vector v1{1, 2, 3};
+    Vector v2{2, 3, 4};
+    EXPECT_EQ(cross(v1, v2), Vector(-1, 2, -1));
+    EXPECT_EQ(cross(v2, v1), Vector(1, -2, 1));
+}
+
 // Point-related:
 
 // Vector += Point (= ERROR)
