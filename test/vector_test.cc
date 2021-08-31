@@ -117,17 +117,17 @@ TEST(VectorTest, VectorMagnitude) { // NOLINT
     Vector v3{0, 0, 1};
     Vector v4{1, 2, 3};
     Vector v5{-1, -2, -3};
-    EXPECT_EQ(v1.magnitude(), 1);
-    EXPECT_EQ(v2.magnitude(), 1);
-    EXPECT_EQ(v3.magnitude(), 1);
-    EXPECT_DOUBLE_EQ(v4.magnitude(), std::sqrt(14));
-    EXPECT_DOUBLE_EQ(v5.magnitude(), std::sqrt(14));
+    EXPECT_EQ(magnitude(v1), 1);
+    EXPECT_EQ(magnitude(v2), 1);
+    EXPECT_EQ(magnitude(v3), 1);
+    EXPECT_DOUBLE_EQ(magnitude(v4), std::sqrt(14));
+    EXPECT_DOUBLE_EQ(magnitude(v5), std::sqrt(14));
 }
 
 // Vector can be normalized.
 TEST(VectorTest, VectorNormalize) { // NOLINT
     Vector v{4, 0, 0};
-    EXPECT_EQ(v.normalize(), Vector(1, 0, 0));
+    EXPECT_EQ(normalize(v), Vector(1, 0, 0));
 }
 
 // Point-related:

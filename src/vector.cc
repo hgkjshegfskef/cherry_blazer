@@ -12,9 +12,9 @@ Vector::Vector(const Point& begin, const Point& end) {
     z = end.z - begin.z;
 }
 
-double Vector::magnitude() const { return std::sqrt(x * x + y * y + z * z); }
+double magnitude(const Vector& v) { return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z); }
 
-Vector Vector::normalize() const {
-    auto magnitude = this->magnitude();
-    return {x / magnitude, y / magnitude, z / magnitude};
+Vector normalize(const Vector& v) {
+    auto mag = magnitude(v);
+    return {v.x / mag, v.y / mag, v.z / mag};
 }

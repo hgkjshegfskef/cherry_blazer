@@ -31,9 +31,6 @@ struct Vector : Tuple {
     // from Tuple.
     bool operator==(Point const& rhs) const = delete;
     bool operator!=(Point const& rhs) const = delete;
-
-    [[nodiscard]] double magnitude() const;
-    [[nodiscard]] Vector normalize() const;
 };
 
 static_assert(
@@ -42,5 +39,9 @@ static_assert(
     "used. For example, it can memcpy it instead of calling copy constructor. Or it can pass the "
     "struct inside a register, instead of passing a pointer to the struct. Considering how often "
     "this struct will be used in the project, it is preferable to keep it trivially copyable.");
+
+double magnitude(Vector const& v);
+
+Vector normalize(Vector const& v);
 
 #endif // CHERRY_BLAZER_SRC_VECTOR_HH_
