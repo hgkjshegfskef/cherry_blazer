@@ -157,10 +157,6 @@ if(BUILD_TESTING OR CHERRY_BLAZER_TEST)
     add_subdirectory(test)
 endif()
 
-# * TODO: use FETCHCONTENT_FULLY_DISCONNECTED with previously downloaded dependencies
-# * TODO: perhaps disable C in googletest (using cmake script mode)
-# * TODO: perhaps googletest doesn't need python if building without gmock
-# * TODO: use FETCHCONTENT_QUIET OFF on CI build
 # * TODO: specify external dependencies. for example, git 1.6.5+ for ExternalProject (via
 #   FetchContent)
 # * TODO: CI: create configurations for different kinds of builds: w/ or wo/ flags
