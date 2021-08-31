@@ -1,38 +1,20 @@
 #ifndef CHERRY_BLAZER_SRC_VECTOR_HH_
 #define CHERRY_BLAZER_SRC_VECTOR_HH_
 
-#include "tuple.hh"
-
+#include <ostream>
 #include <type_traits>
 
 namespace cherry_blazer {
 
-// Point and Vector are siblings. Due to circular inclusion problem one of them has to be
-// forward-declared. Due to `Point += Vector (= Point)` being implemented in point.hh, which uses
-// non-static Vector members, point.hh requires full Vector definition. Therefore, Point is
-// forward-declared here, and not the other way around.
 struct Point;
+struct Vector {
+    double x{};
+    double y{};
+    double z{};
 
-struct Vector : Tuple {
     Vector() = default;
+    Vector(double x, double y, double z);
     Vector(Point const& begin, Point const& end);
-    using Tuple::Tuple;
-
-    // Point-related operations:
-
-    // Vector += Point (= ERROR)
-    Vector& operator+=(Point const& rhs) = delete;
-    // Vector + Point is defined in point.hh
-
-    // Vector -= Point (= ERROR)
-    Vector& operator-=(Point const& rhs) = delete;
-    // Vector - Point = ERROR
-    Vector operator-(Point const& rhs) const = delete;
-
-    // Vector cannot be compared to Point. Explicit deletion is required due to inherited operators
-    // from Tuple.
-    bool operator==(Point const& rhs) const = delete;
-    bool operator!=(Point const& rhs) const = delete;
 };
 
 static_assert(
@@ -41,6 +23,53 @@ static_assert(
     "used. For example, it can memcpy it instead of calling copy constructor. Or it can pass the "
     "struct inside a register, instead of passing a pointer to the struct. Considering how often "
     "this struct will be used in the project, it is preferable to keep it trivially copyable.");
+
+// -Vector
+Vector operator-(Vector const& v);
+
+// Vector*scalar
+Vector operator*(Vector const& v, double scalar);
+
+// scalar*Vector
+Vector operator*(double scalar, Vector const& v);
+
+// Vector/scalar
+Vector operator/(Vector const& v, double scalar);
+
+// scalar/Vector (= ERROR)
+
+// Vector += Vector (= Vector)
+Vector& operator+=(Vector& lhs, Vector const& rhs);
+
+// Vector -= Vector (= Vector)
+Vector& operator-=(Vector& lhs, Vector const& rhs);
+
+// Vector + Vector = Vector
+Vector operator+(Vector lhs, Vector const& rhs);
+
+// Vector - Vector = Vector
+Vector operator-(Vector lhs, Vector const& rhs);
+
+// Vectors can be compared for equality.
+bool operator==(Vector const& lhs, Vector const& rhs);
+
+// Vectors can be compared for inequality.
+bool operator!=(Vector const& lhs, Vector const& rhs);
+
+std::ostream& operator<<(std::ostream& os, Vector const& v);
+
+// Point-related operations:
+
+// Vector += Point (= ERROR)
+
+// Vector + Point = Point
+Point operator+(Vector const& lhs, Point rhs);
+
+// Vector -= Point (= ERROR)
+
+// Vector - Point (= ERROR)
+
+// Freestanding operations:
 
 double magnitude(Vector const& v);
 

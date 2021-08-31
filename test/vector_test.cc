@@ -1,5 +1,4 @@
 #include "point.hh"
-#include "tuple.hh"
 #include "vector.hh"
 
 #include <cmath> // IWYU pragma: keep
@@ -18,6 +17,13 @@ TEST(VectorTest, VectorDefaultConstructable) { // NOLINT
     EXPECT_EQ(v, Vector(0, 0, 0));
 }
 
+// Vector is copy constructable.
+TEST(VectorTest, VectorCopyConstructable) { // NOLINT
+    Vector v1;
+    Vector v2{v1};
+    EXPECT_EQ(v2, Vector(0, 0, 0));
+}
+
 // Vector can be constructed from 2 Points
 TEST(VectorTest, VectorCtorTwoPoints) { // NOLINT
     Point p1{3, -2, 5};
@@ -29,7 +35,7 @@ TEST(VectorTest, VectorCtorTwoPoints) { // NOLINT
 // -Vector
 TEST(VectorTest, VectorNegate) { // NOLINT
     Vector v1{3, -2, 5};
-    auto v2{-v1};
+    Vector v2{-v1};
     EXPECT_EQ(v2, Vector(-3, 2, -5));
 }
 
@@ -37,7 +43,7 @@ TEST(VectorTest, VectorNegate) { // NOLINT
 TEST(VectorTest, ScalarTimesVector) { // NOLINT
     Vector v1{1, -2, 3};
     double scalar = 3.5; // NOLINT(readability-magic-numbers)
-    auto v2 = scalar * v1;
+    Vector v2 = scalar * v1;
     EXPECT_EQ(v2, Vector(3.5, -7, 10.5));
 }
 
@@ -45,7 +51,7 @@ TEST(VectorTest, ScalarTimesVector) { // NOLINT
 TEST(VectorTest, VectorTimesScalar) { // NOLINT
     Vector v1{1, -2, 3};
     double scalar = 3.5; // NOLINT(readability-magic-numbers)
-    auto v2 = v1 * scalar;
+    Vector v2 = v1 * scalar;
     EXPECT_EQ(v2, Vector(3.5, -7, 10.5));
 }
 
@@ -53,7 +59,7 @@ TEST(VectorTest, VectorTimesScalar) { // NOLINT
 TEST(VectorTest, VectorDividedByScalar) { // NOLINT
     Vector v1{1, -2, 3};
     double scalar = 2;
-    auto v2 = v1 / scalar;
+    Vector v2 = v1 / scalar;
     EXPECT_EQ(v2, Vector(0.5, -1, 1.5));
 }
 
@@ -71,7 +77,7 @@ TEST(VectorTest, VectorPlusEqualsVector) { // NOLINT
 TEST(VectorTest, VectorPlusVector) { // NOLINT
     Vector v1{3, -2, 5};
     Vector v2{-2, 3, 1};
-    auto v3 = v1 + v2;
+    Vector v3 = v1 + v2;
     EXPECT_EQ(v3, Vector(1, 1, 6));
 }
 
@@ -87,7 +93,7 @@ TEST(VectorTest, VectorMinusEqualsVector) { // NOLINT
 TEST(VectorTest, VectorMinusVector) { // NOLINT
     Vector v1{3, 2, 1};
     Vector v2{5, 6, 7};
-    auto v3 = v1 - v2;
+    Vector v3 = v1 - v2;
     EXPECT_EQ(v3, Vector(-2, -4, -6));
 }
 
@@ -156,7 +162,7 @@ TEST(VectorTest, VectorCrossProduct) { // NOLINT
 TEST(VectorTest, VectorPlusPoint) { // NOLINT
     Vector v{3, -2, 5};
     Point p{-2, 3, 1};
-    auto p2 = v + p;
+    Point p2 = v + p;
     EXPECT_EQ(p2, Point(1, 1, 6));
 }
 

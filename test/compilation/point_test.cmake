@@ -1,5 +1,16 @@
 # scalar*Point (= ERROR)
 cherry_blazer_add_compilation_test(
+    PointTest_MinusPoint
+    [[
+#include <point.hh>
+int main() {
+    cherry_blazer::Point p;
+    -p;
+}
+]])
+
+# scalar*Point (= ERROR)
+cherry_blazer_add_compilation_test(
     PointTest_ScalarTimesPoint
     [[
 #include <point.hh>

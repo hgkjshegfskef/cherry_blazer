@@ -1,31 +1,19 @@
 #ifndef CHERRY_BLAZER_SRC_POINT_HH_
 #define CHERRY_BLAZER_SRC_POINT_HH_
 
-#include "tuple.hh"
-#include "vector.hh"
-
+#include <ostream>
 #include <type_traits>
 
 namespace cherry_blazer {
 
-struct Point : Tuple {
+struct Vector;
+struct Point {
+    double x{};
+    double y{};
+    double z{};
+
     Point() = default;
-    using Tuple::Tuple;
-
-    // Point += Point (= ERROR)
-    Point& operator+=(Point const& rhs) = delete;
-
-    // Point -= Point (= ERROR)
-    Point& operator-=(Point const& rhs) = delete;
-
-    // Point + Point (= ERROR)
-    Point operator+(Point const& rhs) const = delete;
-
-    // Vector-related operations:
-
-    // Point cannot be compared to Vector.
-    bool operator==(Vector const& rhs) const = delete;
-    bool operator!=(Vector const& rhs) const = delete;
+    Point(double x, double y, double z);
 };
 
 static_assert(
@@ -35,31 +23,43 @@ static_assert(
     "struct inside a register, instead of passing a pointer to the struct. Considering how often "
     "this struct will be used in the project, it is preferable to keep it trivially copyable.");
 
+// -Point (= ERROR)
+
 // Point*scalar (= ERROR)
-Point operator*(Point const& p, double scalar) = delete;
 
 // scalar*Point (= ERROR)
-Point operator*(double scalar, Point const& p) = delete;
 
 // Point/scalar (= ERROR)
-Point operator/(Point const& p, double scalar) = delete;
 
-// scalar*Point (= ERROR)
-Point operator/(double scalar, Point const& p) = delete;
+// scalar/Point (= ERROR)
+
+// Point += Point (= ERROR)
+
+// Point + Point (= ERROR)
+
+// Point -= Point (= ERROR)
+
+// Point - Point = Vector (pointing from rhs to lhs)
+Vector operator-(Point const& lhs, Point const& rhs);
+
+// Points can be compared for equality.
+bool operator==(Point const& lhs, Point const& rhs);
+
+// Points can be compared for inequality.
+bool operator!=(Point const& lhs, Point const& rhs);
+
+std::ostream& operator<<(std::ostream& os, Point const& p);
 
 // Vector-related operations:
 
 // Point += Vector
 Point& operator+=(Point& lhs, Vector const& rhs);
 
-// Point -= Vector
-Point& operator-=(Point& lhs, Vector const& rhs);
-
 // Point + Vector = Point
 Point operator+(Point lhs, Vector const& rhs);
 
-// Point - Point = Vector (pointing from rhs to lhs)
-Vector operator-(Point const& lhs, Point const& rhs);
+// Point -= Vector
+Point& operator-=(Point& lhs, Vector const& rhs);
 
 // Point - Vector = Point (move backward by vector)
 Point operator-(Point lhs, Vector const& rhs);
