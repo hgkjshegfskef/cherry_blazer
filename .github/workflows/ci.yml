@@ -11,11 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: "Dependencies: install upstream cmake"
+        run: |
+          bash <(curl -s https://apt.kitware.com/kitware-archive.sh)
+          apt-get -y install cmake
+          echo -e "CMAKE VERSION: "
+          cmake --version
       - name: "Dependencies: install system packages"
         run: |
-          sudo apt-get update
-          sudo apt-get -y install cmake ninja-build clang-12 clang-tidy-12 llvm-12-dev libclang-12-dev
-      - name: "Dependencies: Build include-what-you-use"
+          apt-get -y install ninja-build clang-12 clang-tidy-12 llvm-12-dev libclang-12-dev
+      - name: "Dependencies: build include-what-you-use"
         run: |
           git clone https://github.com/include-what-you-use/include-what-you-use.git
           cd include-what-you-use
