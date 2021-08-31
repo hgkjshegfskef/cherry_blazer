@@ -2,7 +2,7 @@
 #include "tuple.hh"
 #include "vector.hh"
 
-#include <cmath>
+#include <cmath> // IWYU pragma: keep
 #include <gtest/gtest.h>
 #include <sstream> // IWYU pragma: keep
 #include <string>

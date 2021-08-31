@@ -3,6 +3,7 @@
 #include "util.hh"
 
 #include <iomanip>
+#include <limits>
 
 Tuple::Tuple(double x, double y, double z) : x{x}, y{y}, z{z} {}
 
