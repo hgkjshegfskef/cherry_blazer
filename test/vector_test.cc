@@ -122,6 +122,11 @@ TEST(VectorTest, VectorMagnitude) { // NOLINT
     EXPECT_DOUBLE_EQ(v3.magnitude(), 1);
     EXPECT_EQ(v4.magnitude(), std::sqrt(14));
     EXPECT_EQ(v5.magnitude(), std::sqrt(14));
+
+// Vector can be normalized.
+TEST(VectorTest, VectorNormalize) { // NOLINT
+    Vector v{4, 0, 0};
+    EXPECT_EQ(v.normalize(), Vector(1, 0, 0));
 }
 
 // Point-related:

@@ -2,6 +2,8 @@
 
 #include "util.hh"
 
+#include <iomanip>
+
 Tuple::Tuple(double x, double y, double z) : x{x}, y{y}, z{z} {}
 
 Tuple operator-(Tuple const& t) { return {-t.x, -t.y, -t.z}; }
@@ -48,5 +50,6 @@ bool operator==(const Tuple& lhs, const Tuple& rhs) {
 bool operator!=(const Tuple& lhs, const Tuple& rhs) { return !(lhs == rhs); }
 
 std::ostream& operator<<(std::ostream& os, const Tuple& t) {
-    return os << "{" << t.x << ", " << t.y << ", " << t.z << "}";
+    return os << std::setprecision(std::numeric_limits<double>::max_digits10) << "{" << t.x << ", "
+              << t.y << ", " << t.z << "}";
 }

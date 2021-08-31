@@ -33,6 +33,7 @@ struct Vector : Tuple {
     bool operator!=(Point const& rhs) const = delete;
 
     [[nodiscard]] double magnitude() const;
+    [[nodiscard]] Vector normalize() const;
 };
 
 static_assert(
