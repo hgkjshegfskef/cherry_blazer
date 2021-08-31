@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: "Dependencies: install upstream cmake"
         run: |
-          sudo bash <(curl -s https://apt.kitware.com/kitware-archive.sh)
+          curl -sf -L https://apt.kitware.com/kitware-archive.sh | sudo sh
           sudo apt-get -y install cmake
           echo -e "CMAKE VERSION: "
           cmake --version
