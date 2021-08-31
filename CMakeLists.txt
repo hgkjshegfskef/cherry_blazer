@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.17)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 include(CherryBlazerUtil)
@@ -25,6 +25,8 @@ option(CHERRY_BLAZER_CI "Set ON if building in CI" OFF)
 
 # Compilation database for code completion.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+set(CMAKE_MESSAGE_CONTEXT_SHOW ON)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
@@ -135,8 +137,10 @@ endif()
 option(BUILD_GMOCK OFF)
 option(INSTALL_GTEST OFF)
 
+list(APPEND CMAKE_MESSAGE_CONTEXT "googletest")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src"
                  "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-build")
+list(POP_BACK CMAKE_MESSAGE_CONTEXT)
 
 add_subdirectory(src)
 
