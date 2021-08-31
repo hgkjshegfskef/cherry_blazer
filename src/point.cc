@@ -3,7 +3,6 @@
 #include "util.hh"
 #include "vector.hh"
 
-#include <cmath>
 #include <iomanip>
 #include <limits>
 
@@ -40,9 +39,9 @@ bool operator==(Point const& lhs, Point const& rhs) {
 
 bool operator!=(Point const& lhs, Point const& rhs) { return !(lhs == rhs); }
 
-std::ostream& operator<<(std::ostream& os, Point const& v) {
-    return os << std::setprecision(std::numeric_limits<double>::max_digits10) << "{" << v.x << ", "
-              << v.y << ", " << v.z << "}";
+std::ostream& operator<<(std::ostream& os, Point const& p) {
+    return os << std::setprecision(std::numeric_limits<double>::max_digits10) << "{" << p.x << ", "
+              << p.y << ", " << p.z << "}";
 }
 
 } // namespace cherry_blazer

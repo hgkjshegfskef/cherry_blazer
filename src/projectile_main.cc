@@ -1,4 +1,6 @@
+#include "point.hh"
 #include "projectile.hh"
+#include "vector.hh"
 
 #include <iostream>
 
