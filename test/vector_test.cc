@@ -7,6 +7,9 @@
 #include <sstream> // IWYU pragma: keep
 #include <string>
 
+using cherry_blazer::Point;
+using cherry_blazer::Vector;
+
 // Everything marked as (=ERROR) is tested to not compile in vector_test.cmake.
 
 // Vector is default constructable and zero-initialized.

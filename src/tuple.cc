@@ -5,6 +5,8 @@
 #include <iomanip>
 #include <limits>
 
+namespace cherry_blazer {
+
 Tuple::Tuple(double x, double y, double z) : x{x}, y{y}, z{z} {}
 
 Tuple operator-(Tuple const& t) { return {-t.x, -t.y, -t.z}; }
@@ -54,3 +56,5 @@ std::ostream& operator<<(std::ostream& os, const Tuple& t) {
     return os << std::setprecision(std::numeric_limits<double>::max_digits10) << "{" << t.x << ", "
               << t.y << ", " << t.z << "}";
 }
+
+} // namespace cherry_blazer

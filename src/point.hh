@@ -6,6 +6,8 @@
 
 #include <type_traits>
 
+namespace cherry_blazer {
+
 struct Point : Tuple {
     Point() = default;
     using Tuple::Tuple;
@@ -61,5 +63,7 @@ Vector operator-(Point const& lhs, Point const& rhs);
 
 // Point - Vector = Point (move backward by vector)
 Point operator-(Point lhs, Vector const& rhs);
+
+} // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_POINT_HH_

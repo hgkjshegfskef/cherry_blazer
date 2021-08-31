@@ -4,6 +4,8 @@
 #include <sstream> // IWYU pragma: keep
 #include <string>
 
+using cherry_blazer::Tuple;
+
 // Tuple is default constructable and zero-initialized.
 TEST(TupleTest, TupleDefaultConstructable) { // NOLINT
     Tuple t;

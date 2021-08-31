@@ -4,7 +4,7 @@ cherry_blazer_add_compilation_test(
     [[
 #include <point.hh>
 int main() {
-    Point p;
+    cherry_blazer::Point p;
     double scalar{};
     scalar * p;
 }
@@ -16,7 +16,7 @@ cherry_blazer_add_compilation_test(
     [[
 #include <point.hh>
 int main() {
-    Point p;
+    cherry_blazer::Point p;
     double scalar{};
     p * scalar;
 }
@@ -28,7 +28,7 @@ cherry_blazer_add_compilation_test(
     [[
 #include <point.hh>
 int main() {
-    Point p;
+    cherry_blazer::Point p;
     double scalar{};
     scalar / p;
 }
@@ -40,7 +40,7 @@ cherry_blazer_add_compilation_test(
     [[
 #include <point.hh>
 int main() {
-    Point p;
+    cherry_blazer::Point p;
     double scalar{};
     p / scalar;
 }
@@ -52,8 +52,8 @@ cherry_blazer_add_compilation_test(
     [[
 #include <point.hh>
 int main() {
-    Point p1;
-    Point p2;
+    cherry_blazer::Point p1;
+    cherry_blazer::Point p2;
     p1 += p2;
 }
 ]])
@@ -64,8 +64,8 @@ cherry_blazer_add_compilation_test(
     [[
 #include <point.hh>
 int main() {
-    Point p1;
-    Point p2;
+    cherry_blazer::Point p1;
+    cherry_blazer::Point p2;
     p1 + p2;
 }
 ]])
@@ -76,8 +76,8 @@ cherry_blazer_add_compilation_test(
     [[
 #include <point.hh>
 int main() {
-    Point p1;
-    Point p2;
+    cherry_blazer::Point p1;
+    cherry_blazer::Point p2;
     p1 -= p2;
 }
 ]])
@@ -91,8 +91,8 @@ cherry_blazer_add_compilation_test(
 #include <point.hh>
 #include <vector.hh>
 int main() {
-    Point p;
-    Vector v;
+    cherry_blazer::Point p;
+    cherry_blazer::Vector v;
     p == v;
 }
 ]])
@@ -104,8 +104,8 @@ cherry_blazer_add_compilation_test(
 #include <point.hh>
 #include <vector.hh>
 int main() {
-    Point p;
-    Vector v;
+    cherry_blazer::Point p;
+    cherry_blazer::Vector v;
     p != v;
 }
 ]])

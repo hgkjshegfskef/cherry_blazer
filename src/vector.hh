@@ -5,6 +5,8 @@
 
 #include <type_traits>
 
+namespace cherry_blazer {
+
 // Point and Vector are siblings. Due to circular inclusion problem one of them has to be
 // forward-declared. Due to `Point += Vector (= Point)` being implemented in point.hh, which uses
 // non-static Vector members, point.hh requires full Vector definition. Therefore, Point is
@@ -43,5 +45,7 @@ static_assert(
 double magnitude(Vector const& v);
 
 Vector normalize(Vector const& v);
+
+} // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_VECTOR_HH_

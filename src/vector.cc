@@ -4,6 +4,8 @@
 
 #include <cmath>
 
+namespace cherry_blazer {
+
 Vector::Vector(const Point& begin, const Point& end) {
     // Cannot initialize members declared by Tuple, because the Tuple constructor has already
     // initialized them. Thus, reassign:
@@ -18,3 +20,5 @@ Vector normalize(const Vector& v) {
     auto mag = magnitude(v);
     return {v.x / mag, v.y / mag, v.z / mag};
 }
+
+} // namespace cherry_blazer

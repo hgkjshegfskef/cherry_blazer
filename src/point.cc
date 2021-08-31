@@ -1,5 +1,7 @@
 #include "point.hh"
 
+namespace cherry_blazer {
+
 Point& operator+=(Point& lhs, const Vector& rhs) {
     lhs.x += rhs.x;
     lhs.y += rhs.y;
@@ -27,3 +29,5 @@ Point operator-(Point lhs, Vector const& rhs) {
     lhs -= rhs;
     return lhs;
 }
+
+} // namespace cherry_blazer

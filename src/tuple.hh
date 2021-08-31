@@ -4,6 +4,8 @@
 #include <ostream>
 #include <type_traits>
 
+namespace cherry_blazer {
+
 struct Tuple {
     double x{};
     double y{};
@@ -53,5 +55,7 @@ bool operator==(Tuple const& lhs, Tuple const& rhs);
 bool operator!=(Tuple const& lhs, Tuple const& rhs);
 
 std::ostream& operator<<(std::ostream& os, Tuple const& t);
+
+} // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_TUPLE_HH_
