@@ -1,4 +1,4 @@
-name: cherry-blazer-default
+name: cherry-blazer-linux
 
 on:
   push:
@@ -7,40 +7,6 @@ on:
     branches: [ master ]
 
 jobs:
-  sequential-verbose:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get -y install cmake clang-12 clang-tidy-12 llvm-12-dev libclang-12-dev
-      - name: Compile IWYU
-        run: |
-          git clone https://github.com/include-what-you-use/include-what-you-use.git
-          cd include-what-you-use
-          git checkout clang_12
-          cmake -S . -B iwyu-build -DCMAKE_PREFIX_PATH=/usr/lib/llvm-12
-          cmake --build iwyu-build -- -j$(nproc)
-          cd ${{github.workspace}}
-      - name: Configure Cherry Blazer
-        run: >-
-          cmake -S . -B cb-build
-          -D CHERRY_BLAZER_CI=1
-          -D CHERRY_BLAZER_DEBUG=1
-          -D CHERRY_BLAZER_TEST=1
-          -D CHERRY_BLAZER_OPTIMIZE=1
-          -D CHERRY_BLAZER_ASAN=1
-          -D CMAKE_CXX_CLANG_TIDY='clang-tidy-12;-warnings-as-errors=*'
-          -D CMAKE_CXX_INCLUDE_WHAT_YOU_USE='${{github.workspace}}/include-what-you-use/iwyu-build/bin/include-what-you-use;-Xiwyu;--mapping_file='$(pwd)'/iwyu.imp'
-      - name: Build Cherry Blazer
-        run: |
-          cmake --build cb-build -- VERBOSE=1
-      - name: Test Cherry Blazer
-        working-directory: cb-build
-        run: |
-          ctest -V
-
   parallel-nonverbose:
     runs-on: ubuntu-latest
     steps:

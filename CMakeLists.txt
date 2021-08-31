@@ -95,10 +95,8 @@ endif()
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src")
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
     execute_process(
-        COMMAND
-            "${CMAKE_COMMAND}" -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}'
-            -DCHERRY_BLAZER_CI=${CHERRY_BLAZER_CI} -P
-            "${CMAKE_CURRENT_SOURCE_DIR}/cmake/get_googletest.cmake"
+        COMMAND "${CMAKE_COMMAND}" -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}' -P
+                "${CMAKE_CURRENT_SOURCE_DIR}/cmake/get_googletest.cmake"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
 
     set(command git describe --long --tags)
