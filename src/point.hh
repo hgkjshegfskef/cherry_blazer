@@ -33,6 +33,20 @@ static_assert(
     "struct inside a register, instead of passing a pointer to the struct. Considering how often "
     "this struct will be used in the project, it is preferable to keep it trivially copyable.");
 
+// Point*scalar (= ERROR)
+Point operator*(Point const& p, double scalar) = delete;
+
+// scalar*Point (= ERROR)
+Point operator*(double scalar, Point const& p) = delete;
+
+// Point/scalar (= ERROR)
+Point operator/(Point const& p, double scalar) = delete;
+
+// scalar*Point (= ERROR)
+Point operator/(double scalar, Point const& p) = delete;
+
+// Vector-related operations:
+
 // Point += Vector
 Point& operator+=(Point& lhs, Vector const& rhs);
 

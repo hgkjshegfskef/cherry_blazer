@@ -24,13 +24,13 @@ static_assert(
 Tuple operator-(Tuple const& t);
 
 // Tuple*scalar
-Tuple operator*(Tuple t, double scalar);
+Tuple operator*(Tuple const& t, double scalar);
 
 // scalar*Tuple
-Tuple operator*(double scalar, Tuple t);
+Tuple operator*(double scalar, Tuple const& t);
 
 // Tuple/scalar
-Tuple operator/(Tuple t, double scalar);
+Tuple operator/(Tuple const& t, double scalar);
 
 // scalar/Tuple (= ERROR)
 

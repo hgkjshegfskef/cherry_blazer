@@ -1,12 +1,48 @@
+# scalar*Point (= ERROR)
+cherry_blazer_add_compilation_test(
+    PointTest_ScalarTimesPoint
+    [[
+#include <point.hh>
+int main() {
+    Point p;
+    double scalar{};
+    scalar * p;
+}
+]])
+
+# Point*scalar (= ERROR)
+cherry_blazer_add_compilation_test(
+    PointTest_PointTimesScalar
+    [[
+#include <point.hh>
+int main() {
+    Point p;
+    double scalar{};
+    p * scalar;
+}
+]])
+
 # scalar/Point (= ERROR)
 cherry_blazer_add_compilation_test(
     PointTest_ScalarDividedByPoint
     [[
 #include <point.hh>
 int main() {
-    Point p1{1, -2, 3};
-    double scalar = 2;
-    auto p2 = scalar / p1;
+    Point p;
+    double scalar{};
+    scalar / p;
+}
+]])
+
+# Point/scalar (= ERROR)
+cherry_blazer_add_compilation_test(
+    PointTest_PointDividedByScalar
+    [[
+#include <point.hh>
+int main() {
+    Point p;
+    double scalar{};
+    p / scalar;
 }
 ]])
 
@@ -30,7 +66,7 @@ cherry_blazer_add_compilation_test(
 int main() {
     Point p1;
     Point p2;
-    auto p3 = p1 + p2;
+    p1 + p2;
 }
 ]])
 

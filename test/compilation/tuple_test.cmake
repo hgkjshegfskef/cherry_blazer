@@ -9,5 +9,3 @@ int main() {
     auto t2 = scalar / t1;
 }
 ]])
-
-# TODO: divided by 0

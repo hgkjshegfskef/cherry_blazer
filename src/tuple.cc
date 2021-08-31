@@ -6,11 +6,15 @@ Tuple::Tuple(double x, double y, double z) : x{x}, y{y}, z{z} {}
 
 Tuple operator-(Tuple const& t) { return {-t.x, -t.y, -t.z}; }
 
-Tuple operator*(Tuple t, double scalar) { return {t.x * scalar, t.y * scalar, t.z * scalar}; }
+Tuple operator*(Tuple const& t, double scalar) {
+    return {t.x * scalar, t.y * scalar, t.z * scalar};
+}
 
-Tuple operator*(double scalar, Tuple t) { return t * scalar; }
+Tuple operator*(double scalar, Tuple const& t) { return t * scalar; }
 
-Tuple operator/(Tuple t, double scalar) { return {t.x / scalar, t.y / scalar, t.z / scalar}; }
+Tuple operator/(Tuple const& t, double scalar) {
+    return {t.x / scalar, t.y / scalar, t.z / scalar};
+}
 
 Tuple& operator+=(Tuple& lhs, const Tuple& rhs) {
     lhs.x += rhs.x;

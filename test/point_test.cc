@@ -20,29 +20,11 @@ TEST(PointTest, PointNegate) { // NOLINT
     EXPECT_EQ(p2, Point(-3, 2, -5));
 }
 
-// scalar*Point
-TEST(PointTest, ScalarTimesPoint) { // NOLINT
-    Point p1{1, -2, 3};
-    double scalar = 3.5; // NOLINT(readability-magic-numbers)
-    auto p2 = scalar * p1;
-    EXPECT_EQ(p2, Point(3.5, -7, 10.5));
-}
+// scalar*Point (= ERROR)
 
-// Point*scalar
-TEST(PointTest, PointTimesScalar) { // NOLINT
-    Point p1{1, -2, 3};
-    double scalar = 3.5; // NOLINT(readability-magic-numbers)
-    auto p2 = p1 * scalar;
-    EXPECT_EQ(p2, Point(3.5, -7, 10.5));
-}
+// Point*scalar (= ERROR)
 
-// Point/scalar
-TEST(PointTest, PointDividedByScalar) { // NOLINT
-    Point p1{1, -2, 3};
-    double scalar = 2;
-    auto p2 = p1 / scalar;
-    EXPECT_EQ(p2, Point(0.5, -1, 1.5));
-}
+// Point/scalar (= ERROR)
 
 // scalar/Point (= ERROR)
 
