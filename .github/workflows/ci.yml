@@ -41,7 +41,7 @@ jobs:
         run: |
           ctest -V
 
-  parallel:
+  parallel-nonverbose:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
