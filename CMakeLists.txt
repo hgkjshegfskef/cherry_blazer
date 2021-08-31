@@ -94,10 +94,13 @@ endif()
 
 if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src")
     file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+
+    message(STATUS "Downloading googletest")
     execute_process(
         COMMAND "${CMAKE_COMMAND}" -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}' -P
                 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/get_googletest.cmake"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    message(STATUS "Downloading googletest - done")
 
     set(command git describe --long --tags)
     execute_process(
@@ -111,6 +114,22 @@ if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src")
         message(FATAL_ERROR "execute_process: '${command}' failed with output:\n${out}")
     endif()
     message(STATUS "googletest version: ${out}")
+
+    file(COPY googletest.patch DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src")
+
+    message(STATUS "Applying googletest.patch")
+    set(command git apply googletest.patch)
+    execute_process(
+        COMMAND ${command}
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src"
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE out
+        ERROR_VARIABLE out
+        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
+    if(NOT "${result}" EQUAL "0")
+        message(FATAL_ERROR "execute_process: '${command}' failed with output:\n${out}")
+    endif()
+    message(STATUS "Applying googletest.patch - done")
 endif()
 
 option(BUILD_GMOCK OFF)

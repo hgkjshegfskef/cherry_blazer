@@ -8,8 +8,6 @@ message(DEBUG "CHERRY_BLAZER_SOURCE_DIR: '${CHERRY_BLAZER_SOURCE_DIR}'")
 
 include(FetchContent)
 
-message(STATUS "Downloading googletest...")
-
 FetchContent_Populate(
     googletest
     QUIET

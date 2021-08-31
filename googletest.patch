@@ -1,0 +1,56 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ea81ab12..401b8810 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -7,7 +7,7 @@ if (POLICY CMP0048)
+   cmake_policy(SET CMP0048 NEW)
+ endif (POLICY CMP0048)
+ 
+-project(googletest-distribution)
++project(googletest-distribution CXX)
+ set(GOOGLETEST_VERSION 1.11.0)
+ 
+ if (CMAKE_VERSION VERSION_GREATER "3.0.2")
+diff --git a/googletest/CMakeLists.txt b/googletest/CMakeLists.txt
+index abdd98b7..3c064dd7 100644
+--- a/googletest/CMakeLists.txt
++++ b/googletest/CMakeLists.txt
+@@ -47,11 +47,11 @@ endif()
+ # Project version:
+ 
+ if (CMAKE_VERSION VERSION_LESS 3.0)
+-  project(gtest CXX C)
++  project(gtest CXX)
+   set(PROJECT_VERSION ${GOOGLETEST_VERSION})
+ else()
+   cmake_policy(SET CMP0048 NEW)
+-  project(gtest VERSION ${GOOGLETEST_VERSION} LANGUAGES CXX C)
++  project(gtest VERSION ${GOOGLETEST_VERSION} LANGUAGES CXX)
+ endif()
+ cmake_minimum_required(VERSION 2.8.12)
+ 
+diff --git a/googletest/cmake/internal_utils.cmake b/googletest/cmake/internal_utils.cmake
+index 8d8d60a8..09a2358b 100644
+--- a/googletest/cmake/internal_utils.cmake
++++ b/googletest/cmake/internal_utils.cmake
+@@ -247,13 +247,13 @@ function(cxx_executable name dir libs)
+ endfunction()
+ 
+ # Sets PYTHONINTERP_FOUND and PYTHON_EXECUTABLE.
+-if ("${CMAKE_VERSION}" VERSION_LESS "3.12.0")
+-  find_package(PythonInterp)
+-else()
+-  find_package(Python COMPONENTS Interpreter)
+-  set(PYTHONINTERP_FOUND ${Python_Interpreter_FOUND})
+-  set(PYTHON_EXECUTABLE ${Python_EXECUTABLE})
+-endif()
++#if ("${CMAKE_VERSION}" VERSION_LESS "3.12.0")
++#  find_package(PythonInterp)
++#else()
++#  find_package(Python COMPONENTS Interpreter)
++#  set(PYTHONINTERP_FOUND ${Python_Interpreter_FOUND})
++#  set(PYTHON_EXECUTABLE ${Python_EXECUTABLE})
++#endif()
+ 
+ # cxx_test_with_flags(name cxx_flags libs srcs...)
+ #
