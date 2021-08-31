@@ -37,14 +37,8 @@ function(cherry_blazer_add_compilation_test test_name test_contents)
         set_target_properties(${test_name} PROPERTIES CXX_INCLUDE_WHAT_YOU_USE "")
     endif()
 
-    if(CHERRY_BLAZER_CI)
-        # See which command compiled the test.
-        add_test(NAME ${test_name} COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}"
-                                           --target ${test_name} -- VERBOSE=1)
-    else()
-        add_test(NAME ${test_name} COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}"
-                                           --target ${test_name})
-    endif()
+    add_test(NAME ${test_name} COMMAND "${CMAKE_COMMAND}" --build "${CMAKE_BINARY_DIR}" --target
+                                       ${test_name})
 
     # The purpose of (most) compilation tests is to test that something fails to compile.
     set_tests_properties(${test_name} PROPERTIES WILL_FAIL 1)
