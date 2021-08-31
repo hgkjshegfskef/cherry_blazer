@@ -66,4 +66,5 @@ function(cherry_blazer_add_compilation_test test_name test_contents)
 endfunction()
 
 include(compilation/point_test.cmake)
+include(compilation/tuple_test.cmake)
 include(compilation/vector_test.cmake)

@@ -1,3 +1,15 @@
+# scalar/Point (= ERROR)
+cherry_blazer_add_compilation_test(
+    PointTest_ScalarDividedByPoint
+    [[
+#include <point.hh>
+int main() {
+    Point p1{1, -2, 3};
+    double scalar = 2;
+    auto p2 = scalar / p1;
+}
+]])
+
 # Point += Point (= ERROR)
 cherry_blazer_add_compilation_test(
     PointTest_PointPlusEqualsPoint

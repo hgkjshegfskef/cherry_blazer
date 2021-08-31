@@ -29,6 +29,32 @@ TEST(VectorTest, VectorNegate) { // NOLINT
     EXPECT_EQ(v2, Vector(-3, 2, -5));
 }
 
+// scalar*Vector
+TEST(VectorTest, ScalarTimesVector) { // NOLINT
+    Vector v1{1, -2, 3};
+    double scalar = 3.5; // NOLINT(readability-magic-numbers)
+    auto v2 = scalar * v1;
+    EXPECT_EQ(v2, Vector(3.5, -7, 10.5));
+}
+
+// Vector*scalar
+TEST(VectorTest, VectorTimesScalar) { // NOLINT
+    Vector v1{1, -2, 3};
+    double scalar = 3.5; // NOLINT(readability-magic-numbers)
+    auto v2 = v1 * scalar;
+    EXPECT_EQ(v2, Vector(3.5, -7, 10.5));
+}
+
+// Vector/scalar
+TEST(VectorTest, VectorDividedByScalar) { // NOLINT
+    Vector v1{1, -2, 3};
+    double scalar = 2;
+    auto v2 = v1 / scalar;
+    EXPECT_EQ(v2, Vector(0.5, -1, 1.5));
+}
+
+// scalar/Vector (= ERROR)
+
 // Vector += Vector
 TEST(VectorTest, VectorPlusEqualsVector) { // NOLINT
     Vector v1{3, -2, 5};

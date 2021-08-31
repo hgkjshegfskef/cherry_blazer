@@ -1,3 +1,15 @@
+# scalar/Vector (= ERROR)
+cherry_blazer_add_compilation_test(
+    VectorTest_ScalarDividedByVector
+    [[
+#include <vector.hh>
+int main() {
+    Vector v1{1, -2, 3};
+    double scalar = 2;
+    auto v2 = scalar / v1;
+}
+]])
+
 # Point-related:
 
 # Vector += Point (= ERROR)

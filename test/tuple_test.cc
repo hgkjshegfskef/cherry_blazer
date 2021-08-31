@@ -17,6 +17,32 @@ TEST(TupleTest, TupleNegate) { // NOLINT
     EXPECT_EQ(t2, Tuple(-3, 2, -5));
 }
 
+// scalar*Tuple
+TEST(TupleTest, ScalarTimesTuple) { // NOLINT
+    Tuple t1{1, -2, 3};
+    double scalar = 3.5; // NOLINT(readability-magic-numbers)
+    auto t2 = scalar * t1;
+    EXPECT_EQ(t2, Tuple(3.5, -7, 10.5));
+}
+
+// Tuple*scalar
+TEST(TupleTest, TupleTimesScalar) { // NOLINT
+    Tuple t1{1, -2, 3};
+    double scalar = 3.5; // NOLINT(readability-magic-numbers)
+    auto t2 = t1 * scalar;
+    EXPECT_EQ(t2, Tuple(3.5, -7, 10.5));
+}
+
+// Tuple/scalar
+TEST(TupleTest, TupleDividedByScalar) { // NOLINT
+    Tuple t1{1, -2, 3};
+    double scalar = 2;
+    auto t2 = t1 / scalar;
+    EXPECT_EQ(t2, Tuple(0.5, -1, 1.5));
+}
+
+// scalar/Tuple (= ERROR)
+
 // Tuple += Tuple (= Tuple)
 TEST(TupleTest, TuplePlusEqualsTuple) { // NOLINT
     Tuple t1{3, -2, 5};
