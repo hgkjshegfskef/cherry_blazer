@@ -6,7 +6,7 @@
 
 namespace cherry_blazer {
 
-Vector::Vector(const Point& begin, const Point& end) {
+Vector::Vector(Point const& begin, Point const& end) {
     // Cannot initialize members declared by Tuple, because the Tuple constructor has already
     // initialized them. Thus, reassign:
     x = end.x - begin.x;
@@ -14,9 +14,9 @@ Vector::Vector(const Point& begin, const Point& end) {
     z = end.z - begin.z;
 }
 
-double magnitude(const Vector& v) { return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z); }
+double magnitude(Vector const& v) { return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z); }
 
-Vector normalize(const Vector& v) {
+Vector normalize(Vector const& v) {
     auto mag = magnitude(v);
     return {v.x / mag, v.y / mag, v.z / mag};
 }

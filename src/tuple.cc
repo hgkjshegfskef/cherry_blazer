@@ -21,38 +21,38 @@ Tuple operator/(Tuple const& t, double scalar) {
     return {t.x / scalar, t.y / scalar, t.z / scalar};
 }
 
-Tuple& operator+=(Tuple& lhs, const Tuple& rhs) {
+Tuple& operator+=(Tuple& lhs, Tuple const& rhs) {
     lhs.x += rhs.x;
     lhs.y += rhs.y;
     lhs.z += rhs.z;
     return lhs;
 }
 
-Tuple& operator-=(Tuple& lhs, const Tuple& rhs) {
+Tuple& operator-=(Tuple& lhs, Tuple const& rhs) {
     lhs.x -= rhs.x;
     lhs.y -= rhs.y;
     lhs.z -= rhs.z;
     return lhs;
 }
 
-Tuple operator+(Tuple lhs, const Tuple& rhs) {
+Tuple operator+(Tuple lhs, Tuple const& rhs) {
     lhs += rhs;
     return lhs;
 }
 
-Tuple operator-(Tuple lhs, const Tuple& rhs) {
+Tuple operator-(Tuple lhs, Tuple const& rhs) {
     lhs -= rhs;
     return lhs;
 }
 
-bool operator==(const Tuple& lhs, const Tuple& rhs) {
+bool operator==(Tuple const& lhs, Tuple const& rhs) {
     // floating-point comparison through epsilon
     return almost_equal(lhs.x, rhs.x) && almost_equal(lhs.y, rhs.y) && almost_equal(lhs.z, rhs.z);
 }
 
-bool operator!=(const Tuple& lhs, const Tuple& rhs) { return !(lhs == rhs); }
+bool operator!=(Tuple const& lhs, Tuple const& rhs) { return !(lhs == rhs); }
 
-std::ostream& operator<<(std::ostream& os, const Tuple& t) {
+std::ostream& operator<<(std::ostream& os, Tuple const& t) {
     return os << std::setprecision(std::numeric_limits<double>::max_digits10) << "{" << t.x << ", "
               << t.y << ", " << t.z << "}";
 }
