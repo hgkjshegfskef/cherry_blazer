@@ -27,9 +27,6 @@ jobs:
           cmake --build iwyu-build -- -j$(nproc)
           cd ${{github.workspace}}
 
-      - name: Tree
-        run: echo ${{github.workspace}}
-
       - name: Configure Cherry Blazer
         run: >-
           cmake -S . -B cb-build
