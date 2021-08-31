@@ -92,6 +92,35 @@ if(CHERRY_BLAZER_ASAN)
     target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_asan)
 endif()
 
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src")
+    file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    execute_process(
+        COMMAND
+            "${CMAKE_COMMAND}" -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}'
+            -DCHERRY_BLAZER_CI=${CHERRY_BLAZER_CI} -P
+            "${CMAKE_CURRENT_SOURCE_DIR}/cmake/get_googletest.cmake"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+
+    set(command git describe --long --tags)
+    execute_process(
+        COMMAND ${command}
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src"
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE out
+        ERROR_VARIABLE out
+        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
+    if(NOT "${result}" EQUAL "0")
+        message(FATAL_ERROR "execute_process: '${command}' failed with output:\n${out}")
+    endif()
+    message(STATUS "googletest version: ${out}")
+endif()
+
+option(BUILD_GMOCK OFF)
+option(INSTALL_GTEST OFF)
+
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src"
+                 "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-build")
+
 add_subdirectory(src)
 
 if(BUILD_TESTING OR CHERRY_BLAZER_TEST)

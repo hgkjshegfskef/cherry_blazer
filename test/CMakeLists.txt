@@ -1,18 +1,3 @@
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG origin/master
-    GIT_PROGRESS ON)
-set(BUILD_GMOCK
-    OFF
-    CACHE BOOL "" FORCE)
-set(INSTALL_GTEST
-    OFF
-    CACHE BOOL "" FORCE)
-message(STATUS "Downloading Google Test...")
-FetchContent_MakeAvailable(googletest)
-
 if(CMAKE_CXX_CLANG_TIDY)
     # Deselect GTest targets from being checked by clang-tidy.
     set_target_properties(gtest gtest_main PROPERTIES CXX_CLANG_TIDY "")
