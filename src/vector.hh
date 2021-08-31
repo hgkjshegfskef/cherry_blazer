@@ -31,6 +31,8 @@ struct Vector : Tuple {
     // from Tuple.
     bool operator==(Point const& rhs) const = delete;
     bool operator!=(Point const& rhs) const = delete;
+
+    [[nodiscard]] double magnitude() const;
 };
 
 static_assert(

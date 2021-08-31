@@ -1,5 +1,8 @@
 #include "vector.hh"
+
 #include "point.hh"
+
+#include <cmath>
 
 Vector::Vector(const Point& begin, const Point& end) {
     // Cannot initialize members declared by Tuple, because the Tuple constructor has already
@@ -8,3 +11,5 @@ Vector::Vector(const Point& begin, const Point& end) {
     y = end.y - begin.y;
     z = end.z - begin.z;
 }
+
+double Vector::magnitude() const { return std::sqrt(x * x + y * y + z * z); }

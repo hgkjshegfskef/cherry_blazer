@@ -2,6 +2,7 @@
 #include "tuple.hh"
 #include "vector.hh"
 
+#include <cmath>
 #include <gtest/gtest.h>
 #include <sstream> // IWYU pragma: keep
 #include <string>
@@ -107,6 +108,20 @@ TEST(VectorTest, VectorPrintOut) { // NOLINT
     std::stringstream ss;
     ss << v;
     EXPECT_EQ(ss.str(), std::string{"{1, 2, 3}"});
+}
+
+// Vector has magnitude.
+TEST(VectorTest, VectorMagnitude) { // NOLINT
+    Vector v1{1, 0, 0};
+    Vector v2{0, 1, 0};
+    Vector v3{0, 0, 1};
+    Vector v4{1, 2, 3};
+    Vector v5{-1, -2, -3};
+    EXPECT_EQ(v1.magnitude(), 1);
+    EXPECT_EQ(v2.magnitude(), 1);
+    EXPECT_DOUBLE_EQ(v3.magnitude(), 1);
+    EXPECT_EQ(v4.magnitude(), std::sqrt(14));
+    EXPECT_EQ(v5.magnitude(), std::sqrt(14));
 }
 
 // Point-related:

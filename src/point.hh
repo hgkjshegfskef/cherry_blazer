@@ -1,10 +1,10 @@
 #ifndef CHERRY_BLAZER_SRC_POINT_HH_
 #define CHERRY_BLAZER_SRC_POINT_HH_
 
-#include <type_traits>
-
 #include "tuple.hh"
 #include "vector.hh"
+
+#include <type_traits>
 
 struct Point : Tuple {
     Point() = default;
