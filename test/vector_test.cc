@@ -133,6 +133,13 @@ TEST(VectorTest, VectorNormalize) { // NOLINT
     EXPECT_EQ(normalize(v), Vector(1, 0, 0));
 }
 
+// Vectors can have a dot product.
+TEST(VectorTest, VectorDotProduct) { // NOLINT
+    Vector v1{1, 2, 3};
+    Vector v2{2, 3, 4};
+    EXPECT_EQ(dot(v1, v2), 20);
+}
+
 // Point-related:
 
 // Vector += Point (= ERROR)

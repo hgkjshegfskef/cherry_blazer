@@ -21,4 +21,6 @@ Vector normalize(const Vector& v) {
     return {v.x / mag, v.y / mag, v.z / mag};
 }
 
+double dot(Vector const& v1, Vector const& v2) { return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z; }
+
 } // namespace cherry_blazer

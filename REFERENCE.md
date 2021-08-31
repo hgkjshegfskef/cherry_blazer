@@ -45,6 +45,7 @@
 * Geometrically, the dot product of ⃗V and W is related to their lengths and to the angle alpha between them.
 * `[V,W] = |V| * |W| * cos(alpha)`.
 * `[V,V] = |V|^2`.
+* The smaller the dot product, the larger the angle between vectors.
 
 #### Cross product
 * The _cross product_ of two vectors is a vector perpendicular to both of them.

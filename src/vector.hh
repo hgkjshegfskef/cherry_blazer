@@ -46,6 +46,8 @@ double magnitude(Vector const& v);
 
 Vector normalize(Vector const& v);
 
+double dot(Vector const& v1, Vector const& v2);
+
 } // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_VECTOR_HH_
