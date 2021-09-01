@@ -22,6 +22,9 @@ static_assert(
     "struct inside a register, instead of passing a pointer to the struct. Considering how often "
     "this struct will be used in the project, it is preferable to keep it trivially copyable.");
 
+static_assert(std::is_nothrow_move_constructible_v<Color>,
+              "It is preferable to have move ctor to be noexcept, otherwise e.g. std::vector "
+              "cannot move this type.");
 // Color*scalar
 Color operator*(Color const& c, double scalar);
 
@@ -56,6 +59,8 @@ bool operator==(Color const& lhs, Color const& rhs);
 
 // Colors can be compared for inequality.
 bool operator!=(Color const& lhs, Color const& rhs);
+
+std::ostream& operator<<(std::ostream& os, Color const& c);
 
 } // namespace cherry_blazer
 

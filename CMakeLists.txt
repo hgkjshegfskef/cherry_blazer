@@ -154,6 +154,8 @@ if(BUILD_TESTING OR CHERRY_BLAZER_TEST)
     # To silence clang-tidy warnings from IDE, #pragma ide is used, which compilers complain about.
     target_compile_options(cherry_blazer_test_flags INTERFACE -Wno-unknown-pragmas)
 
+    target_compile_definitions(cherry_blazer_test_flags INTERFACE CHERRY_BLAZER_TEST)
+
     add_subdirectory(test)
 endif()
 

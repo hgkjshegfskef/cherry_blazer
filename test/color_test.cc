@@ -1,6 +1,8 @@
 #include "color.hh"
 
 #include <gtest/gtest.h>
+#include <sstream>
+#include <string>
 
 using cherry_blazer::Color;
 
@@ -82,4 +84,12 @@ TEST(ColorTest, ColorTimesColor) { // NOLINT
     Color c2{0.9, 1, 0.1};         // NOLINT(readability-magic-numbers)
     Color c3 = c1 * c2;
     EXPECT_EQ(c3, Color(0.9, 0.2, 0.04));
+}
+
+// Color can be printed out.
+TEST(ColorTest, ColorPrintOut) { // NOLINT
+    Color c{1, 22, 255};         // NOLINT(readability-magic-numbers)
+    std::stringstream ss;
+    ss << c;
+    EXPECT_EQ(ss.str(), std::string{"(  1  22 255)"});
 }

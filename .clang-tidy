@@ -4,8 +4,11 @@
 # -hicpp-braces-around-statements: duplicate
 # -modernize-use-trailing-return-type: ugly
 # -cppcoreguidelines-avoid-magic-numbers: duplicate
+# -cppcoreguidelines-pro-bounds-array-to-pointer-decay: duplicate
+# -cppcoreguidelines-non-private-member-variables-in-classes: annoying
+# -misc-non-private-member-variables-in-classes: duplicate of the above
 
-Checks: '*,-abseil-*,-altera-*,-android-*,-darwin-*,-fuchsia-*,-google-*,-linuxkernel-*,-llvm-*,-llvmlibc-*,-mpi-*,-objc-*,-openmp-*,-zircon-*,-modernize-use-trailing-return-type,-hicpp-braces-around-statements,-cppcoreguidelines-avoid-magic-numbers'
+Checks: '*,-abseil-*,-altera-*,-android-*,-darwin-*,-fuchsia-*,-google-*,-linuxkernel-*,-llvm-*,-llvmlibc-*,-mpi-*,-objc-*,-openmp-*,-zircon-*,-modernize-use-trailing-return-type,-hicpp-braces-around-statements,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-non-private-member-variables-in-classes,-misc-non-private-member-variables-in-classes'
 WarningsAsErrors: ''
 FormatStyle: 'file' # use .clang-format
 UseColor: true # force colors, since release 11
