@@ -7,7 +7,7 @@ if(CMAKE_CXX_INCLUDE_WHAT_YOU_USE)
     set_target_properties(gtest gtest_main PROPERTIES CXX_INCLUDE_WHAT_YOU_USE "")
 endif()
 
-add_executable(cherry_blazer_test point_test.cc vector_test.cc)
+add_executable(cherry_blazer_test color_test.cc point_test.cc vector_test.cc)
 target_link_libraries(cherry_blazer_test PRIVATE libcherryblazer GTest::gtest_main
                                                  cherry_blazer_test_flags)
 
@@ -44,5 +44,6 @@ function(cherry_blazer_add_compilation_test test_name test_contents)
     set_tests_properties(${test_name} PROPERTIES WILL_FAIL 1)
 endfunction()
 
+include(compilation/color_test.cmake)
 include(compilation/point_test.cmake)
 include(compilation/vector_test.cmake)
