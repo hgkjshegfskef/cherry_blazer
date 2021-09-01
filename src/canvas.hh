@@ -4,6 +4,7 @@
 #include "color.hh"
 
 #include <ostream>
+#include <type_traits>
 #include <vector>
 
 #ifdef CHERRY_BLAZER_TEST
@@ -13,16 +14,39 @@
 namespace cherry_blazer {
 
 class Canvas {
+    template <typename CanvasVector> class Canvas1d {
+      public:
+        Canvas1d(CanvasVector& canvas, std::size_t i) : canvas_{canvas}, i_{i} {}
+
+        Canvas1d() = delete;
+        ~Canvas1d() = default;
+        // Attempt to prevent user from storing Canvas1d.
+        Canvas1d(const Canvas1d&) = delete;
+        Canvas1d& operator=(const Canvas1d&) = delete;
+        Canvas1d(Canvas1d&&) noexcept = default;
+        Canvas1d& operator=(Canvas1d&&) noexcept = default;
+
+        Color& operator[](std::size_t j) { return canvas_[i_][j]; }
+        Color const& operator[](std::size_t j) const { return canvas_[i_][j]; }
+
+      private:
+        CanvasVector& canvas_;
+        std::size_t i_;
+    };
+
   public:
     using size_type = std::vector<Color>::size_type;
-    using reference = std::vector<std::vector<Color>>::reference;
-    using const_reference = std::vector<std::vector<Color>>::const_reference;
 
     Canvas() = default;
     Canvas(int width, int height);
 
-    reference operator[](std::size_t idx);
-    const_reference operator[](std::size_t idx) const;
+    static_assert(std::is_trivially_copyable_v<Canvas1d<const std::vector<std::vector<Color>>>>);
+
+    Canvas1d<std::vector<std::vector<Color>>> operator[](std::size_t idx) { return {canvas_, idx}; }
+
+    Canvas1d<const std::vector<std::vector<Color>>> operator[](std::size_t idx) const {
+        return {canvas_, idx};
+    }
 
     [[nodiscard]] size_type width() const;
     [[nodiscard]] size_type height() const;

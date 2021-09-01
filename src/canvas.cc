@@ -25,10 +25,6 @@ Canvas::size_type Canvas::height() const {
     return outer_size == 1 ? 0 : outer_size;
 }
 
-Canvas::reference Canvas::operator[](std::size_t idx) { return canvas_[idx]; }
-
-Canvas::const_reference Canvas::operator[](std::size_t idx) const { return canvas_[idx]; }
-
 std::ostream& operator<<(std::ostream& os, std::vector<Color> const& canvas_row) {
     os << "[ ";
     std::copy(std::cbegin(canvas_row), std::prev(std::cend(canvas_row)),
