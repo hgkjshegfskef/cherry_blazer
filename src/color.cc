@@ -6,8 +6,6 @@
 
 namespace cherry_blazer {
 
-Color::Color(double r, double g, double b) : r{r}, g{g}, b{b} {}
-
 Color operator*(Color const& c, double scalar) {
     return {c.r * scalar, c.g * scalar, c.b * scalar};
 }
