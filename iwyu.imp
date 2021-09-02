@@ -4,6 +4,7 @@
 [
     # Replace suggested private GTest headers with public one.
     {include: ["@<gtest/gtest-.*>", "private", "<gtest/gtest.h>", "public"]}
+    {include: ["@<gtest/gtest_.*>", "private", "<gtest/gtest.h>", "public"]}
 ]
 
 # vim: set ft=python :

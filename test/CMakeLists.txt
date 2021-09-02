@@ -44,6 +44,7 @@ function(cherry_blazer_add_compilation_test test_name test_contents)
     set_tests_properties(${test_name} PROPERTIES WILL_FAIL 1)
 endfunction()
 
+include(compilation/canvas_test.cmake)
 include(compilation/color_test.cmake)
 include(compilation/point_test.cmake)
 include(compilation/vector_test.cmake)

@@ -3,9 +3,12 @@
 
 #include "color.hh"
 
+#include <algorithm>
+#include <cassert>
+#include <memory>
 #include <ostream>
+#include <stdexcept>
 #include <type_traits>
-#include <vector>
 
 #ifdef CHERRY_BLAZER_TEST
 #include <gtest/gtest.h>
@@ -14,66 +17,42 @@
 namespace cherry_blazer {
 
 class Canvas {
-    template <typename CanvasVector> class Canvas1d {
-      public:
-        Canvas1d(CanvasVector& canvas, std::size_t i) : canvas_{canvas}, i_{i} {}
-
-        Canvas1d() = delete;
-        ~Canvas1d() = default;
-        // Attempt to prevent user from storing Canvas1d.
-        Canvas1d(const Canvas1d&) = delete;
-        Canvas1d& operator=(const Canvas1d&) = delete;
-        Canvas1d(Canvas1d&&) noexcept = default;
-        Canvas1d& operator=(Canvas1d&&) noexcept = default;
-
-        Color& operator[](std::size_t j) { return canvas_[i_][j]; }
-        Color const& operator[](std::size_t j) const { return canvas_[i_][j]; }
-
-      private:
-        CanvasVector& canvas_;
-        std::size_t i_;
-    };
-
   public:
-    using size_type = std::vector<Color>::size_type;
+    // Default meember initialization makes no sense for this class.
+    Canvas() = delete;
 
-    Canvas() = default;
-    Canvas(int width, int height);
+    // Create canvas of certain width (x) and height (y).
+    Canvas(std::size_t width, std::size_t height);
 
-    static_assert(std::is_trivially_copyable_v<Canvas1d<const std::vector<std::vector<Color>>>>);
+    [[nodiscard]] std::size_t width() const;
+    [[nodiscard]] std::size_t height() const;
 
-    Canvas1d<std::vector<std::vector<Color>>> operator[](std::size_t idx) { return {canvas_, idx}; }
+    // Read/write at [x, y]
+    Color& operator()(std::size_t x, std::size_t y);
+    Color const& operator()(std::size_t x, std::size_t y) const;
 
-    Canvas1d<const std::vector<std::vector<Color>>> operator[](std::size_t idx) const {
-        return {canvas_, idx};
-    }
+    // Checked read/write at [x, y]
+    Color& at(std::size_t x, std::size_t y);
+    [[nodiscard]] Color const& at(std::size_t x, std::size_t y) const;
 
-    [[nodiscard]] size_type width() const;
-    [[nodiscard]] size_type height() const;
+    friend bool operator==(Canvas const& lhs, Canvas const& rhs);
+    friend bool operator!=(Canvas const& lhs, Canvas const& rhs);
 
-    // On the benefits of hidden friends:
-    // https://www.justsoftwaresolutions.co.uk/cplusplus/hidden-friends.html
-    friend bool operator==(Canvas const& lhs, Canvas const& rhs) {
-        return lhs.canvas_ == rhs.canvas_;
-    }
-    friend bool operator!=(Canvas const& lhs, Canvas const& rhs) { return !(lhs == rhs); }
-
-    // Not inline because it uses helper overloads declared below.
     friend std::ostream& operator<<(std::ostream& os, Canvas const& c);
 
   private:
-    std::vector<std::vector<Color>> canvas_{{}};
+    std::unique_ptr<Color[]> canvas_; // 2D, but in 1D array
+    std::size_t width_;
+    std::size_t height_;
+
+    [[nodiscard]] std::size_t len() const { return width_ * height_; }
 
 #ifdef CHERRY_BLAZER_TEST
     friend class CanvasTest;
-    FRIEND_TEST(CanvasTest, CanvasDefaultConstructable);
-    FRIEND_TEST(CanvasTest, CanvasWidthHeightCtor);
+//    FRIEND_TEST(CanvasTest, CanvasDefaultConstructable);
+//    FRIEND_TEST(CanvasTest, CanvasWidthHeightCtor);
 #endif
 };
-
-std::ostream& operator<<(std::ostream& os, std::vector<Color> const& canvas_row);
-
-std::ostream& operator<<(std::ostream& os, std::vector<std::vector<Color>> const& canvas);
 
 } // namespace cherry_blazer
 

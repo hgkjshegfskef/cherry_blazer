@@ -54,6 +54,7 @@ endif()
 option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
 add_library(cherry_blazer_flags_debug INTERFACE)
 target_compile_options(cherry_blazer_flags_debug INTERFACE -g)
+target_compile_definitions(cherry_blazer_flags_debug INTERFACE CHERRY_BLAZER_DEBUG)
 
 option(CHERRY_BLAZER_NDEBUG "Disable asserts" OFF)
 add_library(cherry_blazer_flags_ndebug INTERFACE)
