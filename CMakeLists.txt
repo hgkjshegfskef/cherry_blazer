@@ -143,6 +143,49 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src"
                  "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-build")
 list(POP_BACK CMAKE_MESSAGE_CONTEXT)
 
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/_deps/boost_pfr-src")
+    file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+
+    message(STATUS "Downloading boost_pfr")
+    execute_process(
+        COMMAND "${CMAKE_COMMAND}" -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}' -P
+                "${CMAKE_CURRENT_SOURCE_DIR}/cmake/get_boost_pfr.cmake"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+    message(STATUS "Downloading boost_pfr - done")
+
+    set(command git describe --long --tags)
+    execute_process(
+        COMMAND ${command}
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps/boost_pfr-src"
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE out
+        ERROR_VARIABLE out
+        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
+    if(NOT "${result}" EQUAL "0")
+        message(FATAL_ERROR "execute_process: '${command}' failed with output:\n${out}")
+    endif()
+    message(STATUS "boost_pfr version: ${out}")
+
+    message(STATUS "Copying CMakeLists.txt for boost_pfr")
+    execute_process(
+        COMMAND "${CMAKE_COMMAND}" -E copy "thirdparty/CMakeLists.txt.boost_pfr"
+                "_deps/boost_pfr-src/CMakeLists.txt"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+        RESULT_VARIABLE result
+        OUTPUT_VARIABLE out
+        ERROR_VARIABLE out
+        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
+    if(NOT "${result}" EQUAL "0")
+        message(FATAL_ERROR "execute_process: '${command}' failed with output:\n${out}")
+    endif()
+    message(STATUS "Copying CMakeLists.txt for boost_pfr - done")
+endif()
+
+list(APPEND CMAKE_MESSAGE_CONTEXT "boost_pfr")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/_deps/boost_pfr-src"
+                 "${CMAKE_CURRENT_SOURCE_DIR}/_deps/boost_pfr-build")
+list(POP_BACK CMAKE_MESSAGE_CONTEXT)
+
 add_subdirectory(src)
 
 if(BUILD_TESTING OR CHERRY_BLAZER_TEST)

@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 3.17)
+
+project(boost_pfr LANGUAGES CXX)
+
+add_library(boost_pfr INTERFACE)
+add_library(Boost::pfr ALIAS boost_pfr)
+
+target_include_directories(boost_pfr SYSTEM INTERFACE include)
