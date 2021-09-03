@@ -8,9 +8,8 @@
 #include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <iterator>
 #include <ostream>
-#include <sstream>
+#include <sstream> // IWYU pragma: keep
 #include <stdexcept>
 #include <string>
 #include <system_error>

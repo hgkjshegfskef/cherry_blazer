@@ -3,17 +3,9 @@
 
 #include "color.hh"
 
-#include <algorithm>
-#include <cassert>
 #include <fstream>
 #include <memory>
-#include <ostream>
-#include <stdexcept>
 #include <type_traits>
-
-#ifdef CHERRY_BLAZER_TEST
-#include <gtest/gtest.h>
-#endif
 
 namespace cherry_blazer {
 
