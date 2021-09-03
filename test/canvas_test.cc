@@ -18,17 +18,7 @@ TEST(CanvasCtorTest, CanvasCtor) { // NOLINT
 
 class CanvasTest : public testing::Test {
   protected:
-    void fill_c1() {
-        std::size_t c1_filled_len = c1_filled.width() * c1_filled.height();
-        std::fill(c1_filled.canvas_.get(), c1_filled.canvas_.get() + c1_filled_len, red);
-        // alternative way to fill:
-        //        for (std::size_t y = 0; y < c1_filled.height(); ++y) {
-        //            for (std::size_t x = 0; x < c1_filled.width(); ++x)
-        //                c1_filled(x, y) = red;
-        //        }
-    }
-
-    void SetUp() override { fill_c1(); }
+    void SetUp() override { c1_filled.fill(red); }
 
     Canvas c1{3, 5};
     Canvas c1_filled{3, 5};
@@ -81,30 +71,78 @@ TEST_F(CanvasTest, CanvasPrintOut) { // NOLINT
     EXPECT_EQ(ss.str(), s) << c1_filled;
 }
 
-/*
+TEST_F(CanvasTest, CanvasExportPpmSimple) { // NOLINT
+    Canvas c2{5, 3};
+    Color col1{1.5, 0, 0};
+    Color col2{0, 0.5, 0};
+    Color col3{-0.5, 0, 1};
+    c2(0, 0) = col1;
+    c2(2, 1) = col2;
+    c2(4, 2) = col3;
 
-TEST_F(CanvasTest, CanvasDefaultConstructable) { // NOLINT
-    EXPECT_EQ(c1.width(), 0);
-    EXPECT_EQ(c1.height(), 0);
-    //    EXPECT_EQ(c1[0][0], Color(0, 0, 0)); -- segfaults
+    const std::string file_name = "image.ppm";
+    c2.save_as_ppm(file_name);
+
+    std::ifstream file{file_name};
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+
+    std::string expected{"P3\n"
+                         "5 3\n"
+                         "255\n"
+                         " 255   0   0   0   0   0   0   0   0   0   0   0   0   0   0\n"
+                         "   0   0   0   0   0   0   0 128   0   0   0   0   0   0   0\n"
+                         "   0   0   0   0   0   0   0   0   0   0   0   0   0   0 255\n"};
+
+    EXPECT_EQ(buffer.str(), expected) << buffer.str();
 }
 
-TEST_F(CanvasTest, CanvasWidthHeightCtor) { // NOLINT
-    EXPECT_EQ(c2.width(), 3);
-    EXPECT_EQ(c2.height(), 5);
-    for (const auto& row : c2.canvas_) {
-        for (const auto& color : row) {
-            EXPECT_EQ(color, Color(0, 0, 0));
-        }
-    }
+TEST_F(CanvasTest, CanvasExportPpmLongLines) { // NOLINT
+    Canvas c2{10, 2};
+    Color col1{1, 0.8, 0.6};
+    c2.fill(col1);
+
+    const std::string file_name = "image.ppm";
+    c2.save_as_ppm(file_name);
+
+    std::ifstream file{file_name};
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+
+    std::string expected{"P3\n"
+                         "10 2\n"
+                         "255\n"
+                         " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
+                         " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
+                         " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
+                         " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"};
+
+    EXPECT_EQ(buffer.str(), expected) << buffer.str();
 }
 
-TEST_F(CanvasTest, CanvasSubscriptOperator) { // NOLINT
-    c2[0][0] = red;
-    EXPECT_EQ(c2[0][0], Color(1, 0, 0));
+TEST_F(CanvasTest, CanvasExportPpmTail) { // NOLINT
+    Canvas c2{3, 6};
+    Color col1{1, 0.8, 0.6};
+    c2.fill(col1);
+
+    const std::string file_name = "image.ppm";
+    c2.save_as_ppm(file_name);
+
+    std::ifstream file{file_name};
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+
+    std::string expected{"P3\n"
+                         "3 6\n"
+                         "255\n"
+                         " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
+                         " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
+                         " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
+                         " 255 204 153 255 204 153 255 204 153\n"};
+
+    EXPECT_EQ(buffer.str(), expected) << buffer.str();
 }
 
-
- */
+// TODO: if ran concurrently, would introduce collisions accessing file
 
 } // namespace cherry_blazer

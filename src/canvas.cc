@@ -1,9 +1,19 @@
 #include "canvas.hh"
 
 #include <algorithm>
+#include <boost/pfr/core.hpp>
 #include <cassert>
+#include <cerrno>
+#include <cmath>
+#include <fstream>
+#include <iomanip>
+#include <iostream>
 #include <iterator>
 #include <ostream>
+#include <sstream>
+#include <stdexcept>
+#include <string>
+#include <system_error>
 #include <tuple>
 
 namespace cherry_blazer {
@@ -16,6 +26,130 @@ Canvas::Canvas(std::size_t width, std::size_t height)
 
 std::size_t Canvas::width() const { return width_; }
 std::size_t Canvas::height() const { return height_; }
+
+Color& Canvas::operator()(std::size_t x, std::size_t y) {
+    assert(y * width_ + x < len()); // NOLINT(hicpp-no-array-decay)
+    return canvas_[y * width_ + x];
+}
+
+Color const& Canvas::operator()(std::size_t x, std::size_t y) const {
+    assert(y * width_ + x < len()); // NOLINT(hicpp-no-array-decay)
+    return canvas_[y * width_ + x];
+}
+
+Color& Canvas::at(std::size_t x, std::size_t y) {
+    if (y * width_ + x >= len())
+        throw std::out_of_range{"range is out of bounds"};
+    return canvas_[y * width_ + x];
+}
+
+Color const& Canvas::at(std::size_t x, std::size_t y) const {
+    if (y * width_ + x >= len())
+        throw std::out_of_range{"range is out of bounds"};
+    return canvas_[y * width_ + x];
+}
+
+void Canvas::fill(Color const& color) { std::fill(canvas_.get(), canvas_.get() + len(), color); }
+
+std::string ppm_generate_header(std::size_t width, std::size_t height) {
+    std::stringstream ss;
+    ss << "P3\n"
+       << std::to_string(width) << ' ' << std::to_string(height) << '\n'
+       << std::to_string(255) << '\n';
+    return ss.str();
+}
+
+std::ofstream ppm_write_header(std::string const& file, std::size_t width, std::size_t height) {
+    std::ofstream f{file};
+    if (!f)
+        throw std::system_error(errno, std::system_category(), "failed to open '" + file + "'");
+    f << ppm_generate_header(width, height);
+    return f;
+}
+
+struct point2d {
+    double x;
+    double y;
+};
+
+struct range {
+    double start;
+    double finish;
+
+    range(double start, double finish) : start{start}, finish{finish} {
+        if (start > finish)
+            throw std::domain_error{"start > finish"};
+    }
+};
+
+// https://en.wikipedia.org/wiki/Linear_interpolation
+// If the two known points are given by the coordinates (x0,y0) and (x1,y1), the linear interpolant
+// is the straight line between these points. Value of x must be in the interval [x0;x1].
+double linear_interpolation(double x, point2d const& left, point2d const& right) {
+    assert(left.x <= x && x <= right.x);
+    return left.y + (x - left.x) * (right.y - left.y) / (right.x - left.x);
+}
+
+// Scale a number between two (possibly overlapping) ranges.
+// Use-case example: given a value in range [0;1], find out its respective value in range [0;255].
+// Further reading: https://gamedev.stackexchange.com/a/33445
+double scale(double x, range const& source, range const& target) {
+    return linear_interpolation(x, {source.start, target.start}, {source.finish, target.finish});
+}
+
+void Canvas::save_as_ppm(std::string const& file_name) const {
+    std::ofstream image_file;
+    try {
+        image_file = ppm_write_header(file_name, width_, height_);
+    } catch (std::system_error const& e) {
+        std::cerr << e.what() << " (" << e.code() << ")" << std::endl;
+        throw;
+    }
+
+    // Max length of line in PPM file
+    constexpr std::size_t ppm_line_length = 70;
+    // How much text space one color component (r, g, or b) occupies
+    constexpr std::size_t component_width = 4;
+    // How many primary colors does one color have
+    constexpr std::size_t component_count = 3;
+    // How much text space one color (r, g, and b) occupies
+    constexpr std::size_t color_width = component_width * component_count;
+    // How many colors fully fit into one line
+    constexpr std::size_t batch_size = ppm_line_length / color_width;
+    // How many full batches of colors are there to print?
+    const std::size_t batch_count = len() / batch_size;
+
+    std::stringstream ss;
+    const range source{0, 1};
+    const range target{0, 255};
+
+    // Print out batch_count batches of batch_size amount of colors each, one batch per line.
+    for (std::size_t nth_batch = 0; nth_batch < batch_count; ++nth_batch) {
+        for (std::size_t nth_color = 0; nth_color < batch_size; ++nth_color) {
+            boost::pfr::for_each_field(
+                canvas_[nth_batch * batch_size + nth_color], [&](auto const& component) {
+                    ss << std::setw(component_width)
+                       << std::round(scale(std::clamp(component, source.start, source.finish),
+                                           source, target));
+                });
+        }
+        ss << "\n";
+    }
+
+    if (len() - batch_count * batch_size) { // Any colors remaining to be processed?
+        const std::size_t already_processed = batch_count * batch_size;
+        for (std::size_t leftover = already_processed; leftover < len(); ++leftover) {
+            boost::pfr::for_each_field(canvas_[leftover], [&](auto const& component) {
+                ss << std::setw(component_width)
+                   << std::round(scale(std::clamp(component, source.start, source.finish), source,
+                                       target));
+            });
+        }
+        ss << "\n";
+    }
+
+    image_file << ss.str();
+}
 
 bool operator==(Canvas const& lhs, Canvas const& rhs) {
     if (std::tie(lhs.width_, lhs.height_) != std::tie(rhs.width_, rhs.height_))
@@ -56,28 +190,6 @@ std::ostream& operator<<(std::ostream& os, Canvas const& c) {
     }
     // print last column in last row (with different delimiter)
     return os << c.canvas_[penultimate_row * c.width_ + penultimate_col] << " ]";
-}
-
-Color& Canvas::operator()(std::size_t x, std::size_t y) {
-    assert(y * width_ + x < len()); // NOLINT(hicpp-no-array-decay)
-    return canvas_[y * width_ + x];
-}
-
-Color const& Canvas::operator()(std::size_t x, std::size_t y) const {
-    assert(y * width_ + x < len()); // NOLINT(hicpp-no-array-decay)
-    return canvas_[y * width_ + x];
-}
-
-Color& Canvas::at(std::size_t x, std::size_t y) {
-    if (y * width_ + x >= len())
-        throw std::out_of_range{"range is out of bounds"};
-    return canvas_[y * width_ + x];
-}
-
-Color const& Canvas::at(std::size_t x, std::size_t y) const {
-    if (y * width_ + x >= len())
-        throw std::out_of_range{"range is out of bounds"};
-    return canvas_[y * width_ + x];
 }
 
 } // namespace cherry_blazer

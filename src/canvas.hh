@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <fstream>
 #include <memory>
 #include <ostream>
 #include <stdexcept>
@@ -35,6 +36,11 @@ class Canvas {
     Color& at(std::size_t x, std::size_t y);
     [[nodiscard]] Color const& at(std::size_t x, std::size_t y) const;
 
+    // Fill whole canvas with a single color.
+    void fill(Color const& color);
+
+    void save_as_ppm(std::string const& component) const;
+
     friend bool operator==(Canvas const& lhs, Canvas const& rhs);
     friend bool operator!=(Canvas const& lhs, Canvas const& rhs);
 
@@ -46,12 +52,6 @@ class Canvas {
     std::size_t height_;
 
     [[nodiscard]] std::size_t len() const { return width_ * height_; }
-
-#ifdef CHERRY_BLAZER_TEST
-    friend class CanvasTest;
-//    FRIEND_TEST(CanvasTest, CanvasDefaultConstructable);
-//    FRIEND_TEST(CanvasTest, CanvasWidthHeightCtor);
-#endif
 };
 
 } // namespace cherry_blazer

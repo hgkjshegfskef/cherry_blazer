@@ -1,6 +1,8 @@
+find_package(Boost REQUIRED)
+
 add_library(libcherryblazer canvas.cc color.cc point.cc vector.cc)
 target_include_directories(libcherryblazer PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}")
-target_link_libraries(libcherryblazer PUBLIC m cherry_blazer_flags)
+target_link_libraries(libcherryblazer PUBLIC Boost::headers m cherry_blazer_flags)
 if(BUILD_TESTING OR CHERRY_BLAZER_TEST)
     target_link_libraries(libcherryblazer PUBLIC GTest::gtest_main)
 endif()
