@@ -50,21 +50,22 @@ Color const& Canvas::at(std::size_t x, std::size_t y) const {
 
 void Canvas::fill(Color const& color) { std::fill(canvas_.get(), canvas_.get() + len(), color); }
 
-std::string ppm_generate_header(std::size_t width, std::size_t height) {
+std::string ppm_generate_header(std::size_t width, std::size_t height,
+                                std::size_t max_component_value) {
     std::stringstream ss;
     ss << "P3\n"
        << std::to_string(width) << ' ' << std::to_string(height) << '\n'
-       << std::to_string(255) << '\n';
+       << std::to_string(max_component_value) << '\n';
     return ss.str();
 }
 
-std::ofstream ppm_write_header(std::string const& file, std::size_t width, std::size_t height) {
-    std::ofstream f{file};
-    if (!f)
-        throw std::system_error(errno, std::system_category(), "failed to open '" + file + "'");
-    f << ppm_generate_header(width, height);
-    return f;
-}
+// std::ofstream ppm_write_header(std::string const& file, std::size_t width, std::size_t height) {
+//     std::ofstream f{file};
+//     if (!f)
+//         throw std::system_error(errno, std::system_category(), "failed to open '" + file + "'");
+//     f << ppm_generate_header(width, height);
+//     return f;
+// }
 
 struct point2d {
     double x;
@@ -84,7 +85,7 @@ struct range {
 // https://en.wikipedia.org/wiki/Linear_interpolation
 // If the two known points are given by the coordinates (x0,y0) and (x1,y1), the linear interpolant
 // is the straight line between these points. Value of x must be in the interval [x0;x1].
-double linear_interpolation(double x, point2d const& left, point2d const& right) {
+static double linear_interpolation(double x, point2d const& left, point2d const& right) {
     assert(left.x <= x && x <= right.x);
     return left.y + (x - left.x) * (right.y - left.y) / (right.x - left.x);
 }
@@ -92,18 +93,19 @@ double linear_interpolation(double x, point2d const& left, point2d const& right)
 // Scale a number between two (possibly overlapping) ranges.
 // Use-case example: given a value in range [0;1], find out its respective value in range [0;255].
 // Further reading: https://gamedev.stackexchange.com/a/33445
-double scale(double x, range const& source, range const& target) {
+static double scale(double x, range const& source, range const& target) {
     return linear_interpolation(x, {source.start, target.start}, {source.finish, target.finish});
 }
 
-void Canvas::save_as_ppm(std::string const& file_name) const {
-    std::ofstream image_file;
-    try {
-        image_file = ppm_write_header(file_name, width_, height_);
-    } catch (std::system_error const& e) {
-        std::cerr << e.what() << " (" << e.code() << ")" << std::endl;
-        throw;
-    }
+std::string Canvas::as_ppm() const {
+    // TODO: when writing file saving routines, they should use binary write, not <<
+    //    std::ofstream image_file;
+    //    try {
+    //        image_file = ppm_write_header(file_name, width_, height_);
+    //    } catch (std::system_error const& e) {
+    //        std::cerr << e.what() << " (" << e.code() << ")" << std::endl;
+    //        throw;
+    //    }
 
     // Max length of line in PPM file
     constexpr std::size_t ppm_line_length = 70;
@@ -118,13 +120,18 @@ void Canvas::save_as_ppm(std::string const& file_name) const {
     // How many full batches of colors are there to print?
     const std::size_t batch_count = len() / batch_size;
 
-    std::stringstream ss;
+    // Range of canvas color colomponents' values (we clamp to it first).
     const range source{0, 1};
+    // Range of PPM color values.
     const range target{0, 255};
+
+    std::stringstream ss;
+    ss << ppm_generate_header(width_, height_, target.finish);
 
     // Print out batch_count batches of batch_size amount of colors each, one batch per line.
     for (std::size_t nth_batch = 0; nth_batch < batch_count; ++nth_batch) {
         for (std::size_t nth_color = 0; nth_color < batch_size; ++nth_color) {
+            // Clamp color components to the source range, then scale them to the target range.
             boost::pfr::for_each_field(
                 canvas_[nth_batch * batch_size + nth_color], [&](auto const& component) {
                     ss << std::setw(component_width)
@@ -147,7 +154,7 @@ void Canvas::save_as_ppm(std::string const& file_name) const {
         ss << "\n";
     }
 
-    image_file << ss.str();
+    return ss.str();
 }
 
 bool operator==(Canvas const& lhs, Canvas const& rhs) {

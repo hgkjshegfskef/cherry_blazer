@@ -31,7 +31,7 @@ class Canvas {
     // Fill whole canvas with a single color.
     void fill(Color const& color);
 
-    void save_as_ppm(std::string const& component) const;
+    [[nodiscard]] std::string as_ppm() const;
 
     friend bool operator==(Canvas const& lhs, Canvas const& rhs);
     friend bool operator!=(Canvas const& lhs, Canvas const& rhs);

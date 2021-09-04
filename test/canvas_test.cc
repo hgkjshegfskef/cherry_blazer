@@ -80,21 +80,14 @@ TEST_F(CanvasTest, CanvasExportPpmSimple) { // NOLINT
     c2(2, 1) = col2;
     c2(4, 2) = col3;
 
-    const std::string file_name = "image.ppm";
-    c2.save_as_ppm(file_name);
-
-    std::ifstream file{file_name};
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-
+    std::string const image = c2.as_ppm();
     std::string expected{"P3\n"
                          "5 3\n"
                          "255\n"
                          " 255   0   0   0   0   0   0   0   0   0   0   0   0   0   0\n"
                          "   0   0   0   0   0   0   0 128   0   0   0   0   0   0   0\n"
                          "   0   0   0   0   0   0   0   0   0   0   0   0   0   0 255\n"};
-
-    EXPECT_EQ(buffer.str(), expected) << buffer.str();
+    EXPECT_EQ(image, expected) << image;
 }
 
 TEST_F(CanvasTest, CanvasExportPpmLongLines) { // NOLINT
@@ -102,13 +95,7 @@ TEST_F(CanvasTest, CanvasExportPpmLongLines) { // NOLINT
     Color col1{1, 0.8, 0.6};
     c2.fill(col1);
 
-    const std::string file_name = "image.ppm";
-    c2.save_as_ppm(file_name);
-
-    std::ifstream file{file_name};
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-
+    std::string const image = c2.as_ppm();
     std::string expected{"P3\n"
                          "10 2\n"
                          "255\n"
@@ -116,8 +103,7 @@ TEST_F(CanvasTest, CanvasExportPpmLongLines) { // NOLINT
                          " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
                          " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
                          " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"};
-
-    EXPECT_EQ(buffer.str(), expected) << buffer.str();
+    EXPECT_EQ(image, expected) << image;
 }
 
 TEST_F(CanvasTest, CanvasExportPpmTail) { // NOLINT
@@ -125,13 +111,7 @@ TEST_F(CanvasTest, CanvasExportPpmTail) { // NOLINT
     Color col1{1, 0.8, 0.6};
     c2.fill(col1);
 
-    const std::string file_name = "image.ppm";
-    c2.save_as_ppm(file_name);
-
-    std::ifstream file{file_name};
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-
+    const std::string image = c2.as_ppm();
     std::string expected{"P3\n"
                          "3 6\n"
                          "255\n"
@@ -139,10 +119,7 @@ TEST_F(CanvasTest, CanvasExportPpmTail) { // NOLINT
                          " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
                          " 255 204 153 255 204 153 255 204 153 255 204 153 255 204 153\n"
                          " 255 204 153 255 204 153 255 204 153\n"};
-
-    EXPECT_EQ(buffer.str(), expected) << buffer.str();
+    EXPECT_EQ(image, expected) << image;
 }
-
-// TODO: if ran concurrently, would introduce collisions accessing file
 
 } // namespace cherry_blazer
