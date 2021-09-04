@@ -202,6 +202,8 @@ std::ostream& operator<<(std::ostream& os, Canvas const& c) {
     return os << c.canvas_[penultimate_row * c.width_ + penultimate_col] << " ]";
 }
 
+std::size_t Canvas::len() const { return width_ * height_; }
+
 } // namespace cherry_blazer
 
 #ifdef CHERRY_BLAZER_DEBUG

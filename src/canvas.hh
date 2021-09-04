@@ -43,7 +43,7 @@ class Canvas {
     std::size_t width_;
     std::size_t height_;
 
-    [[nodiscard]] std::size_t len() const { return width_ * height_; }
+    [[nodiscard]] std::size_t len() const;
 };
 
 } // namespace cherry_blazer
