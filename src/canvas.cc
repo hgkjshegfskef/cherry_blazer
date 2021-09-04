@@ -17,6 +17,40 @@
 
 namespace cherry_blazer {
 
+namespace {
+
+struct point2d {
+    double x;
+    double y;
+};
+
+struct range {
+    double start;
+    double finish;
+
+    range(double start, double finish) : start{start}, finish{finish} {
+        if (start > finish)
+            throw std::domain_error{"start > finish"};
+    }
+};
+
+// https://en.wikipedia.org/wiki/Linear_interpolation
+// If the two known points are given by the coordinates (x0,y0) and (x1,y1), the linear interpolant
+// is the straight line between these points. Value of x must be in the interval [x0;x1].
+double linear_interpolation(double x, point2d const& left, point2d const& right) {
+    assert(left.x <= x && x <= right.x);
+    return left.y + (x - left.x) * (right.y - left.y) / (right.x - left.x);
+}
+
+// Scale a number between two (possibly overlapping) ranges.
+// Use-case example: given a value in range [0;1], find out its respective value in range [0;255].
+// Further reading: https://gamedev.stackexchange.com/a/33445
+double scale(double x, range const& source, range const& target) {
+    return linear_interpolation(x, {source.start, target.start}, {source.finish, target.finish});
+}
+
+} // namespace
+
 Canvas::Canvas(std::size_t width, std::size_t height)
     : canvas_{std::unique_ptr<Color[]>{new Color[width * height]}}, width_{width}, height_{height} {
     if (width == 0 || height == 0)
@@ -66,36 +100,6 @@ std::string ppm_generate_header(std::size_t width, std::size_t height,
 //     f << ppm_generate_header(width, height);
 //     return f;
 // }
-
-struct point2d {
-    double x;
-    double y;
-};
-
-struct range {
-    double start;
-    double finish;
-
-    range(double start, double finish) : start{start}, finish{finish} {
-        if (start > finish)
-            throw std::domain_error{"start > finish"};
-    }
-};
-
-// https://en.wikipedia.org/wiki/Linear_interpolation
-// If the two known points are given by the coordinates (x0,y0) and (x1,y1), the linear interpolant
-// is the straight line between these points. Value of x must be in the interval [x0;x1].
-static double linear_interpolation(double x, point2d const& left, point2d const& right) {
-    assert(left.x <= x && x <= right.x);
-    return left.y + (x - left.x) * (right.y - left.y) / (right.x - left.x);
-}
-
-// Scale a number between two (possibly overlapping) ranges.
-// Use-case example: given a value in range [0;1], find out its respective value in range [0;255].
-// Further reading: https://gamedev.stackexchange.com/a/33445
-static double scale(double x, range const& source, range const& target) {
-    return linear_interpolation(x, {source.start, target.start}, {source.finish, target.finish});
-}
 
 std::string Canvas::as_ppm() const {
     // TODO: when writing file saving routines, they should use binary write, not <<
