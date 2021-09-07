@@ -6,12 +6,6 @@
 
 using cherry_blazer::Color;
 
-// Color is default constructable and zero-initialized.
-TEST(ColorTest, ColorDefaultConstructableZeroInit) { // NOLINT
-    Color c;
-    EXPECT_EQ(c, (Color{0, 0, 0}));
-}
-
 // scalar*Color
 TEST(ColorTest, ScalarTimesColor) { // NOLINT
     Color c1{1, -2, 3};

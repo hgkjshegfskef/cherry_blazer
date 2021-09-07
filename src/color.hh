@@ -7,16 +7,10 @@
 namespace cherry_blazer {
 
 struct Color {
-    double r{};
-    double g{};
-    double b{};
-
-    Color() = default;
+    double r;
+    double g;
+    double b;
 };
-
-static_assert(std::is_aggregate_v<Color>);
-static_assert(std::is_trivially_copyable_v<Color>);
-static_assert(std::is_nothrow_move_constructible_v<Color>);
 
 // Color*scalar
 Color operator*(Color const& c, double scalar);

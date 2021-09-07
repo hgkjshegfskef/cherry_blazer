@@ -40,7 +40,14 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # project.
 add_library(cherry_blazer_flags INTERFACE)
 
-target_compile_options(cherry_blazer_flags INTERFACE -Wall -Wextra -Wpedantic)
+target_compile_options(
+    cherry_blazer_flags
+    INTERFACE -Wall # the classic
+              -Wextra # the classic
+              -Wpedantic # be strictly ISO compliant
+              -Wfatal-errors # abort on first error reported
+              -Werror=missing-field-initializers # partial ctors is an error
+)
 
 # Force colors in Ninja: https://github.com/ninja-build/ninja/wiki/FAQ
 if("${CMAKE_GENERATOR}" MATCHES "Ninja")
