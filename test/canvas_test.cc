@@ -16,6 +16,15 @@ TEST(CanvasCtorTest, CanvasCtor) { // NOLINT
     EXPECT_THROW({ Canvas cc(0, 0); }, std::range_error);
 }
 
+TEST(CanvasCtorTest, CanvasIsZeroInitialized) { // NOLINT
+    Canvas c{1, 2};
+    Color black{};
+    for (std::size_t y = 0; y < c.height(); ++y) {
+        for (std::size_t x = 0; x < c.width(); ++x)
+            EXPECT_EQ(c(x, y), black);
+    }
+}
+
 class CanvasTest : public testing::Test {
   protected:
     void SetUp() override { c1_filled.fill(red); }

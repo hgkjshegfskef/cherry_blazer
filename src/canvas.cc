@@ -54,8 +54,8 @@ double scale(double x, range const& source, range const& target) {
 } // namespace
 
 Canvas::Canvas(std::size_t width, std::size_t height)
-    : canvas_{std::unique_ptr<Color[]>{new Color[width * height]()}}, width_{width}, height_{
-                                                                                         height} {
+    : canvas_{std::unique_ptr<Color[]>{new Color[width * height]()}}, // zero-init with black color
+      width_{width}, height_{height} {
     if (width == 0 || height == 0)
         throw std::range_error{"width == 0 || height == 0"};
 }
