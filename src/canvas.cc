@@ -1,5 +1,7 @@
 #include "canvas.hh"
 
+#include "ppm.hh"
+
 #include <algorithm>
 #include <boost/pfr/core.hpp>
 #include <cassert>
@@ -84,33 +86,7 @@ Color const& Canvas::at(std::size_t x, std::size_t y) const {
 
 void Canvas::fill(Color const& color) { std::fill(canvas_.get(), canvas_.get() + len(), color); }
 
-std::string ppm_generate_header(std::size_t width, std::size_t height,
-                                std::size_t max_component_value) {
-    std::stringstream ss;
-    ss << "P3\n"
-       << std::to_string(width) << ' ' << std::to_string(height) << '\n'
-       << std::to_string(max_component_value) << '\n';
-    return ss.str();
-}
-
-// std::ofstream ppm_write_header(std::string const& file, std::size_t width, std::size_t height) {
-//     std::ofstream f{file};
-//     if (!f)
-//         throw std::system_error(errno, std::system_category(), "failed to open '" + file + "'");
-//     f << ppm_generate_header(width, height);
-//     return f;
-// }
-
 std::string Canvas::as_ppm() const {
-    // TODO: when writing file saving routines, they should use binary write, not <<
-    //    std::ofstream image_file;
-    //    try {
-    //        image_file = ppm_write_header(file_name, width_, height_);
-    //    } catch (std::system_error const& e) {
-    //        std::cerr << e.what() << " (" << e.code() << ")" << std::endl;
-    //        throw;
-    //    }
-
     // Max length of line in PPM file
     constexpr std::size_t ppm_line_length = 70;
     // How much text space one color component (r, g, or b) occupies
@@ -130,7 +106,7 @@ std::string Canvas::as_ppm() const {
     const range target{0, 255};
 
     std::stringstream ss;
-    ss << ppm_generate_header(width_, height_, target.finish);
+    ss << ppm::generate_header(width_, height_, target.finish);
 
     // Print out batch_count batches of batch_size amount of colors each, one batch per line.
     for (std::size_t nth_batch = 0; nth_batch < batch_count; ++nth_batch) {
