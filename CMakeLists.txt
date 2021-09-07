@@ -5,6 +5,9 @@ include(CherryBlazerUtil)
 
 project(cherry_blazer LANGUAGES CXX)
 
+# ##################################################################################################
+# Build preconditions
+
 if(CMAKE_BUILD_TYPE)
     message(
         FATAL_ERROR
@@ -21,7 +24,32 @@ if(NOT (UNIX AND NOT APPLE))
     message(FATAL_ERROR "cherry_blazer only supports Linux.")
 endif()
 
+# ##################################################################################################
+# Options
+
 option(CHERRY_BLAZER_CI "Set ON if building in CI" OFF)
+
+option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
+add_library(cherry_blazer_flags_debug INTERFACE)
+target_compile_options(cherry_blazer_flags_debug INTERFACE -g)
+target_compile_definitions(cherry_blazer_flags_debug INTERFACE CHERRY_BLAZER_DEBUG)
+
+option(CHERRY_BLAZER_NDEBUG "Disable asserts" OFF)
+add_library(cherry_blazer_flags_ndebug INTERFACE)
+target_compile_definitions(cherry_blazer_flags_ndebug INTERFACE NDEBUG)
+
+option(CHERRY_BLAZER_OPTIMIZE "Enable optimizations" OFF)
+add_library(cherry_blazer_flags_optimize INTERFACE)
+target_compile_options(cherry_blazer_flags_optimize INTERFACE -O2)
+
+option(CHERRY_BLAZER_ASAN "Enable address sanitizer" OFF)
+add_library(cherry_blazer_flags_asan INTERFACE)
+target_compile_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address
+                                                          -fno-omit-frame-pointer)
+target_link_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address)
+
+# ##################################################################################################
+# CMAKE_ settings
 
 # Compilation database for code completion.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -35,6 +63,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+# ##################################################################################################
 
 # Set of flags built up piecewise to be used to build sources of every target defined by this
 # project.
@@ -57,25 +87,6 @@ if("${CMAKE_GENERATOR}" MATCHES "Ninja")
         target_compile_options(cherry_blazer_flags INTERFACE -fcolor-diagnostics)
     endif()
 endif()
-
-option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
-add_library(cherry_blazer_flags_debug INTERFACE)
-target_compile_options(cherry_blazer_flags_debug INTERFACE -g)
-target_compile_definitions(cherry_blazer_flags_debug INTERFACE CHERRY_BLAZER_DEBUG)
-
-option(CHERRY_BLAZER_NDEBUG "Disable asserts" OFF)
-add_library(cherry_blazer_flags_ndebug INTERFACE)
-target_compile_definitions(cherry_blazer_flags_ndebug INTERFACE NDEBUG)
-
-option(CHERRY_BLAZER_OPTIMIZE "Enable optimizations" OFF)
-add_library(cherry_blazer_flags_optimize INTERFACE)
-target_compile_options(cherry_blazer_flags_optimize INTERFACE -O2)
-
-option(CHERRY_BLAZER_ASAN "Enable address sanitizer" OFF)
-add_library(cherry_blazer_flags_asan INTERFACE)
-target_compile_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address
-                                                          -fno-omit-frame-pointer)
-target_link_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address)
 
 if(CHERRY_BLAZER_DEBUG)
     if(NOT CHERRY_BLAZER_OPTIMIZE)
