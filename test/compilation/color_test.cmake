@@ -21,10 +21,10 @@ int main() {
 cherry_blazer_add_compilation_test(
     ColorTest_ScalarDividedByColor
     [[
-#include <vector.hh>
+#include <color.hh>
 int main() {
-    cherry_blazer::Color v1{1, -2, 3};
+    cherry_blazer::Color c{1, -2, 3};
     double scalar = 2;
-    auto v2 = scalar / v1;
+    scalar / v1;
 }
 ]])
