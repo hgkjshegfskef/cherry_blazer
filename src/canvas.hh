@@ -9,11 +9,11 @@
 
 namespace cherry_blazer {
 
+// Canvas is a 2D buffer to write colors into, either one color at a time via "canvas(x, y) = color"
+// or one color in bulk via fill(). Canvas coordinate system: X grows from left to right, Y grows
+// from up to down.
 class Canvas {
   public:
-    // Default meember initialization makes no sense for this class.
-    Canvas() = delete;
-
     // Create canvas of certain width (x) and height (y).
     Canvas(std::size_t width, std::size_t height);
 
