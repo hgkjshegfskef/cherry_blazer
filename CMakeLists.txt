@@ -93,8 +93,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ##################################################################################################
@@ -105,7 +103,8 @@ add_library(cherry_blazer_flags INTERFACE)
 
 target_compile_options(
     cherry_blazer_flags
-    INTERFACE -Wall # the classic
+    INTERFACE -std=c++2a # C++20
+              -Wall # the classic
               -Wextra # the classic
               -Wpedantic # be strictly ISO compliant
               -Wfatal-errors # abort on first error reported
