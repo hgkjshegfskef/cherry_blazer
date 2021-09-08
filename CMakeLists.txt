@@ -106,7 +106,7 @@ target_compile_options(
     INTERFACE -std=c++2a # C++20
               -Wall # the classic
               -Wextra # the classic
-              -Wpedantic # be strictly ISO compliant
+              -pedantic-errors # issue errors on standard non-compliance
               -Wfatal-errors # abort on first error reported
               -Werror=missing-field-initializers # partial ctors is an error
 )
