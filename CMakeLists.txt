@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-include(CherryBlazerUtil)
+include(cherry_blazer_util)
 
 project(cherry_blazer LANGUAGES CXX)
 
@@ -47,6 +47,39 @@ add_library(cherry_blazer_flags_asan INTERFACE)
 target_compile_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address
                                                           -fno-omit-frame-pointer)
 target_link_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address)
+
+set(CHERRY_BLAZER_BOOST_VERSION
+    "boost-1.77.0"
+    CACHE STRING "Boost version")
+
+# Dependency order is maintained: latter library may depend on former libraries.
+list(
+    APPEND
+    boost_libraries
+    pfr
+    mp11
+    preprocessor
+    config
+    io
+    static_assert
+    type_traits
+    assert
+    throw_exception
+    core
+    logic
+    integer
+    safe_numerics)
+
+# ;-list is transformed into space-delimited list in order:
+#
+# 1. To provide user-friendly customization option (;-list looks scary).
+# 2. To pass the list through execute_process() into CMake script (it is not possible to make ;-list
+#    be treated like single argument).
+string(REPLACE ";" " " boost_libraries_space_delimited "${boost_libraries}")
+
+set(CHERRY_BLAZER_BOOST_LIBRARIES
+    "${boost_libraries_space_delimited}"
+    CACHE STRING "List of Boost libraries to use")
 
 # ##################################################################################################
 # CMAKE_ settings
@@ -113,45 +146,12 @@ if(CHERRY_BLAZER_ASAN)
     target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_asan)
 endif()
 
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src")
-    file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+# ##################################################################################################
+# googletest
 
-    message(STATUS "Downloading googletest")
-    execute_process(
-        COMMAND "${CMAKE_COMMAND}" -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}' -P
-                "${CMAKE_CURRENT_SOURCE_DIR}/cmake/get_googletest.cmake"
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-    message(STATUS "Downloading googletest - done")
-
-    set(command git describe --long --tags)
-    execute_process(
-        COMMAND ${command}
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src"
-        RESULT_VARIABLE result
-        OUTPUT_VARIABLE out
-        ERROR_VARIABLE out
-        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
-    if(NOT "${result}" EQUAL "0")
-        message(FATAL_ERROR "execute_process: '${command}' failed with output:\n${out}")
-    endif()
-    message(STATUS "googletest version: ${out}")
-
-    file(COPY googletest.patch DESTINATION "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src")
-
-    message(STATUS "Applying googletest.patch")
-    set(command git apply googletest.patch)
-    execute_process(
-        COMMAND ${command}
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src"
-        RESULT_VARIABLE result
-        OUTPUT_VARIABLE out
-        ERROR_VARIABLE out
-        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
-    if(NOT "${result}" EQUAL "0")
-        message(FATAL_ERROR "execute_process: '${command}' failed with output:\n${out}")
-    endif()
-    message(STATUS "Applying googletest.patch - done")
-endif()
+set(cmake_definitions -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}')
+cherry_blazer_dependency_download(googletest "${cmake_definitions}")
+cherry_blazer_dependency_apply_patch(googletest googletest.patch)
 
 option(BUILD_GMOCK OFF)
 option(INSTALL_GTEST OFF)
@@ -161,48 +161,23 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src"
                  "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-build")
 list(POP_BACK CMAKE_MESSAGE_CONTEXT)
 
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/_deps/boost_pfr-src")
-    file(MAKE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
+# ##################################################################################################
+# boost
 
-    message(STATUS "Downloading boost_pfr")
-    execute_process(
-        COMMAND "${CMAKE_COMMAND}" -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}' -P
-                "${CMAKE_CURRENT_SOURCE_DIR}/cmake/get_boost_pfr.cmake"
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps")
-    message(STATUS "Downloading boost_pfr - done")
+set(cmake_definitions
+    -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}'
+    -DCHERRY_BLAZER_BOOST_VERSION='${CHERRY_BLAZER_BOOST_VERSION}'
+    -DCHERRY_BLAZER_BOOST_LIBRARIES='${CHERRY_BLAZER_BOOST_LIBRARIES}')
+cherry_blazer_dependency_download(boost "${cmake_definitions}")
 
-    set(command git describe --long --tags)
-    execute_process(
-        COMMAND ${command}
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/_deps/boost_pfr-src"
-        RESULT_VARIABLE result
-        OUTPUT_VARIABLE out
-        ERROR_VARIABLE out
-        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
-    if(NOT "${result}" EQUAL "0")
-        message(FATAL_ERROR "execute_process: '${command}' failed with output:\n${out}")
-    endif()
-    message(STATUS "boost_pfr version: ${out}")
+list(TRANSFORM boost_libraries PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/_deps/boost-src/libs/"
+                                       OUTPUT_VARIABLE boost_include_dirs)
+list(TRANSFORM boost_include_dirs APPEND "/include")
+add_library(boost_headers INTERFACE)
+target_include_directories(boost_headers SYSTEM INTERFACE ${boost_include_dirs})
+add_library(Boost::headers ALIAS boost_headers)
 
-    message(STATUS "Copying CMakeLists.txt for boost_pfr")
-    execute_process(
-        COMMAND "${CMAKE_COMMAND}" -E copy "thirdparty/CMakeLists.txt.boost_pfr"
-                "_deps/boost_pfr-src/CMakeLists.txt"
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-        RESULT_VARIABLE result
-        OUTPUT_VARIABLE out
-        ERROR_VARIABLE out
-        OUTPUT_STRIP_TRAILING_WHITESPACE ERROR_STRIP_TRAILING_WHITESPACE)
-    if(NOT "${result}" EQUAL "0")
-        message(FATAL_ERROR "execute_process: '${command}' failed with output:\n${out}")
-    endif()
-    message(STATUS "Copying CMakeLists.txt for boost_pfr - done")
-endif()
-
-list(APPEND CMAKE_MESSAGE_CONTEXT "boost_pfr")
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/_deps/boost_pfr-src"
-                 "${CMAKE_CURRENT_SOURCE_DIR}/_deps/boost_pfr-build")
-list(POP_BACK CMAKE_MESSAGE_CONTEXT)
+# ##################################################################################################
 
 add_subdirectory(src)
 
