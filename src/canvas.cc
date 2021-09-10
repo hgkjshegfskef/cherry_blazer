@@ -1,135 +1,123 @@
 #include "canvas.hh"
 
 #include "ppm.hh"
+#include "types.hh"
 
 #include <algorithm>
 #include <boost/pfr/core.hpp>
 #include <cassert>
-#include <cerrno>
 #include <cmath>
 #include <fstream>
 #include <iomanip>
-#include <iostream>
-#include <ostream>
-#include <sstream> // IWYU pragma: keep
-#include <stdexcept>
 #include <string>
-#include <system_error>
 #include <tuple>
+#include <utility>
 
 namespace cherry_blazer {
 
 namespace {
 
-struct point2d {
-    double x;
-    double y;
-};
-
-struct range {
-    double start;
-    double finish;
-
-    range(double start, double finish) : start{start}, finish{finish} {
-        if (start > finish)
-            throw std::domain_error{"start > finish"};
-    }
-};
-
 // https://en.wikipedia.org/wiki/Linear_interpolation
 // If the two known points are given by the coordinates (x0,y0) and (x1,y1), the linear interpolant
 // is the straight line between these points. Value of x must be in the interval [x0;x1].
-double linear_interpolation(double x, point2d const& left, point2d const& right) {
-    assert(left.x <= x && x <= right.x);
-    return left.y + (x - left.x) * (right.y - left.y) / (right.x - left.x);
+constexpr double linear_interpolation(double x, std::pair<double, double> const& left_point,
+                                      std::pair<double, double> const& right_point) {
+    assert(left_point.first <= x && x <= right_point.first);
+    return left_point.second + (x - left_point.first) * (right_point.second - left_point.second) /
+                                   (right_point.first - left_point.first);
 }
 
 // Scale a number between two (possibly overlapping) ranges.
 // Use-case example: given a value in range [0;1], find out its respective value in range [0;255].
 // Further reading: https://gamedev.stackexchange.com/a/33445
-double scale(double x, range const& source, range const& target) {
-    return linear_interpolation(x, {source.start, target.start}, {source.finish, target.finish});
+constexpr double scale(double value, std::pair<double, double> const& source_range,
+                       std::pair<double, double> const& target_range) {
+    return linear_interpolation(value, {source_range.first, target_range.first},
+                                {source_range.second, target_range.second});
 }
 
 } // namespace
 
-Canvas::Canvas(std::size_t width, std::size_t height)
-    : canvas_{std::unique_ptr<Color[]>{new Color[width * height]()}}, // zero-init with black color
-      width_{width}, height_{height} {
-    if (width == 0 || height == 0)
-        throw std::range_error{"width == 0 || height == 0"};
-}
+Canvas::Canvas(width_t const& width, height_t const& height)
+    : canvas_{new Color[u32(width * height)]()}, width_{width}, height_{height} {}
 
-std::size_t Canvas::width() const { return width_; }
-std::size_t Canvas::height() const { return height_; }
+Canvas::width_t const& Canvas::width() const { return width_; }
 
-Color& Canvas::operator()(std::size_t x, std::size_t y) {
-    assert(y * width_ + x < len()); // NOLINT(hicpp-no-array-decay)
+Canvas::height_t const& Canvas::height() const { return height_; }
+
+Color& Canvas::operator()(col_t const& x, row_t const& y) { return canvas_[y * width_ + x]; }
+
+Color const& Canvas::operator()(col_t const& x, row_t const& y) const {
     return canvas_[y * width_ + x];
 }
 
-Color const& Canvas::operator()(std::size_t x, std::size_t y) const {
-    assert(y * width_ + x < len()); // NOLINT(hicpp-no-array-decay)
-    return canvas_[y * width_ + x];
-}
+auto Canvas::size() const { return width_ * height_; }
 
-Color& Canvas::at(std::size_t x, std::size_t y) {
-    if (y * width_ + x >= len())
-        throw std::out_of_range{"range is out of bounds"};
-    return canvas_[y * width_ + x];
+void Canvas::fill(Color const& color) {
+    std::fill(canvas_.get(), canvas_.get() + u32(size()), color);
 }
-
-Color const& Canvas::at(std::size_t x, std::size_t y) const {
-    if (y * width_ + x >= len())
-        throw std::out_of_range{"range is out of bounds"};
-    return canvas_[y * width_ + x];
-}
-
-void Canvas::fill(Color const& color) { std::fill(canvas_.get(), canvas_.get() + len(), color); }
 
 std::string Canvas::as_ppm() const {
-    // Max length of line in PPM file
-    constexpr std::size_t ppm_line_length = 70;
-    // How much text space one color component (r, g, or b) occupies
-    constexpr std::size_t component_width = 4;
-    // How many primary colors does one color have
-    constexpr std::size_t component_count = 3;
-    // How much text space one color (r, g, and b) occupies
-    constexpr std::size_t color_width = component_width * component_count;
-    // How many colors fully fit into one line
-    constexpr std::size_t batch_size = ppm_line_length / color_width;
+    // Max length of line in PPM file.
+    constexpr safe_uliteral_auto_trap<70> ppm_line_length;
+    // How much text space one color component (r, g, or b) occupies?
+    constexpr safe_uliteral_auto_trap<4> component_width;
+    // How many primary colors does one color have?
+    constexpr safe_uliteral_auto_trap<3> component_count;
+    // How much text space one color (r, g, and b) occupies?
+    constexpr auto color_width = component_width * component_count;
+    // How many colors fully fit into one line?
+    constexpr safe_auto<uint_fast8_t> batch_size = ppm_line_length / color_width;
     // How many full batches of colors are there to print?
-    const std::size_t batch_count = len() / batch_size;
+    const auto batch_count = size() / batch_size;
 
-    // Range of canvas color colomponents' values (we clamp to it first).
-    const range source{0, 1};
+    // Range of canvas color components' values.
+    constexpr auto component_min{0.0};
+    constexpr auto component_max{1.0};
+    constexpr std::pair component_range{component_min, component_max};
+
+    //    constexpr Point2d component_range{component_min, component_max};
+
+    //    constexpr safe_uliteral_auto_trap<0> component_min{};
+    //    constexpr safe_uliteral_auto_trap<1> component_max{};
+    //    constexpr safe_urange_auto_trap<component_min, component_max>
+    //    component_range{component_min};
+
     // Range of PPM color values.
-    const range target{0, 255};
+    constexpr auto ppm_min{0.0};
+    constexpr auto ppm_max{255.0};
+    constexpr std::pair ppm_range{ppm_min, ppm_max};
+
+    //    constexpr Point2d ppm_range{ppm_min, ppm_max};
+
+    //    constexpr safe_uliteral_auto_trap<0> ppm_min{};
+    //    constexpr safe_uliteral_auto_trap<255> ppm_max{};
+    //    constexpr safe_urange_auto_trap<ppm_min, ppm_max> ppm_range{ppm_min};
 
     std::stringstream ss;
-    ss << ppm::generate_header(width_, height_, target.finish);
+    ss << ppm::generate_header(width_, height_, u32(ppm_max));
 
     // Print out batch_count batches of batch_size amount of colors each, one batch per line.
-    for (std::size_t nth_batch = 0; nth_batch < batch_count; ++nth_batch) {
-        for (std::size_t nth_color = 0; nth_color < batch_size; ++nth_color) {
+    for (auto nth_batch{0U}; nth_batch < batch_count; ++nth_batch) {
+        for (auto nth_color{0U}; nth_color < batch_size; ++nth_color) {
             // Clamp color components to the source range, then scale them to the target range.
             boost::pfr::for_each_field(
                 canvas_[nth_batch * batch_size + nth_color], [&](auto const& component) {
                     ss << std::setw(component_width)
-                       << std::round(scale(std::clamp(component, source.start, source.finish),
-                                           source, target));
+                       << std::round(scale(std::clamp(component, component_min, component_max),
+                                           component_range, ppm_range));
                 });
         }
         ss << "\n";
     }
 
-    if (len() - batch_count * batch_size) { // Any colors remaining to be processed?
-        const std::size_t already_processed = batch_count * batch_size;
-        for (std::size_t leftover = already_processed; leftover < len(); ++leftover) {
+    if ((size() - batch_count * batch_size) != 0) { // Any colors remaining to be processed?
+        auto already_processed = batch_count * batch_size;
+        for (auto leftover{already_processed}; leftover < size(); ++leftover) {
             boost::pfr::for_each_field(canvas_[leftover], [&](auto const& component) {
                 ss << std::setw(component_width)
-                   << std::round(scale(std::clamp(component, source.start, source.finish), source,
-                                       target));
+                   << std::round(scale(std::clamp(component, component_min, component_max),
+                                       component_range, ppm_range));
             });
         }
         ss << "\n";
@@ -141,8 +129,8 @@ std::string Canvas::as_ppm() const {
 bool operator==(Canvas const& lhs, Canvas const& rhs) {
     if (std::tie(lhs.width_, lhs.height_) != std::tie(rhs.width_, rhs.height_))
         return false;
-    std::size_t len = lhs.len();
-    for (std::size_t i = 0; i < len; ++i) {
+    auto size = lhs.size();
+    for (auto i{0U}; i < size; ++i) {
         if (lhs.canvas_[i] != rhs.canvas_[i])
             return false;
     }
@@ -154,14 +142,15 @@ bool operator!=(Canvas const& lhs, Canvas const& rhs) { return !(lhs == rhs); }
 std::ostream& operator<<(std::ostream& os, Canvas const& c) {
     // In order to format the output nicely, it is necessary to print n-1 items with one delimiter,
     // and the nth item with a different delimiter.
-    std::size_t penultimate_row = c.height_ - 1;
-    std::size_t penultimate_col = c.width_ - 1;
+
+    const safe_auto<u16> penultimate_row = c.height_ - 1;
+    const safe_auto<u16> penultimate_col = c.width_ - 1;
 
     // for each row except last row
-    for (std::size_t y = 0; y < penultimate_row; ++y) {
+    for (auto y{0U}; y < penultimate_row; ++y) {
         os << "[ ";
         // for each column in row except last column
-        for (std::size_t x = 0; x < penultimate_col; ++x) {
+        for (auto x{0U}; x < penultimate_col; ++x) {
             // calculate offset in the 1D array
             os << c.canvas_[y * c.width_ + x] << ", ";
         }
@@ -172,14 +161,12 @@ std::ostream& operator<<(std::ostream& os, Canvas const& c) {
     // print last row (with different delimiter)
     os << "[ ";
     // for each column in last row except last column
-    for (std::size_t x = 0; x < penultimate_col; ++x) {
+    for (auto x{0U}; x < penultimate_col; ++x) {
         os << c.canvas_[penultimate_row * c.width_ + x] << ", ";
     }
     // print last column in last row (with different delimiter)
     return os << c.canvas_[penultimate_row * c.width_ + penultimate_col] << " ]";
 }
-
-std::size_t Canvas::len() const { return width_ * height_; }
 
 } // namespace cherry_blazer
 

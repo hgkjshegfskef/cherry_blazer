@@ -1,26 +1,29 @@
 #include "canvas.hh"
 
-#include <algorithm>
 #include <gtest/gtest.h>
-#include <sstream>
-#include <stdexcept>
 #include <string>
-#include <vector>
+#include <system_error>
 
 namespace cherry_blazer {
 
 TEST(CanvasCtorTest, CanvasCtor) { // NOLINT
     Canvas c{1, 2};
-    EXPECT_THROW({ Canvas cc(0, 1); }, std::range_error);
-    EXPECT_THROW({ Canvas cc(1, 0); }, std::range_error);
-    EXPECT_THROW({ Canvas cc(0, 0); }, std::range_error);
+}
+
+TEST(CanvasCtorTest, CanvasCtorOutOfRange) {                     // NOLINT
+    EXPECT_THROW({ Canvas cc(0, 1); }, std::system_error);       // NOLINT
+    EXPECT_THROW({ Canvas cc(1, 0); }, std::system_error);       // NOLINT
+    EXPECT_THROW({ Canvas cc(0, 0); }, std::system_error);       // NOLINT
+    EXPECT_THROW({ Canvas cc(3841, 1); }, std::system_error);    // NOLINT
+    EXPECT_THROW({ Canvas cc(1, 2161); }, std::system_error);    // NOLINT
+    EXPECT_THROW({ Canvas cc(3841, 2161); }, std::system_error); // NOLINT
 }
 
 TEST(CanvasCtorTest, CanvasIsZeroInitialized) { // NOLINT
     Canvas c{1, 2};
     Color black{};
-    for (std::size_t y = 0; y < c.height(); ++y) {
-        for (std::size_t x = 0; x < c.width(); ++x)
+    for (auto y{0U}; y < c.height(); ++y) {
+        for (auto x{0U}; x < c.width(); ++x)
             EXPECT_EQ(c(x, y), black);
     }
 }
@@ -46,13 +49,6 @@ TEST_F(CanvasTest, CanvasCallOperator) { // NOLINT
     c1(0, 0) = red;
     Color const& color = c1(0, 0);
     EXPECT_EQ(color, red);
-}
-
-TEST_F(CanvasTest, CanvasAtOperator) { // NOLINT
-    c1.at(0, 0) = red;
-    Color const& color = c1.at(0, 0);
-    EXPECT_EQ(color, red);
-    EXPECT_THROW(c1.at(123, 123), std::out_of_range);
 }
 
 TEST_F(CanvasTest, CanvasEquality) { // NOLINT

@@ -1,14 +1,14 @@
+#include "ppm.hh"
+
 #include <sstream>
 #include <string>
 
 namespace cherry_blazer::ppm {
 
-std::string generate_header(std::size_t width, std::size_t height,
-                            std::size_t max_color_component_value) {
+std::string generate_header(safe_auto<u32> const& width, safe_auto<u32> const& height,
+                            safe_auto<u32> const& color_component_max) {
     std::stringstream ss;
-    ss << "P3\n"
-       << std::to_string(width) << ' ' << std::to_string(height) << '\n'
-       << std::to_string(max_color_component_value) << '\n';
+    ss << "P3\n" << width << ' ' << height << '\n' << color_component_max << '\n';
     return ss.str();
 }
 

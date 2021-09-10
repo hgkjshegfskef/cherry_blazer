@@ -1,12 +1,14 @@
 #include "canvas.hh"
+#include "color.hh"
 #include "point.hh"
 #include "projectile.hh"
+#include "safe_numerics_typedefs.hh"
+#include "types.hh"
 #include "vector.hh"
 
-#include <cstdlib>
-#include <fstream>
+#include <boost/safe_numerics/safe_integer.hpp>
+#include <cerrno>
 #include <iostream>
-#include <sstream>
 #include <string>
 #include <system_error>
 
@@ -41,7 +43,7 @@ int main() {
     do {
         // convert between canvas' and projectile's Y coordinates: projectile's Y coordinates go up,
         // while canvas' Y coordinates go down
-        canvas(p.position.x, canvas.height() - p.position.y) = red;
+        canvas(u16(p.position.x), u16(double(u16(canvas.height())) - p.position.y)) = red;
         p = tick(env, p);
         std::cout << "[Tick #" << ++counter << "] "
                   << "Projectile position: " << p.position << std::endl;
@@ -58,5 +60,5 @@ int main() {
     }
 
     const std::string image_contents = canvas.as_ppm();
-    image_file.write(image_contents.data(), image_contents.size());
+    image_file.write(image_contents.data(), cb::safe_auto<long>(image_contents.size()));
 }

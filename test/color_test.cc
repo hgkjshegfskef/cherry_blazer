@@ -1,7 +1,6 @@
 #include "color.hh"
 
 #include <gtest/gtest.h>
-#include <sstream>
 #include <string>
 
 using cherry_blazer::Color;

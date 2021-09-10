@@ -2,7 +2,6 @@
 #define CHERRY_BLAZER_SRC_COLOR_HH_
 
 #include <ostream>
-#include <type_traits>
 
 namespace cherry_blazer {
 

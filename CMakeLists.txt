@@ -63,6 +63,7 @@ list(
     io
     static_assert
     type_traits
+    concept_check
     assert
     throw_exception
     core
@@ -103,13 +104,31 @@ add_library(cherry_blazer_flags INTERFACE)
 
 target_compile_options(
     cherry_blazer_flags
-    INTERFACE -std=c++2a # C++20
-              -Wall # the classic
-              -Wextra # the classic
-              -pedantic-errors # issue errors on standard non-compliance
-              -Wfatal-errors # abort on first error reported
-              -Werror=missing-field-initializers # partial ctors is an error
-)
+    INTERFACE
+        -std=c++2a # C++20
+        -Wall # the classic
+        -Wextra # the classic
+        -pedantic-errors # issue errors on standard non-compliance
+        -Wfatal-errors # abort on first error reported
+        -Werror=missing-field-initializers # partial ctors is an error
+        -Wdelete-non-virtual-dtor # https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP52-CPP.+Do+not+delete+a+polymorphic+object+without+a+virtual+destructor
+        -Wconversion
+        -Wsign-conversion)
+
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+    target_compile_options(
+        cherry_blazer_flags
+        INTERFACE
+            -Wcast-align=strict # https://stackoverflow.com/a/25795795/10986054
+                                # https://trust-in-soft.com/blog/2020/04/06/gcc-always-assumes-aligned-pointer-accesses/
+            -Wshadow=compatible-local # don't warn about parameters and incompatible local types
+    )
+elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+    target_compile_options(
+        cherry_blazer_flags INTERFACE -Wcast-align # clang doesn't have =strict
+                                      -Wshadow # clang doesn't warn about parameters needlessly
+    )
+endif()
 
 # Force colors in Ninja: https://github.com/ninja-build/ninja/wiki/FAQ
 if("${CMAKE_GENERATOR}" MATCHES "Ninja")
