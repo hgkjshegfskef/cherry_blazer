@@ -34,7 +34,7 @@ class CanvasTest : public testing::Test {
 
     Canvas c1{3, 5};
     Canvas c1_filled{3, 5};
-    Color red{1, 0, 0};
+    Color red{255, 0, 0};
 };
 
 TEST_F(CanvasTest, CanvasWidth) { // NOLINT

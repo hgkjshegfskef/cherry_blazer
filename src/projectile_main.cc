@@ -35,7 +35,7 @@ int main() {
     Environment env{cb::Vector{0, -0.1, 0}, cb::Vector{-0.01, 0, 0}};
 
     cb::Canvas canvas{900, 550}; // NOLINT(readability-magic-numbers)
-    cb::Color red{1, 0, 0};
+    cb::Color red{255, 0, 0};
 
     int counter{};
     Projectile p = tick(env, proj);
