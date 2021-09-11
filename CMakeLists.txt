@@ -105,9 +105,9 @@ add_library(cherry_blazer_flags INTERFACE)
 target_compile_options(
     cherry_blazer_flags
     INTERFACE
-        -std=c++2a # C++20
-        -Wall # the classic
-        -Wextra # the classic
+        -std=c++20
+        -Wall
+        -Wextra
         -pedantic-errors # issue errors on standard non-compliance
         -Wfatal-errors # abort on first error reported
         -Werror=missing-field-initializers # partial ctors is an error

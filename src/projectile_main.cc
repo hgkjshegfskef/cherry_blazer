@@ -1,10 +1,11 @@
 #include "canvas.hh"
 #include "color.hh"
-#include "point.hh"
+#include "point3d.hh"
 #include "projectile.hh"
 #include "safe_numerics_typedefs.hh"
 #include "types.hh"
-#include "vector.hh"
+#include "vector3d.hh"
+#include "vector_operations.hh"
 
 #include <boost/safe_numerics/safe_integer.hpp>
 #include <cerrno>
