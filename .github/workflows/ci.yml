@@ -17,6 +17,13 @@ jobs:
           sudo apt-get -y install cmake
           echo -e "CMAKE VERSION: "
           cmake --version
+      - name: "Dependencies: install fresh gcc"
+        run: |
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+          sudo apt-get update
+          sudo apt-get -y install g++-11
+          echo -e "GCC VERSION: "
+          g++-11 --version
       - name: "Dependencies: install system packages"
         run: |
           sudo apt-get -y install ninja-build clang-12 clang-tidy-12 llvm-12-dev libclang-12-dev
@@ -30,7 +37,7 @@ jobs:
           cd ${{github.workspace}}
       - name: "Cherry Blazer: configure"
         run: >-
-          cmake -S . -B cb-build -GNinja
+          CXX=g++-11 cmake -S . -B cb-build -GNinja
           -D CHERRY_BLAZER_CI=1
           -D CHERRY_BLAZER_DEBUG=1
           -D CHERRY_BLAZER_TEST=1

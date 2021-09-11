@@ -66,11 +66,11 @@ TEST_F(CanvasTest, CanvasInequality) { // NOLINT
 }
 
 TEST_F(CanvasTest, CanvasPrintOut) { // NOLINT
-    std::string s{"[ (  1   0   0), (  1   0   0), (  1   0   0) ]\n"
-                  "[ (  1   0   0), (  1   0   0), (  1   0   0) ]\n"
-                  "[ (  1   0   0), (  1   0   0), (  1   0   0) ]\n"
-                  "[ (  1   0   0), (  1   0   0), (  1   0   0) ]\n"
-                  "[ (  1   0   0), (  1   0   0), (  1   0   0) ]"};
+    std::string s{"[ (255   0   0), (255   0   0), (255   0   0) ]\n"
+                  "[ (255   0   0), (255   0   0), (255   0   0) ]\n"
+                  "[ (255   0   0), (255   0   0), (255   0   0) ]\n"
+                  "[ (255   0   0), (255   0   0), (255   0   0) ]\n"
+                  "[ (255   0   0), (255   0   0), (255   0   0) ]"};
     std::stringstream ss;
     ss << c1_filled;
     EXPECT_EQ(ss.str(), s) << c1_filled;
