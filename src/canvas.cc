@@ -11,7 +11,6 @@
 #include <fstream>
 #include <iomanip>
 #include <string>
-#include <tuple>
 #include <utility>
 
 namespace cherry_blazer {
