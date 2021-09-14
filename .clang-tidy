@@ -3,6 +3,7 @@
 # [-abseil-*,...]: all checks of specific projects
 # -hicpp-braces-around-statements: duplicate
 # -modernize-use-trailing-return-type: ugly
+# -readability-magic-numbers: tired of it
 # -cppcoreguidelines-avoid-magic-numbers: duplicate
 # -cppcoreguidelines-pro-bounds-array-to-pointer-decay: duplicate
 # -cppcoreguidelines-non-private-member-variables-in-classes: annoying
@@ -12,7 +13,7 @@
 # -hicpp-avoid-c-arrays: duplicate
 # -hicpp-no-array-decay: flags macros like assert()
 
-Checks: '*,-abseil-*,-altera-*,-android-*,-darwin-*,-fuchsia-*,-google-*,-linuxkernel-*,-llvm-*,-llvmlibc-*,-mpi-*,-objc-*,-openmp-*,-zircon-*,-modernize-use-trailing-return-type,-hicpp-braces-around-statements,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-non-private-member-variables-in-classes,-misc-non-private-member-variables-in-classes,-cppcoreguidelines-avoid-c-arrays,-modernize-avoid-c-arrays,-hicpp-avoid-c-arrays,-hicpp-no-array-decay'
+Checks: '*,-abseil-*,-altera-*,-android-*,-darwin-*,-fuchsia-*,-google-*,-linuxkernel-*,-llvm-*,-llvmlibc-*,-mpi-*,-objc-*,-openmp-*,-zircon-*,-modernize-use-trailing-return-type,-hicpp-braces-around-statements,-readability-magic-numbers,-cppcoreguidelines-avoid-magic-numbers,-cppcoreguidelines-pro-bounds-array-to-pointer-decay,-cppcoreguidelines-non-private-member-variables-in-classes,-misc-non-private-member-variables-in-classes,-cppcoreguidelines-avoid-c-arrays,-modernize-avoid-c-arrays,-hicpp-avoid-c-arrays,-hicpp-no-array-decay'
 WarningsAsErrors: ''
 FormatStyle: 'file' # use .clang-format
 UseColor: true # force colors, since release 11
