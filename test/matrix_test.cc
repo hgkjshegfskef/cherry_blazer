@@ -17,6 +17,17 @@ namespace cherry_blazer {
 // Matrix can be constructed at compile-time, and in many ways.
 TEST(MatrixCtorTest, MatrixConstexprCtors) { // NOLINT
     [[maybe_unused]] constexpr Matrix mat{{1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}, {1, 2, 3, 4}};
+
+TEST(MatrixEqualsTest, MatrixEquals) { // NOLINT
+    constexpr Matrix mat1{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 8, 7, 6}, {5, 4, 3, 2}};
+    constexpr Matrix mat2{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 8, 7, 6}, {5, 4, 3, 2}};
+    EXPECT_EQ(mat1, mat2);
+}
+
+TEST(MatrixEqualsTest, MatrixNotEqual) { // NOLINT
+    constexpr Matrix mat1{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 8, 7, 6}, {5, 4, 3, 2}};
+    constexpr Matrix mat2{{2, 3, 4, 5}, {6, 7, 8, 9}, {8, 7, 6, 5}, {4, 3, 2, 1}};
+    EXPECT_NE(mat1, mat2);
 }
 
 class MatrixTest : public ::testing::Test {

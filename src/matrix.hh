@@ -1,9 +1,9 @@
 #ifndef CHERRY_BLAZER_SRC_MATRIX_HH_
 #define CHERRY_BLAZER_SRC_MATRIX_HH_
-
 #include "matrix_detail.hh"
 #include "safe_numerics_typedefs.hh"
 #include "types.hh"
+#include "util.hh"
 
 #include <algorithm>
 #include <array>
@@ -59,6 +59,15 @@ template <u16 N, u16 M> class Matrix : MatrixImpl<std::make_index_sequence<N>, M
     [[nodiscard]] const_iterator end() const { return impl::mat_.end(); }
     [[nodiscard]] const_iterator cbegin() const { return impl::mat_.begin(); }
     [[nodiscard]] const_iterator cend() const { return impl::mat_.end(); }
+
+    friend constexpr bool operator==(Matrix const& lhs, Matrix const& rhs) noexcept {
+        return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend(),
+                          [](auto& lhs, auto& rhs) { return almost_equal(lhs, rhs); });
+    }
+
+    friend constexpr bool operator!=(Matrix const& lhs, Matrix const& rhs) noexcept {
+        return !(lhs == rhs);
+    }
 };
 
 // Deduct a few commonly used matrices.
