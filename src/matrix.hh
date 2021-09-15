@@ -9,12 +9,35 @@
 #include <array>
 #include <cstddef>
 #include <memory>
+#include <utility>
 
 namespace cherry_blazer {
 
+template <typename Ns, u16 M> struct MatrixImpl;
+
+template <std::size_t... Ns, u16 M> struct MatrixImpl<std::index_sequence<Ns...>, M> {
+    static inline constexpr u32 size = sizeof...(Ns) * M;
+
+    template <std::size_t, typename T> using pair = T;
+
+  public:
+    constexpr explicit MatrixImpl(pair<Ns, double const (&)[M]>... arr) noexcept {
+        ((insert(mat_, arr, Ns)), ...);
+    }
+
+  protected:
+    std::array<double, size> mat_; // NOLINT(readability-identifier-naming)
+
+  private:
+    constexpr void insert(std::array<double, size>& dst, double const (&src)[M], u16 n) noexcept {
+        for (auto i{n * M}, j{0UL}; i < n * M + M; ++i, ++j)
+            dst[i] = src[j];
+    }
+};
+
 // Any NxM Matrix, when size is known at compile time.
-template <u32 N, u32 M> class Matrix {
-    static inline constexpr u64 size = N * M;
+template <u16 N, u16 M> class Matrix : public MatrixImpl<std::make_index_sequence<N>, M> {
+    static inline constexpr u32 size = N * M;
     static_assert(size != 0, "Both dimensions must be non-zero.");
 
     using value_type = std::array<double, size>;
@@ -22,39 +45,18 @@ template <u32 N, u32 M> class Matrix {
   public:
     using iterator = typename value_type::iterator;
     using const_iterator = typename value_type::const_iterator;
+    using impl = MatrixImpl<std::make_index_sequence<N>, M>;
 
-    constexpr explicit Matrix(std::array<std::array<double, M>, N> const& std_arr2d) noexcept {
-        for (auto n{0U}; n < N; ++n) {
-            for (auto m{0U}; m < M; ++m)
-                mat_[n * M + m] = std_arr2d[n][m];
-        }
-    }
+    // Clang requires ctor to not be aliased: https://bugs.llvm.org/show_bug.cgi?id=22242
+    // This became a subject to a defect report: https://wg21.link/cwg2070
+    using MatrixImpl<std::make_index_sequence<N>, M>::MatrixImpl;
 
-    constexpr explicit Matrix(double const (&arr2d)[N][M]) noexcept {
-        // This makes GCC crash, lol: https://godbolt.org/z/E63r3G6o9
-        // std::copy(&arr[0][0], &arr[0][0] + size, std::begin(mat_));
-        for (auto n{0U}; n < N; ++n) {
-            for (auto m{0U}; m < M; ++m)
-                mat_[n * M + m] = arr2d[n][m];
-        }
-    }
-
-    constexpr explicit Matrix(double const (&arr)[size]) noexcept : mat_{std::to_array(arr)} {}
-
-    template <typename... Args> constexpr explicit Matrix(Args&&... args) noexcept : mat_{args...} {
-        static_assert(sizeof...(args) == size, "Amount of arguments doesn't correspond to matrix "
-                                               "size requested in template arguments.");
-    }
-
-    [[nodiscard]] iterator begin() { return mat_.begin(); }
-    [[nodiscard]] iterator end() { return mat_.end(); }
-    [[nodiscard]] const_iterator begin() const { return mat_.begin(); }
-    [[nodiscard]] const_iterator end() const { return mat_.end(); }
-    [[nodiscard]] const_iterator cbegin() const { return mat_.begin(); }
-    [[nodiscard]] const_iterator cend() const { return mat_.end(); }
-
-  private:
-    std::array<double, size> mat_;
+    [[nodiscard]] iterator begin() { return impl::mat_.begin(); }
+    [[nodiscard]] iterator end() { return impl::mat_.end(); }
+    [[nodiscard]] const_iterator begin() const { return impl::mat_.begin(); }
+    [[nodiscard]] const_iterator end() const { return impl::mat_.end(); }
+    [[nodiscard]] const_iterator cbegin() const { return impl::mat_.begin(); }
+    [[nodiscard]] const_iterator cend() const { return impl::mat_.end(); }
 };
 
 // Any NxM Matrix, when size is known at runtime.
