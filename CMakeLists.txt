@@ -109,7 +109,6 @@ target_compile_options(
         -Wall
         -Wextra
         -pedantic-errors # issue errors on standard non-compliance
-        -Wfatal-errors # abort on first error reported
         -Werror=missing-field-initializers # partial ctors is an error
         -Wdelete-non-virtual-dtor # https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP52-CPP.+Do+not+delete+a+polymorphic+object+without+a+virtual+destructor
         -Wconversion

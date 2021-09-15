@@ -13,15 +13,17 @@
 
 namespace cherry_blazer {
 
-template <typename Ns, u16 M> struct MatrixImpl;
+namespace matrix::detail {
+template <std::size_t, typename T> using pair = T;
+} // namespace matrix::detail
 
-template <std::size_t... Ns, u16 M> struct MatrixImpl<std::index_sequence<Ns...>, M> {
+template <typename Ns, u16 M> class MatrixImpl;
+
+template <std::size_t... Ns, u16 M> class MatrixImpl<std::index_sequence<Ns...>, M> {
     static inline constexpr u32 size = sizeof...(Ns) * M;
 
-    template <std::size_t, typename T> using pair = T;
-
   public:
-    constexpr explicit MatrixImpl(pair<Ns, double const (&)[M]>... arr) noexcept {
+    constexpr explicit MatrixImpl(matrix::detail::pair<Ns, double const (&)[M]>... arr) noexcept {
         ((insert(mat_, arr, Ns)), ...);
     }
 
@@ -59,32 +61,38 @@ template <u16 N, u16 M> class Matrix : MatrixImpl<std::make_index_sequence<N>, M
     [[nodiscard]] const_iterator cend() const { return impl::mat_.end(); }
 };
 
+// Deduct 4x4 matrix.
+Matrix(matrix::detail::pair<0UL, double const (&)[4]>,
+       matrix::detail::pair<1UL, double const (&)[4]>,
+       matrix::detail::pair<2UL, double const (&)[4]>,
+       matrix::detail::pair<3UL, double const (&)[4]>) -> Matrix<4, 4>;
+
 // Any NxM Matrix, when size is known at runtime.
-template <> class Matrix<0, 0> {
-  public:
-    using iterator = matrix::detail::Iterator<double>;
-    using const_iterator = matrix::detail::ConstantIterator<double>;
-
-    Matrix(safe_auto<u16> const& n, safe_auto<u16> const& m)
-        : n_{n}, m_{m}, mat_{new double[u32(n * m)]()} {}
-
-    [[nodiscard]] iterator begin() { return iterator{mat_.get()}; }
-    [[nodiscard]] iterator end() { return iterator{mat_.get() + u32(size())}; }
-    [[nodiscard]] const_iterator begin() const { return const_iterator{mat_.get()}; }
-    [[nodiscard]] const_iterator end() const { return const_iterator{mat_.get() + u32(size())}; }
-    [[nodiscard]] const_iterator cbegin() const { return const_iterator{mat_.get()}; }
-    [[nodiscard]] const_iterator cend() const { return const_iterator{mat_.get() + u32(size())}; }
-
-  private:
-    safe_auto<u16> n_;
-    safe_auto<u16> m_;
-    std::unique_ptr<double[]> mat_;
-
-    [[nodiscard]] constexpr safe_auto<u32> size() const { return n_ * m_; }
-};
-
-// Deduction guide to hide that Matrix<0,0> is used as special case.
-Matrix(size_t n, size_t m) -> Matrix<0, 0>;
+// template <> class Matrix<0, 0> {
+//  public:
+//    using iterator = matrix::detail::Iterator<double>;
+//    using const_iterator = matrix::detail::ConstantIterator<double>;
+//
+//    Matrix(safe_auto<u16> const& n, safe_auto<u16> const& m)
+//        : n_{n}, m_{m}, mat_{new double[u32(n * m)]()} {}
+//
+//    [[nodiscard]] iterator begin() { return iterator{mat_.get()}; }
+//    [[nodiscard]] iterator end() { return iterator{mat_.get() + u32(size())}; }
+//    [[nodiscard]] const_iterator begin() const { return const_iterator{mat_.get()}; }
+//    [[nodiscard]] const_iterator end() const { return const_iterator{mat_.get() + u32(size())}; }
+//    [[nodiscard]] const_iterator cbegin() const { return const_iterator{mat_.get()}; }
+//    [[nodiscard]] const_iterator cend() const { return const_iterator{mat_.get() + u32(size())}; }
+//
+//  private:
+//    safe_auto<u16> n_;
+//    safe_auto<u16> m_;
+//    std::unique_ptr<double[]> mat_;
+//
+//    [[nodiscard]] constexpr safe_auto<u32> size() const { return n_ * m_; }
+//};
+//
+//// Deduction guide to hide that Matrix<0,0> is used as special case.
+// Matrix(size_t n, size_t m) -> Matrix<0, 0>;
 
 template <size_t N, size_t M>
 constexpr std::ostream& operator<<(std::ostream& os, Matrix<N, M> const& mat) noexcept {
