@@ -90,9 +90,9 @@ template <u16 N, u16 M> class Matrix : MatrixImpl<std::make_index_sequence<N>, M
 Matrix(matrix::detail::pair<0UL, double const (&)[2]>,
        matrix::detail::pair<1UL, double const (&)[2]>) -> Matrix<2, 2>;
 
-Matrix(matrix::detail::pair<0UL, double const (&)[4]>,
-       matrix::detail::pair<1UL, double const (&)[4]>,
-       matrix::detail::pair<2UL, double const (&)[4]>) -> Matrix<3, 3>;
+Matrix(matrix::detail::pair<0UL, double const (&)[3]>,
+       matrix::detail::pair<1UL, double const (&)[3]>,
+       matrix::detail::pair<2UL, double const (&)[3]>) -> Matrix<3, 3>;
 
 Matrix(matrix::detail::pair<0UL, double const (&)[4]>,
        matrix::detail::pair<1UL, double const (&)[4]>,
