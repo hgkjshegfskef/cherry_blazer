@@ -36,16 +36,16 @@ template <std::size_t... Ns, u16 M> struct MatrixImpl<std::index_sequence<Ns...>
 };
 
 // Any NxM Matrix, when size is known at compile time.
-template <u16 N, u16 M> class Matrix : public MatrixImpl<std::make_index_sequence<N>, M> {
+template <u16 N, u16 M> class Matrix : MatrixImpl<std::make_index_sequence<N>, M> {
     static inline constexpr u32 size = N * M;
     static_assert(size != 0, "Both dimensions must be non-zero.");
 
     using value_type = std::array<double, size>;
+    using impl = MatrixImpl<std::make_index_sequence<N>, M>;
 
   public:
     using iterator = typename value_type::iterator;
     using const_iterator = typename value_type::const_iterator;
-    using impl = MatrixImpl<std::make_index_sequence<N>, M>;
 
     // Clang requires ctor to not be aliased: https://bugs.llvm.org/show_bug.cgi?id=22242
     // This became a subject to a defect report: https://wg21.link/cwg2070
