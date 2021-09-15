@@ -76,6 +76,13 @@ template <u16 N, u16 M> class Matrix : MatrixImpl<std::make_index_sequence<N>, M
     friend constexpr bool operator!=(Matrix const& lhs, Matrix const& rhs) noexcept {
         return !(lhs == rhs);
     }
+
+    friend constexpr std::ostream& operator<<(std::ostream& os, Matrix const& mat) noexcept {
+        os << "{";
+        std::copy(std::cbegin(mat), std::prev(std::cend(mat)),
+                  std::ostream_iterator<double>{os, ", "});
+        return os << *std::prev(std::cend(mat)) << "}";
+    }
 };
 
 // Deduct a few commonly used matrices.
@@ -91,13 +98,6 @@ Matrix(matrix::detail::pair<0UL, double const (&)[4]>,
        matrix::detail::pair<1UL, double const (&)[4]>,
        matrix::detail::pair<2UL, double const (&)[4]>,
        matrix::detail::pair<3UL, double const (&)[4]>) -> Matrix<4, 4>;
-
-template <size_t N, size_t M>
-constexpr std::ostream& operator<<(std::ostream& os, Matrix<N, M> const& mat) noexcept {
-    os << "{";
-    std::copy(std::cbegin(mat), std::prev(std::cend(mat)), std::ostream_iterator<double>{os, ", "});
-    return os << *std::prev(std::cend(mat)) << "}";
-}
 
 } // namespace cherry_blazer
 
