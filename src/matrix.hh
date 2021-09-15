@@ -60,6 +60,14 @@ template <u16 N, u16 M> class Matrix : MatrixImpl<std::make_index_sequence<N>, M
     [[nodiscard]] const_iterator cbegin() const { return impl::mat_.begin(); }
     [[nodiscard]] const_iterator cend() const { return impl::mat_.end(); }
 
+    double constexpr operator()(safe_urange_auto<0, N> n, safe_urange_auto<0, M> m) noexcept {
+        return impl::mat_[n * M + m];
+    }
+
+    double constexpr operator()(safe_urange_auto<0, N> n, safe_urange_auto<0, M> m) const noexcept {
+        return impl::mat_[n * M + m];
+    }
+
     friend constexpr bool operator==(Matrix const& lhs, Matrix const& rhs) noexcept {
         return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend(),
                           [](auto& lhs, auto& rhs) { return almost_equal(lhs, rhs); });
