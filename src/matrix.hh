@@ -23,6 +23,7 @@ template <std::size_t... Ns, u16 M> class MatrixImpl<std::index_sequence<Ns...>,
     static inline constexpr u32 size = sizeof...(Ns) * M;
 
   public:
+    MatrixImpl() = default;
     constexpr explicit MatrixImpl(matrix::detail::pair<Ns, double const (&)[M]>... arr) noexcept {
         ((insert(mat_, arr, Ns)), ...);
     }
@@ -60,11 +61,11 @@ template <u16 N, u16 M> class Matrix : MatrixImpl<std::make_index_sequence<N>, M
     [[nodiscard]] const_iterator cbegin() const { return impl::mat_.begin(); }
     [[nodiscard]] const_iterator cend() const { return impl::mat_.end(); }
 
-    double constexpr operator()(safe_urange_auto<0, N> n, safe_urange_auto<0, M> m) noexcept {
+    constexpr double& operator()(safe_urange_auto<0, N> n, safe_urange_auto<0, M> m) noexcept {
         return impl::mat_[n * M + m];
     }
 
-    double constexpr operator()(safe_urange_auto<0, N> n, safe_urange_auto<0, M> m) const noexcept {
+    constexpr double operator()(safe_urange_auto<0, N> n, safe_urange_auto<0, M> m) const noexcept {
         return impl::mat_[n * M + m];
     }
 
