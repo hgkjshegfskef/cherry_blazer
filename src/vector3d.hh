@@ -3,19 +3,45 @@
 
 #include "vector.hh"
 
-#include <type_traits>
+#include <array>
+#include <exception>
 
 namespace cherry_blazer {
 
-template <> struct Vector<3> {
-    double x;
-    double y;
-    double z;
+template <typename T> struct Vector<T, 3> {
+    static_assert(std::is_floating_point_v<T>);
+
+    T x, y, z;
+
+    constexpr T& operator[](size_t index) noexcept {
+        switch (index) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        default:
+            std::terminate();
+        }
+    }
+
+    constexpr T operator[](size_t index) const noexcept {
+        switch (index) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        case 2:
+            return z;
+        default:
+            std::terminate();
+        }
+    }
 };
 
-using Vector3d = Vector<3>; // NOLINT(readability-identifier-naming)
-
-static_assert(std::is_aggregate_v<Vector3d>, "Must be an aggregate for Boost.PFR to work.");
+using Vec3f = Vector<float, 3>;  // NOLINT(readability-identifier-naming)
+using Vec3d = Vector<double, 3>; // NOLINT(readability-identifier-naming)
 
 } // namespace cherry_blazer
 

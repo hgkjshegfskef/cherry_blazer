@@ -3,18 +3,41 @@
 
 #include "vector.hh"
 
-#include <type_traits>
+#include <array>
+#include <exception>
 
 namespace cherry_blazer {
 
-template <> struct Vector<2> {
-    double x;
-    double y;
+template <typename T> struct Vector<T, 2> {
+    static_assert(std::is_floating_point_v<T>);
+
+    T x, y;
+
+    constexpr T& operator[](size_t index) noexcept {
+        switch (index) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        default:
+            std::terminate();
+        }
+    }
+
+    constexpr T operator[](size_t index) const noexcept {
+        switch (index) {
+        case 0:
+            return x;
+        case 1:
+            return y;
+        default:
+            std::terminate();
+        }
+    }
 };
 
-using Vector2d = Vector<2>; // NOLINT(readability-identifier-naming)
-
-static_assert(std::is_aggregate_v<Vector2d>);
+using Vec2f = Vector<float, 2>;  // NOLINT(readability-identifier-naming)
+using Vec2d = Vector<double, 2>; // NOLINT(readability-identifier-naming)
 
 } // namespace cherry_blazer
 

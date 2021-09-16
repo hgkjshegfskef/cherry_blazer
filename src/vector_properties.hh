@@ -4,7 +4,6 @@
 #include "util.hh"
 #include "vector.hh"
 
-#include <boost/pfr/core.hpp>
 #include <ostream>
 #include <utility>
 
@@ -14,29 +13,27 @@ namespace cherry_blazer {
 // carry the whole set of templates of overload operators.
 
 // Vectors can be compared for equality.
-template <std::size_t D>
-constexpr bool operator==(Vector<D> const& lhs, Vector<D> const& rhs) noexcept {
-    return [&]<std::size_t... Nth>(std::index_sequence<Nth...>) {
-        // floating-point comparison through epsilon
-        return (almost_equal(boost::pfr::get<Nth>(lhs), boost::pfr::get<Nth>(rhs)) && ...);
+template <typename T, std::size_t D>
+constexpr auto operator==(Vector<T, D> const& lhs, Vector<T, D> const& rhs) noexcept {
+    for (auto i{0U}; i < D; ++i) {
+        if (!almost_equal(lhs[i], rhs[i]))
+            return false;
     }
-    (std::make_index_sequence<D>{});
+    return true;
 }
 
 // Vectors can be compared for inequality.
-template <std::size_t D>
-constexpr bool operator!=(Vector<D> const& lhs, Vector<D> const& rhs) noexcept {
+template <typename T, std::size_t D>
+constexpr auto operator!=(Vector<T, D> const& lhs, Vector<T, D> const& rhs) noexcept {
     return !(lhs == rhs);
 }
 
-template <std::size_t D>
-constexpr std::ostream& operator<<(std::ostream& os, Vector<D> const& v) noexcept {
-    return [&]<std::size_t... Nth>(std::index_sequence<Nth...>)->decltype(auto) {
-        os << "{";
-        ((os << (Nth == 0 ? "" : ", ") << boost::pfr::get<Nth>(v)), ...);
-        return os << "}";
-    }
-    (std::make_index_sequence<D>{});
+template <typename T, std::size_t D>
+constexpr auto& operator<<(std::ostream& os, Vector<T, D> const& v) noexcept {
+    os << "{";
+    for (auto i{0U}; i < D - 1; ++i)
+        os << v[i] << ", ";
+    return os << v[D - 1] << "}";
 }
 
 } // namespace cherry_blazer
