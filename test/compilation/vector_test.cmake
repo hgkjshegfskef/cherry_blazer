@@ -1,3 +1,5 @@
+# TODO: fix all these tests
+
 # scalar/Vector (= ERROR)
 cherry_blazer_add_compilation_test(
     VectorTest_ScalarDividedByVector

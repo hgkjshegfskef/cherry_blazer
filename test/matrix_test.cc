@@ -68,6 +68,7 @@ TEST(MatrixTest, MatrixOutput) { // NOLINT
     EXPECT_EQ(ss.str(), expected);
 }
 
+// TODO: compile-time test that different sizes don't compile
 TEST(MatrixTest, MatrixTimesMatrix) { // NOLINT
     constexpr Matrix mat1{{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 8, 7, 6}, {5, 4, 3, 2}};
     constexpr Matrix mat2{{-2, 1, 2, 3}, {3, 2, 1, -1}, {4, 3, 6, 5}, {1, 2, 7, 8}};
