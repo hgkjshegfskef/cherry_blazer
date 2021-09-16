@@ -1,5 +1,6 @@
 #include "point3d.hh"
 #include "point_operations.hh"
+#include "point_properties.hh"
 #include "vector3d.hh"
 #include "vector_properties.hh"
 

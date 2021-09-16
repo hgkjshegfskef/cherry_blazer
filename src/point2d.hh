@@ -3,6 +3,8 @@
 
 #include "point.hh"
 
+#include <type_traits>
+
 namespace cherry_blazer {
 
 template <> struct Point<2> {
@@ -11,6 +13,8 @@ template <> struct Point<2> {
 };
 
 using Point2d = Point<2>; // NOLINT(readability-identifier-naming)
+
+static_assert(std::is_aggregate_v<Point2d>, "Must be an aggregate for Boost.PFR to work.");
 
 } // namespace cherry_blazer
 

@@ -1,6 +1,7 @@
 #include "canvas.hh"
 #include "color.hh"
 #include "point3d.hh"
+#include "point_properties.hh"
 #include "projectile.hh"
 #include "safe_numerics_typedefs.hh"
 #include "types.hh"
