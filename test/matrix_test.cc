@@ -88,32 +88,41 @@ TEST(MatrixTest, MatrixTimesVector) { // NOLINT
 }
 
 TEST(MatrixTest, MatrixIdentityMatrix) { // NOLINT
-    constexpr auto result = matrix::identity<double, 4>();
+    constexpr auto result = Matrix<double, 4, 4>::identity();
     EXPECT_EQ(result, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
 }
 
 TEST(MatrixTest, MatrixIdentityMatrixFrom) { // NOLINT
-    constexpr auto result1 = matrix::identity<double, 4>();
     constexpr Matrix mat{{0., 1., 2., 4.}, {1., 2., 4., 8.}, {2., 4., 8., 16.}, {4., 8., 16., 32.}};
-    constexpr auto result2 = matrix::identity<decltype(mat)::value_type, decltype(mat)::row_size>();
-    constexpr auto result3 = matrix::identity(mat);
-    EXPECT_EQ(result1, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
-    EXPECT_EQ(result2, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
-    EXPECT_EQ(result3, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
+    constexpr auto result = decltype(mat)::identity();
+    EXPECT_EQ(result, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
 }
 
 TEST(MatrixTest, MatrixTimesIdentityMatrix) { // NOLINT
     constexpr Matrix mat{{0., 1., 2., 4.}, {1., 2., 4., 8.}, {2., 4., 8., 16.}, {4., 8., 16., 32.}};
-    constexpr auto identity = matrix::identity(mat);
+    constexpr auto identity = decltype(mat)::identity();
     constexpr auto result = mat * identity;
     EXPECT_EQ(result, (Mat4d{{0, 1, 2, 4}, {1, 2, 4, 8}, {2, 4, 8, 16}, {4, 8, 16, 32}}));
 }
 
 TEST(MatrixTest, IdentityMatrixTimesVector) { // NOLINT
-    constexpr Matrix identity = matrix::identity<double, 4>();
+    constexpr Matrix identity = Matrix<double, 4, 4>::identity();
     constexpr Vector vec{1., 2., 3., 4.};
     constexpr auto result = identity * vec;
     EXPECT_EQ(result, (Vec4d{1, 2, 3, 4}));
+}
+
+TEST(MatrixTest, TransposeMatrix) { // NOLINT
+    constexpr Matrix mat{{0., 9., 3., 0.}, {9., 8., 0., 8.}, {1., 8., 5., 3.}, {0., 0., 5., 8.}};
+    constexpr auto result = transpose(mat);
+    EXPECT_EQ(result,
+              (Mat4d{{0., 9., 1., 0.}, {9., 8., 8., 0.}, {3., 0., 5., 5.}, {0., 8., 3., 8.}}));
+}
+
+TEST(MatrixTest, TransposeIdentityMatrix) { // NOLINT
+    constexpr auto identity = Matrix<double, 4, 4>::identity();
+    constexpr auto result = transpose(identity);
+    EXPECT_EQ(result, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
 }
 
 } // namespace cherry_blazer

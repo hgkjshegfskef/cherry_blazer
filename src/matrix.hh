@@ -90,6 +90,15 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
         std::copy(std::cbegin(mat), std::prev(std::cend(mat)), std::ostream_iterator<T>{os, ", "});
         return os << *std::prev(std::cend(mat)) << "}";
     }
+
+    // https://en.wikipedia.org/wiki/Identity_matrix
+    [[nodiscard]] static constexpr auto
+    identity(typename std::enable_if_t<N == M, bool> /*unused*/ = true) {
+        Matrix<T, N, N> result{};
+        for (auto i{0U}; i < N; ++i)
+            result(i, i) = static_cast<T>(1);
+        return result;
+    }
 };
 
 // Deduct a few commonly used matrices. I don't know if it's possible to use variadic pack to make a
@@ -116,17 +125,6 @@ using Mat4f = Matrix<float, 4, 4>;  // NOLINT(readability-identifier-naming)
 using Mat2d = Matrix<double, 2, 2>; // NOLINT(readability-identifier-naming)
 using Mat3d = Matrix<double, 3, 3>; // NOLINT(readability-identifier-naming)
 using Mat4d = Matrix<double, 4, 4>; // NOLINT(readability-identifier-naming)
-
-namespace matrix {
-
-template <typename T, u16 N> constexpr auto identity(Matrix<T, N, N> const& /*from*/ = {}) {
-    Matrix<T, N, N> result{};
-    for (auto i{0U}; i < N; ++i)
-        result(i, i) = static_cast<T>(1);
-    return result;
-}
-
-} // namespace matrix
 
 } // namespace cherry_blazer
 

@@ -37,6 +37,17 @@ template <typename T, u16 N, u16 M>
     return result;
 }
 
+// https://en.wikipedia.org/wiki/Transpose
+template <typename T, u16 N, u16 M>
+[[nodiscard]] constexpr auto transpose(Matrix<T, N, M> const& mat) {
+    Matrix<T, N, M> result{};
+    for (auto i{0U}; i < N; ++i) {
+        for (auto j{0U}; j < M; ++j)
+            result(j, i) = mat(i, j);
+    }
+    return result;
+}
+
 } // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
