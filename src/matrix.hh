@@ -15,7 +15,7 @@
 namespace cherry_blazer {
 
 namespace matrix::detail {
-template <std::size_t, typename T> using pair = T;
+template <std::size_t, typename T> using indexed_type = T;
 } // namespace matrix::detail
 
 template <typename T, typename Ns, u16 M> class MatrixImpl;
@@ -25,7 +25,8 @@ template <typename T, std::size_t... Ns, u16 M> class MatrixImpl<T, std::index_s
 
   public:
     MatrixImpl() = default;
-    constexpr explicit MatrixImpl(matrix::detail::pair<Ns, T const (&)[M]>... arr) noexcept {
+    constexpr explicit MatrixImpl(
+        matrix::detail::indexed_type<Ns, T const (&)[M]>... arr) noexcept {
         ((insert(mat_, arr, Ns)), ...);
     }
 
@@ -95,17 +96,19 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
 // single guide, or at least deduct that T should be std::common_type of all Ts in the pack.
 
 template <typename T, u16 M>
-Matrix(matrix::detail::pair<0U, T const (&)[M]>, matrix::detail::pair<1U, T const (&)[M]>)
-    -> Matrix<T, M, M>;
+Matrix(matrix::detail::indexed_type<0U, T const (&)[M]>,
+       matrix::detail::indexed_type<1U, T const (&)[M]>) -> Matrix<T, M, M>;
 
 template <typename T, u16 M>
-Matrix(matrix::detail::pair<0U, T const (&)[M]>, matrix::detail::pair<1U, T const (&)[M]>,
-       matrix::detail::pair<2U, T const (&)[M]>) -> Matrix<T, M, M>;
+Matrix(matrix::detail::indexed_type<0U, T const (&)[M]>,
+       matrix::detail::indexed_type<1U, T const (&)[M]>,
+       matrix::detail::indexed_type<2U, T const (&)[M]>) -> Matrix<T, M, M>;
 
 template <typename T, u16 M>
-Matrix(matrix::detail::pair<0U, T const (&)[M]>, matrix::detail::pair<1U, T const (&)[M]>,
-       matrix::detail::pair<2U, T const (&)[M]>, matrix::detail::pair<3U, T const (&)[M]>)
-    -> Matrix<T, M, M>;
+Matrix(matrix::detail::indexed_type<0U, T const (&)[M]>,
+       matrix::detail::indexed_type<1U, T const (&)[M]>,
+       matrix::detail::indexed_type<2U, T const (&)[M]>,
+       matrix::detail::indexed_type<3U, T const (&)[M]>) -> Matrix<T, M, M>;
 
 using Mat2f = Matrix<float, 2, 2>;  // NOLINT(readability-identifier-naming)
 using Mat3f = Matrix<float, 3, 3>;  // NOLINT(readability-identifier-naming)
