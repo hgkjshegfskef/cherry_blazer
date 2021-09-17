@@ -10,16 +10,15 @@
 namespace cherry_blazer {
 
 // Matrix<NxM> * Matrix<MxP> = Matrix<N,P>
-template <u16 N, u16 M, u16 P>
-[[nodiscard]] constexpr auto operator*(Matrix<N, M> const& lhs, Matrix<M, P> const& rhs) noexcept {
-    Matrix<N, P> result;
+template <typename T, u16 N, u16 M, u16 P>
+[[nodiscard]] constexpr auto operator*(Matrix<T, N, M> const& lhs,
+                                       Matrix<T, M, P> const& rhs) noexcept {
+    Matrix<T, N, P> result;
     for (auto i{0U}; i < N; ++i) {
         for (auto j{0U}; j < P; ++j) {
-            double sum{};
-            for (auto k{0U}; k < M; ++k) {
-                sum += lhs(i, k) * rhs(k, j);
-            }
-            result(i, j) = sum;
+            result(i, j) = 0;
+            for (auto k{0U}; k < M; ++k)
+                result(i, j) += lhs(i, k) * rhs(k, j);
         }
     }
     return result;
