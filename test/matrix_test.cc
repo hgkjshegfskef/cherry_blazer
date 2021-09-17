@@ -66,8 +66,7 @@ TEST(MatrixTest, MatrixOutput) { // NOLINT
     constexpr Matrix mat{{1., 2., 3., 4.}, {5., 6., 7., 8.}, {9., 8., 7., 6.}, {5., 4., 3., 2.}};
     std::stringstream ss;
     ss << mat;
-    auto expected = "{1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2}"s;
-    EXPECT_EQ(ss.str(), expected);
+    EXPECT_EQ(ss.str(), "{1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2}"s);
 }
 
 // TODO: compile-time test that different sizes don't compile
@@ -75,9 +74,10 @@ TEST(MatrixTest, MatrixTimesMatrix) { // NOLINT
     constexpr Matrix mat1{{1., 2., 3., 4.}, {5., 6., 7., 8.}, {9., 8., 7., 6.}, {5., 4., 3., 2.}};
     constexpr Matrix mat2{{-2., 1., 2., 3.}, {3., 2., 1., -1.}, {4., 3., 6., 5.}, {1., 2., 7., 8.}};
     constexpr Matrix result = mat1 * mat2;
-    constexpr Matrix expected{
-        {20., 22., 50., 48.}, {44., 54., 114., 108.}, {40., 58., 110., 102.}, {16., 26., 46., 42.}};
-    EXPECT_EQ(result, expected);
+    EXPECT_EQ(result, (Mat4d{{20., 22., 50., 48.},
+                             {44., 54., 114., 108.},
+                             {40., 58., 110., 102.},
+                             {16., 26., 46., 42.}}));
 }
 
 TEST(MatrixTest, MatrixTimesVector) { // NOLINT
