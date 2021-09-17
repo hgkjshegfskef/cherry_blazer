@@ -92,8 +92,7 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
     }
 
     // https://en.wikipedia.org/wiki/Identity_matrix
-    [[nodiscard]] static constexpr auto
-    identity(typename std::enable_if_t<N == M, bool> /*unused*/ = true) {
+    [[nodiscard]] static constexpr auto identity(std::enable_if_t<N == M, bool> /*unused*/ = true) {
         Matrix<T, N, N> result{};
         for (auto i{0U}; i < N; ++i)
             result(i, i) = static_cast<T>(1);
