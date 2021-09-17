@@ -87,4 +87,33 @@ TEST(MatrixTest, MatrixTimesVector) { // NOLINT
     EXPECT_EQ(result, (Vec4d{18, 24, 33, 1}));
 }
 
+TEST(MatrixTest, MatrixIdentityMatrix) { // NOLINT
+    constexpr auto result = matrix::identity<double, 4>();
+    EXPECT_EQ(result, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
+}
+
+TEST(MatrixTest, MatrixIdentityMatrixFrom) { // NOLINT
+    constexpr auto result1 = matrix::identity<double, 4>();
+    constexpr Matrix mat{{0., 1., 2., 4.}, {1., 2., 4., 8.}, {2., 4., 8., 16.}, {4., 8., 16., 32.}};
+    constexpr auto result2 = matrix::identity<decltype(mat)::value_type, decltype(mat)::row_size>();
+    constexpr auto result3 = matrix::identity(mat);
+    EXPECT_EQ(result1, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
+    EXPECT_EQ(result2, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
+    EXPECT_EQ(result3, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
+}
+
+TEST(MatrixTest, MatrixTimesIdentityMatrix) { // NOLINT
+    constexpr Matrix mat{{0., 1., 2., 4.}, {1., 2., 4., 8.}, {2., 4., 8., 16.}, {4., 8., 16., 32.}};
+    constexpr auto identity = matrix::identity(mat);
+    constexpr auto result = mat * identity;
+    EXPECT_EQ(result, (Mat4d{{0, 1, 2, 4}, {1, 2, 4, 8}, {2, 4, 8, 16}, {4, 8, 16, 32}}));
+}
+
+TEST(MatrixTest, IdentityMatrixTimesVector) { // NOLINT
+    constexpr Matrix identity = matrix::identity<double, 4>();
+    constexpr Vector vec{1., 2., 3., 4.};
+    constexpr auto result = identity * vec;
+    EXPECT_EQ(result, (Vec4d{1, 2, 3, 4}));
+}
+
 } // namespace cherry_blazer

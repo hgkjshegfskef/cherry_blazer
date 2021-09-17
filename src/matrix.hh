@@ -46,12 +46,15 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
     static inline constexpr u32 size = N * M;
     static_assert(size != 0, "Both dimensions must be non-zero.");
 
-    using value_type = std::array<T, size>;
+    using underlying_type = std::array<T, size>;
     using impl = MatrixImpl<T, std::make_index_sequence<N>, M>;
 
   public:
-    using iterator = typename value_type::iterator;
-    using const_iterator = typename value_type::const_iterator;
+    using iterator = typename underlying_type::iterator;
+    using const_iterator = typename underlying_type::const_iterator;
+    using value_type = T;
+    static inline constexpr u16 row_size = N;
+    static inline constexpr u16 col_size = M;
 
     // Clang requires ctor to not be aliased: https://bugs.llvm.org/show_bug.cgi?id=22242
     // This became a subject to a defect report: https://wg21.link/cwg2070
@@ -110,6 +113,17 @@ using Mat4f = Matrix<float, 4, 4>;  // NOLINT(readability-identifier-naming)
 using Mat2d = Matrix<double, 2, 2>; // NOLINT(readability-identifier-naming)
 using Mat3d = Matrix<double, 3, 3>; // NOLINT(readability-identifier-naming)
 using Mat4d = Matrix<double, 4, 4>; // NOLINT(readability-identifier-naming)
+
+namespace matrix {
+
+template <typename T, u16 N> constexpr auto identity(Matrix<T, N, N> const& /*from*/ = {}) {
+    Matrix<T, N, N> result{};
+    for (auto i{0U}; i < N; ++i)
+        result(i, i) = static_cast<T>(1);
+    return result;
+}
+
+} // namespace matrix
 
 } // namespace cherry_blazer
 
