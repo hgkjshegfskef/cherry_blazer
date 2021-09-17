@@ -86,6 +86,16 @@ template <typename T, u16 N, u16 M>
     return det(submatrix(mat, row, col));
 }
 
+// Get cofactor of matrix at element (row, col).
+// https://en.wikipedia.org/wiki/Minor_(linear_algebra)
+template <typename T, u16 N, u16 M>
+[[nodiscard]] constexpr auto cofactor(Matrix<T, N, M> const& mat,
+                                      safe_urange_auto<0, N - 1> const& row,
+                                      safe_urange_auto<0, M - 1> const& col) {
+    auto result = minor(mat, row, col);
+    return (row + col) % 2 == 0 ? result : -result;
+}
+
 } // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_

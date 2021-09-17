@@ -150,4 +150,16 @@ TEST(MatrixTest, Matrix3x3Minor) { // NOLINT
     EXPECT_EQ(result, 25);
 }
 
+TEST(MatrixTest, Matrix3x3CofactorSignSame) { // NOLINT
+    constexpr Matrix mat{{3., 5., 0.}, {2., -1., -7.}, {6., -1., 5.}};
+    constexpr auto result = cofactor(mat, 0, 0);
+    EXPECT_EQ(result, -12);
+}
+
+TEST(MatrixTest, Matrix3x3CofactorSignChanges) { // NOLINT
+    constexpr Matrix mat{{3., 5., 0.}, {2., -1., -7.}, {6., -1., 5.}};
+    constexpr auto result = cofactor(mat, 1, 0);
+    EXPECT_EQ(result, -25);
+}
+
 } // namespace cherry_blazer
