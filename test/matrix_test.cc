@@ -146,24 +146,30 @@ TEST(MatrixTest, Matrix4x4Submatrix) { // NOLINT
 
 TEST(MatrixTest, Matrix3x3Minor) { // NOLINT
     constexpr Matrix mat{{3., 5., 0.}, {2., -1., -7.}, {6., -1., 5.}};
+    ASSERT_EQ(det(submatrix(mat, 1, 0)), 25);
     constexpr auto result = minor(mat, 1, 0);
     EXPECT_EQ(result, 25);
 }
 
 TEST(MatrixTest, Matrix3x3CofactorSignSame) { // NOLINT
     constexpr Matrix mat{{3., 5., 0.}, {2., -1., -7.}, {6., -1., 5.}};
+    ASSERT_EQ(minor(mat, 0, 0), -12);
     constexpr auto result = cofactor(mat, 0, 0);
     EXPECT_EQ(result, -12);
 }
 
 TEST(MatrixTest, Matrix3x3CofactorSignChanges) { // NOLINT
     constexpr Matrix mat{{3., 5., 0.}, {2., -1., -7.}, {6., -1., 5.}};
+    ASSERT_EQ(minor(mat, 1, 0), 25);
     constexpr auto result = cofactor(mat, 1, 0);
     EXPECT_EQ(result, -25);
 }
 
 TEST(MatrixTest, Matrix3x3Determinant) { // NOLINT
     constexpr Matrix mat{{1., 2., 6.}, {-5., 8., -4.}, {2., 6., 4.}};
+    ASSERT_EQ(cofactor(mat, 0, 0), 56);
+    ASSERT_EQ(cofactor(mat, 0, 1), 12);
+    ASSERT_EQ(cofactor(mat, 0, 2), -46);
     constexpr auto result = det(mat);
     EXPECT_EQ(result, -196);
 }
@@ -171,6 +177,10 @@ TEST(MatrixTest, Matrix3x3Determinant) { // NOLINT
 TEST(MatrixTest, Matrix4x4Determinant) { // NOLINT
     constexpr Matrix mat{
         {-2., -8., 3., 5.}, {-3., 1., 7., 3.}, {1., 2., -9., 6.}, {-6., 7., 7., -9.}};
+    ASSERT_EQ(cofactor(mat, 0, 0), 690);
+    ASSERT_EQ(cofactor(mat, 0, 1), 447);
+    ASSERT_EQ(cofactor(mat, 0, 2), 210);
+    ASSERT_EQ(cofactor(mat, 0, 3), 51);
     constexpr auto result = det(mat);
     EXPECT_EQ(result, -4071);
 }
