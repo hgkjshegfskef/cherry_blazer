@@ -24,18 +24,18 @@ template <typename T, u16 N, u16 M, u16 P>
     return result;
 }
 
-// Matrix * Vector
-//template <u16 N, u16 M>
-//[[nodiscard]] constexpr auto operator*(Matrix<N, M> const& lhs, Vector<M> const& rhs) noexcept {
-//    Vector<M> result;
-//    for (auto i{0U}; i < N; ++i) {
-//        result[i] = 0;
-//        for (auto j{0U}; j < M; ++j) {
-//            result[i] += lhs(i, j) * rhs[j];
-//        }
-//    }
-//    return result;
-//}
+// Matrix * Vector = Vector
+template <typename T, u16 N, u16 M>
+[[nodiscard]] constexpr auto operator*(Matrix<T, N, M> const& lhs,
+                                       Vector<T, M> const& rhs) noexcept {
+    Vector<T, M> result;
+    for (auto i{0U}; i < N; ++i) {
+        result[i] = 0;
+        for (auto j{0U}; j < M; ++j)
+            result[i] += lhs(i, j) * rhs[j];
+    }
+    return result;
+}
 
 } // namespace cherry_blazer
 

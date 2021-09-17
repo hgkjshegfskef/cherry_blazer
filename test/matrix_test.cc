@@ -1,5 +1,7 @@
 #include "matrix.hh"
 #include "matrix_operations.hh"
+#include "vector4d.hh"
+#include "vector_properties.hh"
 
 #include <algorithm>
 #include <gtest/gtest.h>
@@ -76,6 +78,13 @@ TEST(MatrixTest, MatrixTimesMatrix) { // NOLINT
     constexpr Matrix expected{
         {20., 22., 50., 48.}, {44., 54., 114., 108.}, {40., 58., 110., 102.}, {16., 26., 46., 42.}};
     EXPECT_EQ(result, expected);
+}
+
+TEST(MatrixTest, MatrixTimesVector) { // NOLINT
+    constexpr Matrix mat{{1., 2., 3., 4.}, {2., 4., 4., 2.}, {8., 6., 4., 1.}, {0., 0., 0., 1.}};
+    constexpr Vector vec{1., 2., 3., 1.};
+    constexpr auto result = mat * vec;
+    EXPECT_EQ(result, (Vec4d{18, 24, 33, 1}));
 }
 
 } // namespace cherry_blazer
