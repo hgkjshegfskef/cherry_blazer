@@ -168,4 +168,11 @@ TEST(MatrixTest, Matrix3x3Determinant) { // NOLINT
     EXPECT_EQ(result, -196);
 }
 
+TEST(MatrixTest, Matrix4x4Determinant) { // NOLINT
+    constexpr Matrix mat{
+        {-2., -8., 3., 5.}, {-3., 1., 7., 3.}, {1., 2., -9., 6.}, {-6., 7., 7., -9.}};
+    constexpr auto result = det(mat);
+    EXPECT_EQ(result, -4071);
+}
+
 } // namespace cherry_blazer
