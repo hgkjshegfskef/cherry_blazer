@@ -1,7 +1,6 @@
 #ifndef CHERRY_BLAZER_SRC_VECTOR_HH_
 #define CHERRY_BLAZER_SRC_VECTOR_HH_
 
-#include <array>
 #include <cstddef>
 #include <type_traits>
 

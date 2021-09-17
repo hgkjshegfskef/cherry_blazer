@@ -5,12 +5,13 @@
 #include "vector.hh"
 
 #include <ostream>
-#include <utility>
 
 namespace cherry_blazer {
 
 // Basic properties such as comparison operators are defined here, so that it is not required to
 // carry the whole set of templates of overload operators.
+
+// TODO: this is essentially a copy-paste of vector_properties
 
 // Vectors can be compared for equality.
 template <typename T, std::size_t D>

@@ -159,12 +159,12 @@ TEST(Vec3dTest, Vec3dCrossProduct) { // NOLINT
 // Vector += Point (= ERROR)
 
 // Vector + Point = Point
-// TEST(Vec3dTest, Vec3dPlusPoint) { // NOLINT
-//    Vec3d v{3, -2, 5};
-//    Point3d p{-2, 3, 1};
-//    Point3d p2 = v + p;
-//    EXPECT_EQ(p2, (Point3d{1, 1, 6}));
-//}
+TEST(Vec3dTest, Vec3dPlusPoint) { // NOLINT
+    constexpr Vector v{3., -2., 5.};
+    constexpr Point p{-2., 3., 1.};
+    constexpr Point p2 = v + p;
+    EXPECT_EQ(p2, (Point3d{1, 1, 6}));
+}
 
 // Vector -= Point (= ERROR)
 

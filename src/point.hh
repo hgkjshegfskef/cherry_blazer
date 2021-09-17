@@ -2,14 +2,13 @@
 #define CHERRY_BLAZER_SRC_POINT_HH_
 
 #include <cstddef>
+#include <type_traits>
 
 namespace cherry_blazer {
 
-template <std::size_t D> struct Point {
-    static_assert(D == 2 || D == 3, "Only 2D and 3D dimensions are supported.");
-};
+template <typename T, std::size_t D> struct Point;
 
-template <typename... T> Point(T...) -> Point<sizeof...(T)>;
+template <typename... T> Point(T...) -> Point<typename std::common_type_t<T...>, sizeof...(T)>;
 
 } // namespace cherry_blazer
 

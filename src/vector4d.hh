@@ -3,8 +3,8 @@
 
 #include "vector.hh"
 
-#include <array>
 #include <exception>
+#include <type_traits>
 
 namespace cherry_blazer {
 

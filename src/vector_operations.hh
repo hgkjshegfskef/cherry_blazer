@@ -2,9 +2,9 @@
 #define CHERRY_BLAZER_SRC_VECTOR_OPERATIONS_HH_
 
 #include "point.hh"
+#include "vector.hh"
 
 #include <cmath>
-#include <ostream>
 
 namespace cherry_blazer {
 
@@ -13,7 +13,7 @@ template <typename T, std::size_t D>
 [[nodiscard]] constexpr auto operator-(Vector<T, D> const& v) noexcept {
     Vector<T, D> result;
     for (auto i{0U}; i < D; ++i)
-        result[i] = v[i];
+        result[i] = -v[i];
     return result;
 }
 
@@ -77,7 +77,7 @@ template <typename T, std::size_t D>
 
 // Vector + Point = Point
 template <typename T, std::size_t D>
-[[nodiscard]] constexpr auto operator+(Vector<T, D> const& lhs, Point<D> rhs) noexcept {
+[[nodiscard]] constexpr auto operator+(Vector<T, D> const& lhs, Point<T, D> rhs) noexcept {
     // Implemented in Point and here, to omit unnecessary inclusion of whole point_operations.hh
     for (auto i{0U}; i < D; ++i)
         rhs[i] += lhs[i];
