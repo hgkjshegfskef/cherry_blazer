@@ -56,6 +56,7 @@ template <typename T, u16 N, std::enable_if_t<N == 2, bool> = true>
 }
 
 // Get submatrix without certain row and column.
+// https://en.wikipedia.org/wiki/Matrix_(mathematics)#Submatrix
 template <typename T, u16 N, u16 M>
 [[nodiscard]] constexpr auto submatrix(Matrix<T, N, M> const& mat,
                                        safe_urange_auto<0, N - 1> const& without_row,
