@@ -49,8 +49,9 @@ template <typename T, u16 N, u16 M>
     return result;
 }
 
+// Determinant for 2x2 matrix.
 // https://en.wikipedia.org/wiki/Determinant
-template <typename T, u16 N, std::enable_if_t<N == 2, bool> = true>
+template <typename T, u16 N, std::enable_if_t<N == 2U, bool> = true>
 [[nodiscard]] constexpr auto det(Matrix<T, N, N> const& mat) {
     return mat(0, 0) * mat(1, 1) - mat(0, 1) * mat(1, 0);
 }
@@ -94,6 +95,16 @@ template <typename T, u16 N, u16 M>
                                       safe_urange_auto<0, M - 1> const& col) {
     auto result = minor(mat, row, col);
     return (row + col) % 2 == 0 ? result : -result;
+}
+
+// Determinant for NxN matrix.
+// https://en.wikipedia.org/wiki/Determinant
+template <typename T, u16 N, std::enable_if_t<N >= 3U, bool> = true>
+[[nodiscard]] constexpr auto det(Matrix<T, N, N> const& mat) {
+    T result{};
+    for (auto j{0U}; j < N; ++j)
+        result += mat(0, j) * cofactor(mat, 0, j);
+    return result;
 }
 
 } // namespace cherry_blazer

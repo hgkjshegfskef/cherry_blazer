@@ -162,4 +162,10 @@ TEST(MatrixTest, Matrix3x3CofactorSignChanges) { // NOLINT
     EXPECT_EQ(result, -25);
 }
 
+TEST(MatrixTest, Matrix3x3Determinant) { // NOLINT
+    constexpr Matrix mat{{1., 2., 6.}, {-5., 8., -4.}, {2., 6., 4.}};
+    constexpr auto result = det(mat);
+    EXPECT_EQ(result, -196);
+}
+
 } // namespace cherry_blazer
