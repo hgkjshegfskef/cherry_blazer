@@ -107,6 +107,10 @@ template <typename T, u16 N, std::enable_if_t<N >= 3U, bool> = true>
     return result;
 }
 
+template <typename T, u16 N> [[nodiscard]] constexpr auto invertible(Matrix<T, N, N> const& mat) {
+    return det(mat) != 0;
+}
+
 } // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_

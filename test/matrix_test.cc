@@ -175,4 +175,17 @@ TEST(MatrixTest, Matrix4x4Determinant) { // NOLINT
     EXPECT_EQ(result, -4071);
 }
 
+TEST(MatrixTest, MatrixInvertible) { // NOLINT
+    constexpr Matrix mat{{6., 4., 4., 4.}, {5., 5., 7., 6.}, {4., -9., 3., -7.}, {9., 1., 7., -6.}};
+    constexpr auto result = invertible(mat);
+    EXPECT_EQ(result, true);
+}
+
+TEST(MatrixTest, MatrixNonInvertible) { // NOLINT
+    constexpr Matrix mat{
+        {-4., 2., -2., -3.}, {9., 6., 2., 6.}, {0., -5., 1., -5.}, {0., 0., 0., 0.}};
+    constexpr auto result = invertible(mat);
+    EXPECT_EQ(result, false);
+}
+
 } // namespace cherry_blazer
