@@ -29,7 +29,7 @@ int main() {
     // projectile starts one unit above the origin.
     // velocity is normalized to 1 unit/tick.
     // NOLINTNEXTLINE(readability-magic-numbers)
-    Projectile proj{cb::Point{0, 1, 0}, cb::normalize(cb::Vector{1, 1.8, 0}) * 11.25};
+    Projectile proj{cb::Point{0., 1, 0}, cb::normalize(cb::Vector{1, 1.8, 0}) * 11.25};
 
     // gravity -0.1 unit/tick, and wind is -0.01 unit/tick.
     // NOLINTNEXTLINE(readability-magic-numbers)

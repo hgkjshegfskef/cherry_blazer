@@ -8,12 +8,12 @@ namespace cb = cherry_blazer;
 
 struct Projectile {
     cb::Point3d position;
-    cb::Vector3d velocity;
+    cb::Vec3d velocity;
 };
 
 struct Environment {
-    cb::Vector3d gravity;
-    cb::Vector3d wind;
+    cb::Vec3d gravity;
+    cb::Vec3d wind;
 };
 
 Projectile tick(Environment const& env, Projectile const& proj);
