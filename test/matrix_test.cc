@@ -125,4 +125,10 @@ TEST(MatrixTest, TransposeIdentityMatrix) { // NOLINT
     EXPECT_EQ(result, (Mat4d{{1, 0, 0, 0}, {0, 1, 0, 0}, {0, 0, 1, 0}, {0, 0, 0, 1}}));
 }
 
+TEST(MatrixTest, Matrix2x2Determinant) { // NOLINT
+    constexpr Matrix mat{{1., 5.}, {-3., 2.}};
+    constexpr auto result = det(mat);
+    EXPECT_EQ(result, 17);
+}
+
 } // namespace cherry_blazer

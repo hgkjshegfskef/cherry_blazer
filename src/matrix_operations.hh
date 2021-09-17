@@ -48,6 +48,12 @@ template <typename T, u16 N, u16 M>
     return result;
 }
 
+// https://en.wikipedia.org/wiki/Determinant
+template <typename T, u16 N, std::enable_if_t<N == 2, bool> = true>
+[[nodiscard]] constexpr auto det(Matrix<T, N, N> const& mat) {
+    return mat(0, 0) * mat(1, 1) - mat(0, 1) * mat(1, 0);
+}
+
 } // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
