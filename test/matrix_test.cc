@@ -144,4 +144,10 @@ TEST(MatrixTest, Matrix4x4Submatrix) { // NOLINT
     EXPECT_EQ(result, (Mat3d{{-6, 1, 6}, {-8, 8, 6}, {-7, -1, 1}}));
 }
 
+TEST(MatrixTest, Matrix3x3Minor) { // NOLINT
+    constexpr Matrix mat{{3., 5., 0.}, {2., -1., -7.}, {6., -1., 5.}};
+    constexpr auto result = minor(mat, 1, 0);
+    EXPECT_EQ(result, 25);
+}
+
 } // namespace cherry_blazer
