@@ -104,6 +104,13 @@ Matrix(matrix::detail::pair<0U, T const (&)[M]>, matrix::detail::pair<1U, T cons
        matrix::detail::pair<2U, T const (&)[M]>, matrix::detail::pair<3U, T const (&)[M]>)
     -> Matrix<T, M, M>;
 
+using Mat2f = Matrix<float, 2, 2>;
+using Mat3f = Matrix<float, 3, 3>;
+using Mat4f = Matrix<float, 4, 4>;
+using Mat2d = Matrix<double, 2, 2>;
+using Mat3d = Matrix<double, 3, 3>;
+using Mat4d = Matrix<double, 4, 4>;
+
 } // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_MATRIX_HH_
