@@ -2,6 +2,7 @@
 #define CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
 
 #include "matrix.hh"
+#include "safe_numerics_typedefs.hh"
 #include "types.hh"
 #include "vector.hh"
 
@@ -52,6 +53,27 @@ template <typename T, u16 N, u16 M>
 template <typename T, u16 N, std::enable_if_t<N == 2, bool> = true>
 [[nodiscard]] constexpr auto det(Matrix<T, N, N> const& mat) {
     return mat(0, 0) * mat(1, 1) - mat(0, 1) * mat(1, 0);
+}
+
+// Get submatrix without certain row and column.
+template <typename T, u16 N, u16 M>
+[[nodiscard]] constexpr auto submatrix(Matrix<T, N, M> const& mat,
+                                       safe_urange_auto<0, N - 1> const& without_row,
+                                       safe_urange_auto<0, M - 1> const& without_col) {
+    static_assert(N >= 2 && M >= 2, "Matrix must be at least 2x2 to have a submatrix.");
+    Matrix<T, N - 1, M - 1> result;
+    for (auto src_i{0U}, dst_i{0U}; src_i < N; ++src_i) {
+        if (src_i == without_row)
+            continue;
+        for (auto src_j{0U}, dst_j{0U}; src_j < M; ++src_j) {
+            if (src_j == without_col)
+                continue;
+            result(dst_i, dst_j) = mat(src_i, src_j);
+            ++dst_j;
+        }
+        ++dst_i;
+    }
+    return result;
 }
 
 } // namespace cherry_blazer

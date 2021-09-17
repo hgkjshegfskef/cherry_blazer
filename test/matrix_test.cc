@@ -131,4 +131,16 @@ TEST(MatrixTest, Matrix2x2Determinant) { // NOLINT
     EXPECT_EQ(result, 17);
 }
 
+TEST(MatrixTest, Matrix3x3Submatrix) { // NOLINT
+    Matrix mat{{1., 5., 0.}, {-3., 2., 7.}, {0., 6., -3.}};
+    auto result = submatrix(mat, 0, 2);
+    EXPECT_EQ(result, (Mat2d{{-3, 2}, {0, 6}}));
+}
+
+TEST(MatrixTest, Matrix4x4Submatrix) { // NOLINT
+    Matrix mat{{-6., 1., 1., 6.}, {-8., 5., 8., 6.}, {-1., 0., 8., 2.}, {-7., 1., -1., 1.}};
+    auto result = submatrix(mat, 2, 1);
+    EXPECT_EQ(result, (Mat3d{{-6, 1, 6}, {-8, 8, 6}, {-7, -1, 1}}));
+}
+
 } // namespace cherry_blazer
