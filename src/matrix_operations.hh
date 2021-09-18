@@ -6,6 +6,7 @@
 #include "types.hh"
 #include "vector.hh"
 
+#include <cassert>
 #include <iostream>
 
 namespace cherry_blazer {
@@ -15,11 +16,11 @@ template <typename T, u16 N, u16 M, u16 P>
 [[nodiscard]] constexpr auto operator*(Matrix<T, N, M> const& lhs,
                                        Matrix<T, M, P> const& rhs) noexcept {
     Matrix<T, N, P> result;
-    for (auto i{0U}; i < N; ++i) {
-        for (auto j{0U}; j < P; ++j) {
-            result(i, j) = 0;
-            for (auto k{0U}; k < M; ++k)
-                result(i, j) += lhs(i, k) * rhs(k, j);
+    for (auto row{0U}; row < N; ++row) {
+        for (auto col{0U}; col < P; ++col) {
+            result(row, col) = 0;
+            for (auto inner{0U}; inner < M; ++inner)
+                result(row, col) += lhs(row, inner) * rhs(inner, col);
         }
     }
     return result;
@@ -30,21 +31,21 @@ template <typename T, u16 N, u16 M>
 [[nodiscard]] constexpr auto operator*(Matrix<T, N, M> const& lhs,
                                        Vector<T, M> const& rhs) noexcept {
     Vector<T, M> result;
-    for (auto i{0U}; i < N; ++i) {
-        result[i] = 0;
-        for (auto j{0U}; j < M; ++j)
-            result[i] += lhs(i, j) * rhs[j];
+    for (auto row{0U}; row < N; ++row) {
+        result[row] = 0;
+        for (auto col{0U}; col < M; ++col)
+            result[row] += lhs(row, col) * rhs[col];
     }
     return result;
 }
 
 // https://en.wikipedia.org/wiki/Transpose
 template <typename T, u16 N, u16 M>
-[[nodiscard]] constexpr auto transpose(Matrix<T, N, M> const& mat) {
+[[nodiscard]] constexpr auto transpose(Matrix<T, N, M> const& mat) noexcept {
     Matrix<T, N, M> result{};
-    for (auto i{0U}; i < N; ++i) {
-        for (auto j{0U}; j < M; ++j)
-            result(j, i) = mat(i, j);
+    for (auto row{0U}; row < N; ++row) {
+        for (auto col{0U}; col < M; ++col)
+            result(col, row) = mat(row, col);
     }
     return result;
 }
@@ -52,7 +53,7 @@ template <typename T, u16 N, u16 M>
 // Determinant for 2x2 matrix.
 // https://en.wikipedia.org/wiki/Determinant
 template <typename T, u16 N, std::enable_if_t<N == 2U, bool> = true>
-[[nodiscard]] constexpr auto det(Matrix<T, N, N> const& mat) {
+[[nodiscard]] constexpr auto det(Matrix<T, N, N> const& mat) noexcept {
     return mat(0, 0) * mat(1, 1) - mat(0, 1) * mat(1, 0);
 }
 
@@ -61,21 +62,21 @@ template <typename T, u16 N, std::enable_if_t<N == 2U, bool> = true>
 template <typename T, u16 N, u16 M>
 [[nodiscard]] constexpr auto submatrix(Matrix<T, N, M> const& mat,
                                        safe_urange_auto<0, N - 1> const& without_row,
-                                       safe_urange_auto<0, M - 1> const& without_col) {
+                                       safe_urange_auto<0, M - 1> const& without_col) noexcept {
     static_assert(N >= 2 && M >= 2, "Matrix must be at least 2x2 to have a submatrix.");
-    Matrix<T, N - 1, M - 1> result;
-    for (auto src_i{0U}, dst_i{0U}; src_i < N; ++src_i) {
-        if (src_i == without_row)
+    Matrix<T, N - 1, M - 1> submat;
+    for (auto src_row{0U}, dst_row{0U}; src_row < N; ++src_row) {
+        if (src_row == without_row)
             continue;
-        for (auto src_j{0U}, dst_j{0U}; src_j < M; ++src_j) {
-            if (src_j == without_col)
+        for (auto src_col{0U}, dst_col{0U}; src_col < M; ++src_col) {
+            if (src_col == without_col)
                 continue;
-            result(dst_i, dst_j) = mat(src_i, src_j);
-            ++dst_j;
+            submat(dst_row, dst_col) = mat(src_row, src_col);
+            ++dst_col;
         }
-        ++dst_i;
+        ++dst_row;
     }
-    return result;
+    return submat;
 }
 
 // Get minor of matrix at element (row, col).
@@ -83,7 +84,7 @@ template <typename T, u16 N, u16 M>
 template <typename T, u16 N, u16 M>
 [[nodiscard]] constexpr auto minor(Matrix<T, N, M> const& mat,
                                    safe_urange_auto<0, N - 1> const& row,
-                                   safe_urange_auto<0, M - 1> const& col) {
+                                   safe_urange_auto<0, M - 1> const& col) noexcept {
     return det(submatrix(mat, row, col));
 }
 
@@ -92,7 +93,7 @@ template <typename T, u16 N, u16 M>
 template <typename T, u16 N, u16 M>
 [[nodiscard]] constexpr auto cofactor(Matrix<T, N, M> const& mat,
                                       safe_urange_auto<0, N - 1> const& row,
-                                      safe_urange_auto<0, M - 1> const& col) {
+                                      safe_urange_auto<0, M - 1> const& col) noexcept {
     auto result = minor(mat, row, col);
     return (row + col) % 2 == 0 ? result : -result;
 }
@@ -100,14 +101,15 @@ template <typename T, u16 N, u16 M>
 // Determinant for NxN matrix.
 // https://en.wikipedia.org/wiki/Determinant
 template <typename T, u16 N, std::enable_if_t<N >= 3U, bool> = true>
-[[nodiscard]] constexpr auto det(Matrix<T, N, N> const& mat) {
-    T result{};
-    for (auto j{0U}; j < N; ++j)
-        result += mat(0, j) * cofactor(mat, 0, j);
-    return result;
+[[nodiscard]] constexpr auto det(Matrix<T, N, N> const& mat) noexcept {
+    T determinant{};
+    for (auto col{0U}; col < N; ++col)
+        determinant += mat(0, col) * cofactor(mat, 0, col);
+    return determinant;
 }
 
-template <typename T, u16 N> [[nodiscard]] constexpr auto invertible(Matrix<T, N, N> const& mat) {
+template <typename T, u16 N>
+[[nodiscard]] constexpr auto invertible(Matrix<T, N, N> const& mat) noexcept {
     return det(mat) != 0;
 }
 
