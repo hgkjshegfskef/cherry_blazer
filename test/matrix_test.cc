@@ -210,13 +210,13 @@ TEST(MatrixTest, MatrixInverse) { // NOLINT
     ASSERT_EQ(det(mat), 532);
     ASSERT_EQ(cofactor(mat, 2, 3), -160);
     ASSERT_EQ(cofactor(mat, 3, 2), 105);
-    auto result = inverse(mat);
+    constexpr auto result = inverse(mat);
     ASSERT_EQ(result(3, 2), -160. / 532.);
     ASSERT_EQ(result(2, 3), 105. / 532.);
-    auto expected = Mat4d{{0.218045, 0.451128, 0.240602, -0.0451128},
-                          {-0.808271, -1.45677, -0.443609, 0.520677},
-                          {-0.0789474, -0.223684, -0.0526316, 0.197368},
-                          {-0.522556, -0.81391, -0.300752, 0.306391}};
+    constexpr auto expected = Mat4d{{0.218045, 0.451128, 0.240602, -0.0451128},
+                                    {-0.808271, -1.45677, -0.443609, 0.520677},
+                                    {-0.0789474, -0.223684, -0.0526316, 0.197368},
+                                    {-0.522556, -0.81391, -0.300752, 0.306391}};
     for (u16 i = 0; i < 4; ++i) {
         for (u16 j = 0; j < 4; ++j) {
             EXPECT_NEAR(result(i, j), expected(i, j), 1e-5) << result;
