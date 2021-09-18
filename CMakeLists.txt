@@ -94,8 +94,14 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     )
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     target_compile_options(
-        cherry_blazer_flags INTERFACE -Wcast-align # clang doesn't have =strict
-                                      -Wshadow # clang doesn't warn about parameters needlessly
+        cherry_blazer_flags
+        INTERFACE
+            -Wcast-align # clang doesn't have =strict
+            -Wshadow # clang doesn't warn about parameters needlessly
+            -fconstexpr-steps=4294967295 # uint32_t max, because clang doesn't optimize constexpr.
+                                         # if this doesn't work (I mean, /when/ this stops working),
+                                         # one can patch clang to use uint64.
+            -fconstexpr-backtrace-limit=0 # to see what code led to "too many steps" above
     )
 endif()
 
