@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <array>
 #include <cstddef>
+#include <iomanip>
 #include <memory>
 #include <type_traits>
 #include <utility>
@@ -86,9 +87,23 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
     }
 
     friend constexpr std::ostream& operator<<(std::ostream& os, Matrix const& mat) noexcept {
-        os << "{";
-        std::copy(std::cbegin(mat), std::prev(std::cend(mat)), std::ostream_iterator<T>{os, ", "});
-        return os << *std::prev(std::cend(mat)) << "}";
+        for (auto row{0U}; row < N - 1; ++row) {
+            os << "{ ";
+            for (auto col{0U}; col < M - 1; ++col) {
+                os << std::setprecision(std::numeric_limits<T>::max_digits10) << mat(row, col)
+                   << ", ";
+            }
+            os << std::setprecision(std::numeric_limits<T>::max_digits10) << mat(row, M - 1)
+               << " }\n";
+        }
+
+        os << "{ ";
+        for (auto col{0U}; col < M - 1; ++col) {
+            os << std::setprecision(std::numeric_limits<T>::max_digits10) << mat(N - 1, col)
+               << ", ";
+        }
+        return os << std::setprecision(std::numeric_limits<T>::max_digits10) << mat(N - 1, M - 1)
+                  << " }";
     }
 
     // https://en.wikipedia.org/wiki/Identity_matrix

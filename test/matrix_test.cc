@@ -66,7 +66,11 @@ TEST(MatrixTest, MatrixOutput) { // NOLINT
     constexpr Matrix mat{{1., 2., 3., 4.}, {5., 6., 7., 8.}, {9., 8., 7., 6.}, {5., 4., 3., 2.}};
     std::stringstream ss;
     ss << mat;
-    EXPECT_EQ(ss.str(), "{1, 2, 3, 4, 5, 6, 7, 8, 9, 8, 7, 6, 5, 4, 3, 2}"s);
+    auto expected = "{ 1, 2, 3, 4 }\n"
+                    "{ 5, 6, 7, 8 }\n"
+                    "{ 9, 8, 7, 6 }\n"
+                    "{ 5, 4, 3, 2 }"s;
+    EXPECT_EQ(ss.str(), expected);
 }
 
 // TODO: compile-time test that different sizes don't compile
