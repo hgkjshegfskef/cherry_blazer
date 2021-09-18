@@ -52,6 +52,10 @@ set(CHERRY_BLAZER_BOOST_VERSION
     "1.77.0"
     CACHE STRING "Boost version")
 
+set(CHERRY_BLAZER_USE_CONSTEXPR
+    OFF
+    CACHE BOOL "Calculate most things at compile-time.")
+
 # ##################################################################################################
 # CMAKE_ settings
 

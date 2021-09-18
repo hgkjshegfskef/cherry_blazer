@@ -1,3 +1,4 @@
+#include "config.hh"
 #include "point3d.hh"
 #include "point_properties.hh"
 #include "vector3d.hh"
@@ -13,14 +14,14 @@ namespace cherry_blazer {
 
 // Vector is default constructable and zero-initialized.
 TEST(Vec3dTest, Vec3dDefaultConstructable) { // NOLINT
-    constexpr Vec3d v{};
+    CHERRY_BLAZER_CONSTEXPR Vec3d v{};
     EXPECT_EQ(v, (Vec3d{0, 0, 0}));
 }
 
 // Vector is copy constructable.
 TEST(Vec3dTest, Vec3dCopyConstructable) { // NOLINT
-    constexpr Vector v1{1., 2., 3.};
-    constexpr Vector v2{v1};
+    CHERRY_BLAZER_CONSTEXPR Vector v1{1., 2., 3.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{v1};
     EXPECT_EQ(v2, (Vec3d{1, 2, 3}));
 }
 
@@ -34,32 +35,32 @@ TEST(Vec3dTest, Vec3dCopyConstructable) { // NOLINT
 
 // -Vector
 TEST(Vec3dTest, Vec3dNegate) { // NOLINT
-    constexpr Vector v1{3., -2., 5.};
-    constexpr Vector v2{-v1};
+    CHERRY_BLAZER_CONSTEXPR Vector v1{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{-v1};
     EXPECT_EQ(v2, (Vec3d{-3, 2, -5}));
 }
 
 // scalar*Vector
 TEST(Vec3dTest, ScalarTimesVec3d) { // NOLINT
-    constexpr Vector v1{1., -2., 3.};
-    constexpr auto scalar{3.5};
-    constexpr auto v2 = scalar * v1;
+    CHERRY_BLAZER_CONSTEXPR Vector v1{1., -2., 3.};
+    CHERRY_BLAZER_CONSTEXPR auto scalar{3.5};
+    CHERRY_BLAZER_CONSTEXPR auto v2 = scalar * v1;
     EXPECT_EQ(v2, (Vec3d{3.5, -7, 10.5}));
 }
 
 // Vector*scalar
 TEST(Vec3dTest, Vec3dTimesScalar) { // NOLINT
-    constexpr Vector v1{1., -2., 3.};
-    constexpr auto scalar{3.5};
-    constexpr auto v2 = v1 * scalar;
+    CHERRY_BLAZER_CONSTEXPR Vector v1{1., -2., 3.};
+    CHERRY_BLAZER_CONSTEXPR auto scalar{3.5};
+    CHERRY_BLAZER_CONSTEXPR auto v2 = v1 * scalar;
     EXPECT_EQ(v2, (Vec3d{3.5, -7, 10.5}));
 }
 
 // Vector/scalar
 TEST(Vec3dTest, Vec3dDividedByScalar) { // NOLINT
-    constexpr Vector v1{1., -2., 3.};
-    constexpr auto scalar{2.};
-    constexpr auto v2 = v1 / scalar;
+    CHERRY_BLAZER_CONSTEXPR Vector v1{1., -2., 3.};
+    CHERRY_BLAZER_CONSTEXPR auto scalar{2.};
+    CHERRY_BLAZER_CONSTEXPR auto v2 = v1 / scalar;
     EXPECT_EQ(v2, (Vec3d{0.5, -1, 1.5}));
 }
 
@@ -68,7 +69,7 @@ TEST(Vec3dTest, Vec3dDividedByScalar) { // NOLINT
 // Vector += Vector
 TEST(Vec3dTest, Vec3dPlusEqualsVec3d) { // NOLINT
     Vector v1{3., -2., 5.};
-    constexpr Vector v2{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{-2., 3., 1.};
     v1 += v2;
     EXPECT_EQ(v1, (Vec3d{1, 1, 6}));
 }
@@ -76,44 +77,44 @@ TEST(Vec3dTest, Vec3dPlusEqualsVec3d) { // NOLINT
 // Vector -= Vector
 TEST(Vec3dTest, Vec3dMinusEqualsVec3d) { // NOLINT
     Vector v1{3., 2., 1.};
-    constexpr Vector v2{5., 6., 7.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{5., 6., 7.};
     v1 -= v2;
     EXPECT_EQ(v1, (Vec3d{-2, -4, -6}));
 }
 
 // Vector + Vector = Vector
 TEST(Vec3dTest, Vec3dPlusVec3d) { // NOLINT
-    constexpr Vector v1{3., -2., 5.};
-    constexpr Vector v2{-2., 3., 1.};
-    constexpr Vector v3 = v1 + v2;
+    CHERRY_BLAZER_CONSTEXPR Vector v1{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Vector v3 = v1 + v2;
     EXPECT_EQ(v3, (Vec3d{1, 1, 6}));
 }
 
 // Vector - Vector = Vector
 TEST(Vec3dTest, Vec3dMinusVec3d) { // NOLINT
-    constexpr Vector v1{3., 2., 1.};
-    constexpr Vector v2{5., 6., 7.};
-    constexpr Vector v3 = v1 - v2;
+    CHERRY_BLAZER_CONSTEXPR Vector v1{3., 2., 1.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{5., 6., 7.};
+    CHERRY_BLAZER_CONSTEXPR Vector v3 = v1 - v2;
     EXPECT_EQ(v3, (Vec3d{-2, -4, -6}));
 }
 
 // Vector == Vector
 TEST(Vec3dTest, Vec3dComparedToVec3dEquals) { // NOLINT
-    constexpr Vector v1{3., -2., 5.};
-    constexpr Vector v2{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Vector v1{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{3., -2., 5.};
     EXPECT_EQ(v1, v2);
 }
 
 // Vector != Vector
 TEST(Vec3dTest, Vec3dComparedToVec3dDoesntEqual) { // NOLINT
-    constexpr Vector v1{3., -2., 5.};
-    constexpr Vector v2{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Vector v1{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{-2., 3., 1.};
     EXPECT_NE(v1, v2);
 }
 
 // Vector can be printed out.
 TEST(Vec3dTest, Vec3dPrintOut) { // NOLINT
-    constexpr Vector v{1., 2., 3.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{1., 2., 3.};
     std::stringstream ss;
     ss << v;
     EXPECT_EQ(ss.str(), std::string{"{1, 2, 3}"});
@@ -121,11 +122,11 @@ TEST(Vec3dTest, Vec3dPrintOut) { // NOLINT
 
 // Vector has magnitude.
 TEST(Vec3dTest, Vec3dMagnitude) { // NOLINT
-    constexpr Vector v1{1., 0., 0.};
-    constexpr Vector v2{0., 1., 0.};
-    constexpr Vector v3{0., 0., 1.};
-    constexpr Vector v4{1., 2., 3.};
-    constexpr Vector v5{-1., -2., -3.};
+    CHERRY_BLAZER_CONSTEXPR Vector v1{1., 0., 0.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{0., 1., 0.};
+    CHERRY_BLAZER_CONSTEXPR Vector v3{0., 0., 1.};
+    CHERRY_BLAZER_CONSTEXPR Vector v4{1., 2., 3.};
+    CHERRY_BLAZER_CONSTEXPR Vector v5{-1., -2., -3.};
     EXPECT_EQ(magnitude(v1), 1);
     EXPECT_EQ(magnitude(v2), 1);
     EXPECT_EQ(magnitude(v3), 1);
@@ -135,21 +136,21 @@ TEST(Vec3dTest, Vec3dMagnitude) { // NOLINT
 
 // Vector can be normalized.
 TEST(Vec3dTest, Vec3dNormalize) { // NOLINT
-    constexpr Vector v{4., 0., 0.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{4., 0., 0.};
     EXPECT_EQ(normalize(v), (Vec3d{1, 0, 0}));
 }
 
 // Vectors can have a dot product.
 TEST(Vec3dTest, Vec3dDotProduct) { // NOLINT
-    constexpr Vector v1{1., 2., 3.};
-    constexpr Vector v2{2., 3., 4.};
+    CHERRY_BLAZER_CONSTEXPR Vector v1{1., 2., 3.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{2., 3., 4.};
     EXPECT_EQ(dot(v1, v2), 20);
 }
 
 // Vectors can have a cross product.
 TEST(Vec3dTest, Vec3dCrossProduct) { // NOLINT
-    constexpr Vector v1{1., 2., 3.};
-    constexpr Vector v2{2., 3., 4.};
+    CHERRY_BLAZER_CONSTEXPR Vector v1{1., 2., 3.};
+    CHERRY_BLAZER_CONSTEXPR Vector v2{2., 3., 4.};
     EXPECT_EQ(cross(v1, v2), (Vec3d{-1, 2, -1}));
     EXPECT_EQ(cross(v2, v1), (Vec3d{1, -2, 1}));
 }
@@ -160,9 +161,9 @@ TEST(Vec3dTest, Vec3dCrossProduct) { // NOLINT
 
 // Vector + Point = Point
 TEST(Vec3dTest, Vec3dPlusPoint) { // NOLINT
-    constexpr Vector v{3., -2., 5.};
-    constexpr Point p{-2., 3., 1.};
-    constexpr Point p2 = v + p;
+    CHERRY_BLAZER_CONSTEXPR Vector v{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Point p{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Point p2 = v + p;
     EXPECT_EQ(p2, (Point3d{1, 1, 6}));
 }
 

@@ -1,3 +1,4 @@
+#include "config.hh"
 #include "point3d.hh"
 #include "point_operations.hh"
 #include "point_properties.hh"
@@ -13,27 +14,27 @@ namespace cherry_blazer {
 
 // Point is default constructable and zero-initialized.
 TEST(Point3dTest, Point3dDefaultConstructable) { // NOLINT
-    constexpr Point3d p{};
+    CHERRY_BLAZER_CONSTEXPR Point3d p{};
     EXPECT_EQ(p, (Point3d{0, 0, 0}));
 }
 
 // Point == Point
 TEST(Point3dTest, Point3dComparedToPoint3dEquals) { // NOLINT
-    constexpr Point p1{3., -2., 5.};
-    constexpr Point p2{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Point p1{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Point p2{3., -2., 5.};
     EXPECT_EQ(p1, p2);
 }
 
 // Point != Point
 TEST(Point3dTest, Point3dComparedToPoint3dDoesntEqual) { // NOLINT
-    constexpr Point p1{3., -2., 5.};
-    constexpr Point p2{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Point p1{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Point p2{-2., 3., 1.};
     EXPECT_NE(p1, p2);
 }
 
 // Point can be printed out.
 TEST(Point3dTest, Point3dPrintOut) { // NOLINT
-    constexpr Point p{1., 2., 3.};
+    CHERRY_BLAZER_CONSTEXPR Point p{1., 2., 3.};
     std::stringstream ss;
     ss << p;
     EXPECT_EQ(ss.str(), std::string{"{1, 2, 3}"});
@@ -57,9 +58,9 @@ TEST(Point3dTest, Point3dPrintOut) { // NOLINT
 
 // Point - Point = Vector
 TEST(Point3dTest, Point3dMinusPoint3d) { // NOLINT
-    constexpr Point p1{3., 2., 1.};
-    constexpr Point p2{5., 6., 7.};
-    constexpr Vector v = p1 - p2;
+    CHERRY_BLAZER_CONSTEXPR Point p1{3., 2., 1.};
+    CHERRY_BLAZER_CONSTEXPR Point p2{5., 6., 7.};
+    CHERRY_BLAZER_CONSTEXPR Vector v = p1 - p2;
     EXPECT_EQ(v, (Vec3d{-2, -4, -6}));
 }
 
@@ -68,32 +69,32 @@ TEST(Point3dTest, Point3dMinusPoint3d) { // NOLINT
 // Point += Vector
 TEST(Point3dTest, Point3dPlusEqualsVector3d) { // NOLINT
     Point p{3., -2., 5.};
-    constexpr Vector v{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{-2., 3., 1.};
     p += v;
     EXPECT_EQ(p, (Point3d{1, 1, 6}));
 }
 
 // Point + Vector = Point
 TEST(Point3dTest, Point3dPlusVector3d) { // NOLINT
-    constexpr Point p{3., -2., 5.};
-    constexpr Vector v{-2., 3., 1.};
-    constexpr Point p2 = p + v;
+    CHERRY_BLAZER_CONSTEXPR Point p{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Point p2 = p + v;
     EXPECT_EQ(p2, (Point3d{1, 1, 6}));
 }
 
 // Point -= Vector
 TEST(Point3dTest, Point3dMinusEqualsVector3d) { // NOLINT
     Point p{3., 2., 1.};
-    constexpr Vector v{5., 6., 7.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{5., 6., 7.};
     p -= v;
     EXPECT_EQ(p, (Point3d{-2, -4, -6}));
 }
 
 // Point - Vector = Point
 TEST(Point3dTest, Point3dMinusVector3d) { // NOLINT
-    constexpr Point p{3., 2., 1.};
-    constexpr Vector v{5., 6., 7.};
-    constexpr Point p2 = p - v;
+    CHERRY_BLAZER_CONSTEXPR Point p{3., 2., 1.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{5., 6., 7.};
+    CHERRY_BLAZER_CONSTEXPR Point p2 = p - v;
     EXPECT_EQ(p2, (Point3d{-2, -4, -6}));
 }
 
