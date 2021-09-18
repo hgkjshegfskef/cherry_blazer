@@ -144,7 +144,8 @@ endif()
 
 set(cmake_definitions -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}')
 cherry_blazer_dependency_download(googletest "${cmake_definitions}")
-cherry_blazer_dependency_apply_patch(googletest googletest.patch)
+
+cherry_blazer_dependency_apply_patch(googletest thirdparty-patches/googletest.patch)
 
 option(BUILD_GMOCK OFF)
 option(INSTALL_GTEST OFF)
