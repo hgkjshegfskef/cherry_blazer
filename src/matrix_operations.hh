@@ -113,6 +113,19 @@ template <typename T, u16 N>
     return det(mat) != 0;
 }
 
+template <typename T, u16 N> [[nodiscard]] constexpr auto inverse(Matrix<T, N, N> const& mat) {
+    auto determinant = det(mat);
+    if (determinant == 0)
+        throw std::logic_error{"Cannot inverse matrix, because det = 0."};
+    Matrix<T, N, N> inverted;
+    for (auto row{0U}; row < N; ++row) {
+        for (auto col{0U}; col < N; ++col) {
+            inverted(col, row) = cofactor(mat, row, col) / determinant;
+        }
+    }
+    return inverted;
+}
+
 } // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
