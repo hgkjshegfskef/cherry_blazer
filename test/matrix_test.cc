@@ -286,4 +286,16 @@ TEST(MatrixTest, IdentityMatrixInvertion) { // NOLINT
     }
 }
 
+TEST(MatrixTest, MultiplyMatrixByItsInverse) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Matrix a{
+        {3., -9., 7., 3.}, {3., -8., 2., -9.}, {-4., 4., 4., 1.}, {-6., 5., -1., 1.}};
+    CHERRY_BLAZER_CONSTEXPR auto inverted_a = inverse(a);
+    CHERRY_BLAZER_CONSTEXPR auto result = a * inverted_a;
+    CHERRY_BLAZER_CONSTEXPR auto identity = decltype(a)::identity();
+    for (auto row{0U}; row < decltype(result)::row_size; ++row) {
+        for (auto col{0U}; col < decltype(result)::col_size; ++col)
+            EXPECT_NEAR(result(row, col), identity(row, col), 1e-5) << result;
+    }
+}
+
 } // namespace cherry_blazer
