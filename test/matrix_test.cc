@@ -230,10 +230,9 @@ TEST(MatrixTest, MatrixInverse1) { // NOLINT
                                                   {-0.808271, -1.45677, -0.443609, 0.520677},
                                                   {-0.0789474, -0.223684, -0.0526316, 0.197368},
                                                   {-0.522556, -0.81391, -0.300752, 0.306391}};
-    for (u16 i = 0; i < 4; ++i) {
-        for (u16 j = 0; j < 4; ++j) {
-            EXPECT_NEAR(result(i, j), expected(i, j), 1e-5) << result;
-        }
+    for (auto row{0U}; row < decltype(result)::row_size; ++row) {
+        for (auto col{0U}; col < decltype(result)::col_size; ++col)
+            EXPECT_NEAR(result(row, col), expected(row, col), 1e-5) << result;
     }
 }
 
@@ -245,10 +244,9 @@ TEST(MatrixTest, MatrixInverse2) { // NOLINT
                                                   {-0.07692, 0.12308, 0.02564, 0.03077},
                                                   {0.35897, 0.35897, 0.43590, 0.92308},
                                                   {-0.69231, -0.69231, -0.76923, -1.92308}};
-    for (u16 i = 0; i < 4; ++i) {
-        for (u16 j = 0; j < 4; ++j) {
-            EXPECT_NEAR(result(i, j), expected(i, j), 1e-5) << result;
-        }
+    for (auto row{0U}; row < decltype(result)::row_size; ++row) {
+        for (auto col{0U}; col < decltype(result)::col_size; ++col)
+            EXPECT_NEAR(result(row, col), expected(row, col), 1e-5) << result;
     }
 }
 
@@ -260,10 +258,9 @@ TEST(MatrixTest, MatrixInverse3) { // NOLINT
                                                   {-0.07778, 0.03333, 0.36667, -0.33333},
                                                   {-0.02901, -0.14630, -0.10926, 0.12963},
                                                   {0.17778, 0.06667, -0.26667, 0.33333}};
-    for (u16 i = 0; i < 4; ++i) {
-        for (u16 j = 0; j < 4; ++j) {
-            EXPECT_NEAR(result(i, j), expected(i, j), 1e-5) << result;
-        }
+    for (auto row{0U}; row < decltype(result)::row_size; ++row) {
+        for (auto col{0U}; col < decltype(result)::col_size; ++col)
+            EXPECT_NEAR(result(row, col), expected(row, col), 1e-5) << result;
     }
 }
 
@@ -274,10 +271,9 @@ TEST(MatrixTest, MultiplyProductByItsInverse) { // NOLINT
         {8., 2., 2., 2.}, {3., -1., 7., 0.}, {7., 0., 5., 4.}, {6., -2., 0., 5.}};
     CHERRY_BLAZER_CONSTEXPR auto c = a * b;
     CHERRY_BLAZER_CONSTEXPR auto result = c * inverse(b);
-    for (u16 i = 0; i < 4; ++i) {
-        for (u16 j = 0; j < 4; ++j) {
-            EXPECT_NEAR(result(i, j), a(i, j), 1e-5) << result;
-        }
+    for (auto row{0U}; row < decltype(result)::row_size; ++row) {
+        for (auto col{0U}; col < decltype(result)::col_size; ++col)
+            EXPECT_NEAR(result(row, col), a(row, col), 1e-5) << result;
     }
 }
 
