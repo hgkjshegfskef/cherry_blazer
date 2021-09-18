@@ -49,38 +49,8 @@ target_compile_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address
 target_link_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address)
 
 set(CHERRY_BLAZER_BOOST_VERSION
-    "boost-1.77.0"
+    "1.77.0"
     CACHE STRING "Boost version")
-
-# Dependency order is maintained: latter library may depend on former libraries.
-list(
-    APPEND
-    boost_libraries
-    pfr
-    mp11
-    preprocessor
-    config
-    io
-    static_assert
-    type_traits
-    concept_check
-    assert
-    throw_exception
-    core
-    logic
-    integer
-    safe_numerics)
-
-# ;-list is transformed into space-delimited list in order:
-#
-# 1. To provide user-friendly customization option (;-list looks scary).
-# 2. To pass the list through execute_process() into CMake script (it is not possible to make ;-list
-#    be treated like single argument).
-string(REPLACE ";" " " boost_libraries_space_delimited "${boost_libraries}")
-
-set(CHERRY_BLAZER_BOOST_LIBRARIES
-    "${boost_libraries_space_delimited}"
-    CACHE STRING "List of Boost libraries to use")
 
 # ##################################################################################################
 # CMAKE_ settings
@@ -181,18 +151,31 @@ list(POP_BACK CMAKE_MESSAGE_CONTEXT)
 # ##################################################################################################
 # boost
 
-set(cmake_definitions
-    -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}'
-    -DCHERRY_BLAZER_BOOST_VERSION='${CHERRY_BLAZER_BOOST_VERSION}'
-    -DCHERRY_BLAZER_BOOST_LIBRARIES='${CHERRY_BLAZER_BOOST_LIBRARIES}')
+set(cmake_definitions -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_SOURCE_DIR}'
+                      -DCHERRY_BLAZER_BOOST_VERSION='${CHERRY_BLAZER_BOOST_VERSION}')
 cherry_blazer_dependency_download(boost "${cmake_definitions}")
 
-list(TRANSFORM boost_libraries PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/_deps/boost-src/libs/"
-                                       OUTPUT_VARIABLE boost_include_dirs)
-list(TRANSFORM boost_include_dirs APPEND "/include")
-add_library(boost_headers INTERFACE)
-target_include_directories(boost_headers SYSTEM INTERFACE ${boost_include_dirs})
-add_library(Boost::headers ALIAS boost_headers)
+cherry_blazer_dependency_apply_patch(boost thirdparty-patches/boost.patch)
+
+cherry_blazer_dependency_configure(
+    boost "./bootstrap.sh --prefix=../boost-install --with-icu --with-python=python3"
+    "${CMAKE_SOURCE_DIR}/_deps/boost-src")
+
+include(ProcessorCount)
+ProcessorCount(n)
+cherry_blazer_dependency_install(
+    boost "./b2 --build-dir=../boost-build --user-config=boostbuild.sucks install \
+variant=release debug-symbols=on threading=multi runtime-link=shared link=shared,static \
+--jobs=${n}" "${CMAKE_SOURCE_DIR}/_deps/boost-src")
+
+set(Boost_ROOT "${CMAKE_SOURCE_DIR}/_deps/boost-install")
+find_package(Boost ${CHERRY_BLAZER_BOOST_VERSION} CONFIG REQUIRED)
+
+# ~~~
+# To list all boost targets:
+# find_package(Boost ${CHERRY_BLAZER_BOOST_VERSION} CONFIG REQUIRED ALL)
+# message(WARNING "All Boost targets: ${Boost_ALL_TARGETS}")
+# ~~~
 
 # ##################################################################################################
 

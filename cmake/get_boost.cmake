@@ -8,10 +8,6 @@
 
 message(DEBUG "CHERRY_BLAZER_SOURCE_DIR: '${CHERRY_BLAZER_SOURCE_DIR}'")
 message(DEBUG "CHERRY_BLAZER_BOOST_VERSION: '${CHERRY_BLAZER_BOOST_VERSION}'")
-message(DEBUG "CHERRY_BLAZER_BOOST_LIBRARIES: '${CHERRY_BLAZER_BOOST_LIBRARIES}'")
-
-# Restore the list
-string(REPLACE " " ";" boost_libraries "${CHERRY_BLAZER_BOOST_LIBRARIES}")
 
 include(ProcessorCount)
 ProcessorCount(n)
@@ -21,16 +17,12 @@ else()
     set(submodule_fetchJobs "submodule.fetchJobs=${n}")
 endif()
 
-# Boost libraries are in submodules of the boost superproject under libs/
-list(TRANSFORM boost_libraries PREPEND "libs/" OUTPUT_VARIABLE boost_submodules)
-
 include(FetchContent)
 FetchContent_Populate(
     boost
     # QUIET
     GIT_REPOSITORY https://github.com/boostorg/boost.git
-    GIT_TAG "${CHERRY_BLAZER_BOOST_VERSION}"
-    GIT_SUBMODULES ${boost_submodules}
+    GIT_TAG "boost-${CHERRY_BLAZER_BOOST_VERSION}"
     GIT_SHALLOW ON
     GIT_PROGRESS ON
     GIT_CONFIG advice.detachedHead=false ${submodule_fetchJobs}

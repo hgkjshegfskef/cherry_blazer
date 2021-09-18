@@ -8,7 +8,7 @@ if(CMAKE_CXX_INCLUDE_WHAT_YOU_USE)
 endif()
 
 add_executable(cherry_blazer_test canvas_test.cc color_test.cc matrix_test.cc point3d_test.cc
-               vector3d_test.cc)
+                                  vector3d_test.cc)
 target_link_libraries(cherry_blazer_test PRIVATE libcherryblazer GTest::gtest_main
                                                  cherry_blazer_test_flags)
 

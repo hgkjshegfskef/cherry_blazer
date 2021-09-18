@@ -1,0 +1,7 @@
+diff --git a/boostbuild.sucks b/boostbuild.sucks
+new file mode 100644
+index 0000000..a1aaf78
+--- /dev/null
++++ b/boostbuild.sucks
+@@ -0,0 +1 @@
++using mpi ;
