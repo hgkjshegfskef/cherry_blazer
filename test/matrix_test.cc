@@ -298,4 +298,17 @@ TEST(MatrixTest, MultiplyMatrixByItsInverse) { // NOLINT
     }
 }
 
+TEST(MatrixTest, InverseOfTransposeVsTransposeOfInverse) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Matrix a{
+        {3., -9., 7., 3.}, {3., -8., 2., -9.}, {-4., 4., 4., 1.}, {-6., 5., -1., 1.}};
+    CHERRY_BLAZER_CONSTEXPR auto inverted_a = inverse(a);
+    CHERRY_BLAZER_CONSTEXPR auto transposed_inverse_of_a = transpose(inverted_a);
+    CHERRY_BLAZER_CONSTEXPR auto transposed_a = transpose(a);
+    CHERRY_BLAZER_CONSTEXPR auto inverted_transpose_of_a = inverse(transposed_a);
+    for (auto row{0U}; row < decltype(a)::row_size; ++row) {
+        for (auto col{0U}; col < decltype(a)::col_size; ++col)
+            EXPECT_NEAR(transposed_inverse_of_a(row, col), inverted_transpose_of_a(row, col), 1e-5);
+    }
+}
+
 } // namespace cherry_blazer
