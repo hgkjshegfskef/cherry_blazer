@@ -281,4 +281,13 @@ TEST(MatrixTest, MultiplyProductByItsInverse) { // NOLINT
     }
 }
 
+TEST(MatrixTest, IdentityMatrixInvertion) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR auto identity = Matrix<double, 4, 4>::identity();
+    CHERRY_BLAZER_CONSTEXPR auto result = inverse(identity);
+    for (auto row{0U}; row < decltype(result)::row_size; ++row) {
+        for (auto col{0U}; col < decltype(result)::col_size; ++col)
+            EXPECT_NEAR(result(row, col), identity(row, col), 1e-5) << result;
+    }
+}
+
 } // namespace cherry_blazer
