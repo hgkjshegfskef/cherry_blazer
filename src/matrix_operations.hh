@@ -108,11 +108,14 @@ template <typename T, u16 N, std::enable_if_t<N >= 3U, bool> = true>
     return determinant;
 }
 
+// https://en.wikipedia.org/wiki/Invertible_matrix
 template <typename T, u16 N>
 [[nodiscard]] constexpr auto invertible(Matrix<T, N, N> const& mat) noexcept {
     return det(mat) != 0;
 }
 
+// Find an inverse of a matrix.
+// https://en.wikipedia.org/wiki/Invertible_matrix
 template <typename T, u16 N> [[nodiscard]] constexpr auto inverse(Matrix<T, N, N> const& mat) {
     auto determinant = det(mat);
     if (determinant == 0)
