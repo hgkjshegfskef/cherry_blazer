@@ -15,6 +15,10 @@
 
 using namespace std::string_literals;
 
+namespace {
+inline constexpr double abs_error = 1e-5;
+}
+
 namespace cherry_blazer {
 
 // Matrix can be constructed at compile-time, and in many ways.
@@ -232,7 +236,7 @@ TEST(MatrixTest, MatrixInverse1) { // NOLINT
                                                   {-0.522556, -0.81391, -0.300752, 0.306391}};
     for (auto row{0U}; row < decltype(result)::row_size; ++row) {
         for (auto col{0U}; col < decltype(result)::col_size; ++col)
-            EXPECT_NEAR(result(row, col), expected(row, col), 1e-5) << result;
+            EXPECT_NEAR(result(row, col), expected(row, col), abs_error) << result;
     }
 }
 
@@ -246,7 +250,7 @@ TEST(MatrixTest, MatrixInverse2) { // NOLINT
                                                   {-0.69231, -0.69231, -0.76923, -1.92308}};
     for (auto row{0U}; row < decltype(result)::row_size; ++row) {
         for (auto col{0U}; col < decltype(result)::col_size; ++col)
-            EXPECT_NEAR(result(row, col), expected(row, col), 1e-5) << result;
+            EXPECT_NEAR(result(row, col), expected(row, col), abs_error) << result;
     }
 }
 
@@ -260,7 +264,7 @@ TEST(MatrixTest, MatrixInverse3) { // NOLINT
                                                   {0.17778, 0.06667, -0.26667, 0.33333}};
     for (auto row{0U}; row < decltype(result)::row_size; ++row) {
         for (auto col{0U}; col < decltype(result)::col_size; ++col)
-            EXPECT_NEAR(result(row, col), expected(row, col), 1e-5) << result;
+            EXPECT_NEAR(result(row, col), expected(row, col), abs_error) << result;
     }
 }
 
@@ -273,7 +277,7 @@ TEST(MatrixTest, MultiplyProductByItsInverse) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR auto result = c * inverse(b);
     for (auto row{0U}; row < decltype(result)::row_size; ++row) {
         for (auto col{0U}; col < decltype(result)::col_size; ++col)
-            EXPECT_NEAR(result(row, col), a(row, col), 1e-5) << result;
+            EXPECT_NEAR(result(row, col), a(row, col), abs_error) << result;
     }
 }
 
@@ -282,7 +286,7 @@ TEST(MatrixTest, IdentityMatrixInvertion) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR auto result = inverse(identity);
     for (auto row{0U}; row < decltype(result)::row_size; ++row) {
         for (auto col{0U}; col < decltype(result)::col_size; ++col)
-            EXPECT_NEAR(result(row, col), identity(row, col), 1e-5) << result;
+            EXPECT_NEAR(result(row, col), identity(row, col), abs_error) << result;
     }
 }
 
@@ -294,7 +298,7 @@ TEST(MatrixTest, MultiplyMatrixByItsInverse) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR auto identity = decltype(a)::identity();
     for (auto row{0U}; row < decltype(result)::row_size; ++row) {
         for (auto col{0U}; col < decltype(result)::col_size; ++col)
-            EXPECT_NEAR(result(row, col), identity(row, col), 1e-5) << result;
+            EXPECT_NEAR(result(row, col), identity(row, col), abs_error) << result;
     }
 }
 
@@ -306,8 +310,10 @@ TEST(MatrixTest, InverseOfTransposeVsTransposeOfInverse) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR auto transposed_a = transpose(a);
     CHERRY_BLAZER_CONSTEXPR auto inverted_transpose_of_a = inverse(transposed_a);
     for (auto row{0U}; row < decltype(a)::row_size; ++row) {
-        for (auto col{0U}; col < decltype(a)::col_size; ++col)
-            EXPECT_NEAR(transposed_inverse_of_a(row, col), inverted_transpose_of_a(row, col), 1e-5);
+        for (auto col{0U}; col < decltype(a)::col_size; ++col) {
+            EXPECT_NEAR(transposed_inverse_of_a(row, col), inverted_transpose_of_a(row, col),
+                        abs_error);
+        }
     }
 }
 
