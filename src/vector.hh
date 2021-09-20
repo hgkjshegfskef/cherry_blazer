@@ -18,6 +18,9 @@ template <typename T> struct Vector<T, 2> {
 
     T x, y;
 
+    using value_type = T;
+    static inline constexpr size_t size = 2;
+
     constexpr T& operator[](size_t index) noexcept {
         switch (index) {
         case 0:
@@ -48,6 +51,9 @@ template <typename T> struct Vector<T, 3> {
     static_assert(std::is_floating_point_v<T>);
 
     T x, y, z;
+
+    using value_type = T;
+    static inline constexpr size_t size = 3;
 
     constexpr T& operator[](size_t index) noexcept {
         switch (index) {
@@ -83,6 +89,9 @@ template <typename T> struct Vector<T, 4> {
     static_assert(std::is_floating_point_v<T>);
 
     T x, y, z, w;
+
+    using value_type = T;
+    static inline constexpr size_t size = 4;
 
     constexpr T& operator[](size_t index) noexcept {
         switch (index) {
