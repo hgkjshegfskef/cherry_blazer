@@ -110,10 +110,19 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
     // https://en.wikipedia.org/wiki/Identity_matrix
     [[nodiscard]] static constexpr auto identity() {
         static_assert(N == M, "Only for square matrices.");
-        Matrix<T, N, N> result{};
+        Matrix<T, N, N> identity_matrix{};
         for (auto i{0U}; i < N; ++i)
-            result(i, i) = static_cast<T>(1);
-        return result;
+            identity_matrix(i, i) = static_cast<T>(1);
+        return identity_matrix;
+    }
+
+    // https://en.wikipedia.org/wiki/Translation_(geometry)
+    [[nodiscard]] static constexpr auto translation(Vector<T, N - 1> const& translation_vector) {
+        static_assert(N == M, "Only for square matrices.");
+        Matrix<T, N, N> translation_matrix = identity();
+        for (auto row{0U}; row < N - 1; ++row)
+            translation_matrix(row, N - 1) = translation_vector[row];
+        return translation_matrix;
     }
 };
 

@@ -318,4 +318,14 @@ TEST(MatrixTest, InverseOfTransposeVsTransposeOfInverse) { // NOLINT
     }
 }
 
+TEST(MatrixTest, TranslationMatrixTimesPoint) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point original_point{-3., 4., 5.};
+    CHERRY_BLAZER_CONSTEXPR auto translation_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size + 1>::translation(Vector{5., -3., 2.});
+    CHERRY_BLAZER_CONSTEXPR auto translated_point = translate(translation_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{2., 1., 7.};
+    EXPECT_EQ(translated_point, expected);
+}
+
 } // namespace cherry_blazer

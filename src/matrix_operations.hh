@@ -130,6 +130,24 @@ template <typename T, u16 N> [[nodiscard]] constexpr auto inverse(Matrix<T, N, N
     return inverted;
 }
 
+// https://en.wikipedia.org/wiki/Translation_(geometry)
+template <typename T, u16 D>
+[[nodiscard]] constexpr auto translate(Matrix<T, D, D> const& translation_matrix,
+                                       Point<T, D - 1> const& original_point) {
+    Vector<T, D> augmented_vector;
+    for (auto row{0U}; row < D - 1; ++row)
+        augmented_vector[row] = original_point[row];
+    augmented_vector[D - 1] = static_cast<T>(1);
+
+    auto translated_vector = translation_matrix * augmented_vector;
+
+    Point<T, D - 1> translated_point;
+    for (auto row{0U}; row < D - 1; ++row)
+        translated_point[row] = translated_vector[row];
+
+    return translated_point;
+}
+
 } // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
