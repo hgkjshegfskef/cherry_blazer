@@ -328,4 +328,44 @@ TEST(MatrixTest, TranslationMatrixTimesPoint) { // NOLINT
     EXPECT_EQ(translated_point, expected);
 }
 
+TEST(MatrixTest, ScalingMatrixTimesPoint) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point original_point{-4., 6., 8.};
+    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size + 1>::scaling(Vector{2., 3., 4.});
+    CHERRY_BLAZER_CONSTEXPR auto scaled_point = scale(scaling_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{-8., 18., 32.};
+    EXPECT_EQ(scaled_point, expected);
+}
+
+TEST(MatrixTest, ScalingMatrixTimesVector) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Vector original_vector{-4., 6., 8.};
+    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix =
+        Matrix<decltype(original_vector)::value_type, decltype(original_vector)::size + 1,
+               decltype(original_vector)::size + 1>::scaling(Vector{2., 3., 4.});
+    CHERRY_BLAZER_CONSTEXPR auto scaled_vector = scale(scaling_matrix, original_vector);
+    CHERRY_BLAZER_CONSTEXPR Vector expected{-8., 18., 32.};
+    EXPECT_EQ(scaled_vector, expected);
+}
+
+TEST(MatrixTest, InverseOfScalingMatrixTimesVector) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Vector original_vector{-4., 6., 8.};
+    CHERRY_BLAZER_CONSTEXPR auto inversed_scaling_matrix =
+        inverse(Matrix<decltype(original_vector)::value_type, decltype(original_vector)::size + 1,
+                       decltype(original_vector)::size + 1>::scaling(Vector{2., 3., 4.}));
+    CHERRY_BLAZER_CONSTEXPR auto shrinked_vector = scale(inversed_scaling_matrix, original_vector);
+    CHERRY_BLAZER_CONSTEXPR Vector expected{-2., 2., 2.};
+    EXPECT_EQ(shrinked_vector, expected);
+}
+
+TEST(MatrixTest, ReflectionIsScalingByNegativeValue) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
+    CHERRY_BLAZER_CONSTEXPR auto reflection_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size + 1>::scaling(Vector{-1., 1., 1.});
+    CHERRY_BLAZER_CONSTEXPR auto reflected_point = scale(reflection_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{-2., 3., 4.};
+    EXPECT_EQ(reflected_point, expected);
+}
+
 } // namespace cherry_blazer

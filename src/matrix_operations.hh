@@ -130,6 +130,9 @@ template <typename T, u16 N> [[nodiscard]] constexpr auto inverse(Matrix<T, N, N
     return inverted;
 }
 
+// For translation, scaling, reflection, rotation, shearing see:
+// https://en.wikipedia.org/wiki/Affine_transformation#Image_transformation
+
 // https://en.wikipedia.org/wiki/Translation_(geometry)
 template <typename T, u16 D>
 [[nodiscard]] constexpr auto translate(Matrix<T, D, D> const& translation_matrix,
@@ -139,13 +142,50 @@ template <typename T, u16 D>
         augmented_vector[row] = original_point[row];
     augmented_vector[D - 1] = static_cast<T>(1);
 
-    auto translated_vector = translation_matrix * augmented_vector;
+    auto augmented_translated_vector = translation_matrix * augmented_vector;
 
     Point<T, D - 1> translated_point;
     for (auto row{0U}; row < D - 1; ++row)
-        translated_point[row] = translated_vector[row];
+        translated_point[row] = augmented_translated_vector[row];
 
     return translated_point;
+}
+
+// https://en.wikipedia.org/wiki/Scaling_(geometry)
+template <typename T, u16 D>
+[[nodiscard]] constexpr auto scale(Matrix<T, D, D> const& scaling_matrix,
+                                   Point<T, D - 1> const& original_point) {
+    Vector<T, D> augmented_vector;
+    for (auto row{0U}; row < D - 1; ++row)
+        augmented_vector[row] = original_point[row];
+    augmented_vector[D - 1] = static_cast<T>(1);
+
+    auto augmented_scaled_vector = scaling_matrix * augmented_vector;
+
+    Point<T, D - 1> scaled_point;
+    for (auto row{0U}; row < D - 1; ++row)
+        scaled_point[row] = augmented_scaled_vector[row];
+
+    return scaled_point;
+}
+
+// This is identical to above, except for Vector parameter.
+// https://en.wikipedia.org/wiki/Scaling_(geometry)
+template <typename T, u16 D>
+[[nodiscard]] constexpr auto scale(Matrix<T, D, D> const& scaling_matrix,
+                                   Vector<T, D - 1> const& original_vector) {
+    Vector<T, D> augmented_vector;
+    for (auto row{0U}; row < D - 1; ++row)
+        augmented_vector[row] = original_vector[row];
+    augmented_vector[D - 1] = static_cast<T>(1);
+
+    auto augmented_scaled_vector = scaling_matrix * augmented_vector;
+
+    Vector<T, D - 1> scaled_vector;
+    for (auto row{0U}; row < D - 1; ++row)
+        scaled_vector[row] = augmented_scaled_vector[row];
+
+    return scaled_vector;
 }
 
 } // namespace cherry_blazer

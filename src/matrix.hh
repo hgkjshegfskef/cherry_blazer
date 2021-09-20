@@ -124,6 +124,15 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
             translation_matrix(row, N - 1) = translation_vector[row];
         return translation_matrix;
     }
+
+    // https://en.wikipedia.org/wiki/Scaling_(geometry)
+    [[nodiscard]] static constexpr auto scaling(Vector<T, N - 1> const& scaling_vector) {
+        static_assert(N == M, "Only for square matrices.");
+        Matrix<T, N, N> translation_matrix = identity();
+        for (auto row{0U}; row < N - 1; ++row)
+            translation_matrix(row, row) = scaling_vector[row];
+        return translation_matrix;
+    }
 };
 
 // Deduct a few commonly used matrices. I don't know if it's possible to use variadic pack to make a
