@@ -4,6 +4,7 @@
 #include "safe_numerics_typedefs.hh"
 #include "types.hh"
 #include "util.hh"
+#include "vector.hh"
 
 #include <algorithm>
 #include <array>

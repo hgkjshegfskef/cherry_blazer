@@ -1,6 +1,6 @@
 #include "canvas.hh"
 
-#include "point2d.hh"
+#include "point.hh"
 #include "ppm.hh"
 #include "types.hh"
 

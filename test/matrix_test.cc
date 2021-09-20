@@ -1,7 +1,8 @@
 #include "config.hh"
 #include "matrix.hh"
 #include "matrix_operations.hh"
-#include "vector4d.hh"
+#include "point_properties.hh"
+#include "vector.hh"
 #include "vector_properties.hh"
 
 #include <algorithm>

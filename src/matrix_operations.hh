@@ -2,6 +2,7 @@
 #define CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
 
 #include "matrix.hh"
+#include "point.hh"
 #include "safe_numerics_typedefs.hh"
 #include "types.hh"
 #include "vector.hh"

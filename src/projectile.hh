@@ -1,8 +1,8 @@
 #ifndef CHERRY_BLAZER_SRC_PROJECTILE_HH_
 #define CHERRY_BLAZER_SRC_PROJECTILE_HH_
 
-#include "point3d.hh"
-#include "vector3d.hh"
+#include "point.hh"
+#include "vector.hh"
 
 namespace cb = cherry_blazer;
 
