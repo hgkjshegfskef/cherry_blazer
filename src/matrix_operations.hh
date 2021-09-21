@@ -225,6 +225,23 @@ template <typename T, u16 D>
     return rotated_vector;
 }
 
+template <typename T, u16 D>
+[[nodiscard]] constexpr auto shear(Matrix<T, D, D> const& shearing_matrix,
+                                   Point<T, D - 1> const& original_point) {
+    Vector<T, D> augmented_vector;
+    for (auto row{0U}; row < D - 1; ++row)
+        augmented_vector[row] = original_point[row];
+    augmented_vector[D - 1] = static_cast<T>(1);
+
+    auto augmented_sheared_vector = shearing_matrix * augmented_vector;
+
+    Point<T, D - 1> sheared_point;
+    for (auto row{0U}; row < D - 1; ++row)
+        sheared_point[row] = augmented_sheared_vector[row];
+
+    return sheared_point;
+}
+
 } // namespace cherry_blazer
 
 #endif // CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_

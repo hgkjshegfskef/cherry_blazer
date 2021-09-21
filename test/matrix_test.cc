@@ -2,6 +2,7 @@
 #include "matrix.hh"
 #include "matrix_operations.hh"
 #include "point_properties.hh"
+#include "shearing.hh"
 #include "vector.hh"
 #include "vector_properties.hh"
 
@@ -484,6 +485,90 @@ TEST(MatrixTest, RotatingPointAroundZAxisFullQuarter) { // NOLINT
     for (auto row{0U}; row < decltype(original_point)::size; ++row) {
         EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
             << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, ShearingPointComponentXAgainstY) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
+    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::X::AgainstY{}};
+    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size + 1>::shearing(direction);
+    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{5., 3., 4.};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
+            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, ShearingPointComponentXAgainstZ) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
+    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::X::AgainstZ{}};
+    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size + 1>::shearing(direction);
+    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{6., 3., 4.};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
+            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, ShearingPointComponentYAgainstX) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
+    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::Y::AgainstX{}};
+    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size + 1>::shearing(direction);
+    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{2., 5., 4.};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
+            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, ShearingPointComponentYAgainstZ) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
+    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::Y::AgainstZ{}};
+    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size + 1>::shearing(direction);
+    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{2., 7., 4.};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
+            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, ShearingPointComponentZAgainstX) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
+    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::Z::AgainstX{}};
+    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size + 1>::shearing(direction);
+    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{2., 3., 6.};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
+            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, ShearingPointComponentZAgainstY) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
+    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::Z::AgainstY{}};
+    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size + 1>::shearing(direction);
+    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{2., 3., 7.};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
+            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
     }
 }
 

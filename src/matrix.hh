@@ -3,6 +3,7 @@
 
 #include "axis.hh"
 #include "safe_numerics_typedefs.hh"
+#include "shearing.hh"
 #include "types.hh"
 #include "util.hh"
 #include "vector.hh"
@@ -162,6 +163,33 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
             rotation_matrix(1, 1) = std::cos(radians);
             return rotation_matrix;
         }
+    }
+
+    [[nodiscard]] static constexpr auto shearing(shear_direction const& direction) {
+        static_assert(N == M, "Only for square matrices.");
+        static_assert(N == 4, "Only for 3D (for now).");
+        Matrix<T, N, N> shearing_matrix = identity();
+        std::visit(
+            [&](auto&& kind) {
+                using shear_kind = std::decay_t<decltype(kind)>;
+                if constexpr (std::is_same_v<shear_kind, Shear::X::AgainstY>) {
+                    shearing_matrix(0, 1) = static_cast<T>(1);
+                } else if constexpr (std::is_same_v<shear_kind, Shear::X::AgainstZ>) {
+                    shearing_matrix(0, 2) = static_cast<T>(1);
+                } else if constexpr (std::is_same_v<shear_kind, Shear::Y::AgainstX>) {
+                    shearing_matrix(1, 0) = static_cast<T>(1);
+                } else if constexpr (std::is_same_v<shear_kind, Shear::Y::AgainstZ>) {
+                    shearing_matrix(1, 2) = static_cast<T>(1);
+                } else if constexpr (std::is_same_v<shear_kind, Shear::Z::AgainstX>) {
+                    shearing_matrix(2, 0) = static_cast<T>(1);
+                } else if constexpr (std::is_same_v<shear_kind, Shear::Z::AgainstY>) {
+                    shearing_matrix(2, 1) = static_cast<T>(1);
+                } else {
+                    static_assert(always_false_v<shear_kind>, "non-exhaustive visitor");
+                }
+            },
+            direction);
+        return shearing_matrix;
     }
 };
 
