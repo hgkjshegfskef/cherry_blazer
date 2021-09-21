@@ -5,6 +5,7 @@
 #include "types.hh"
 
 #include <algorithm>
+#include <boost/assert.hpp>
 #include <boost/pfr/core.hpp>
 #include <cassert>
 #include <cmath>
@@ -48,9 +49,17 @@ u32 Canvas::width() const { return width_; }
 
 u32 Canvas::height() const { return height_; }
 
-Color& Canvas::operator()(u32 x, u32 y) { return canvas_[y * width_ + x]; }
+Color& Canvas::operator()(u32 x, u32 y) {
+    BOOST_VERIFY(x < width_);
+    BOOST_VERIFY(y < height_);
+    return canvas_[y * width_ + x];
+}
 
-Color const& Canvas::operator()(u32 x, u32 y) const { return canvas_[y * width_ + x]; }
+Color const& Canvas::operator()(u32 x, u32 y) const {
+    BOOST_VERIFY(x < width_);
+    BOOST_VERIFY(y < height_);
+    return canvas_[y * width_ + x];
+}
 
 u64 Canvas::size() const { return width_ * height_; }
 

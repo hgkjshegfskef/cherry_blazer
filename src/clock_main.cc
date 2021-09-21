@@ -35,7 +35,7 @@ int main() {
 
     using T = decltype(clock_origin)::value_type;        // NOLINT(readability-identifier-naming)
     auto constexpr D = decltype(clock_origin)::size + 1; // NOLINT(readability-identifier-naming)
-    auto constexpr image_scale = 40.;
+    auto constexpr clock_radius = 40.;
 
     std::vector const translation_matrices{
         cb::Matrix<T, D, D>::translation(cb::Vector{0., 1., 0.}),
@@ -48,7 +48,7 @@ int main() {
         cb::Matrix<T, D, D>::rotation(Axis::Z, std::numbers::pi_v<T> / 6)};
 
     auto const scaling_matrix =
-        cb::Matrix<T, D, D>::scaling(cb::Vector{image_scale, image_scale, image_scale});
+        cb::Matrix<T, D, D>::scaling(cb::Vector{clock_radius, clock_radius, clock_radius});
 
     std::vector<cb::Point<T, D - 1>> translated_points;
     translated_points.reserve(translation_matrices.size() * 2);
@@ -65,10 +65,9 @@ int main() {
         }
     }
 
-    translated_points.emplace_back(clock_origin);
-
-    auto constexpr canvas_size = image_scale * 2.5;
-    cb::Canvas canvas{static_cast<u32>(canvas_size), static_cast<u32>(canvas_size)};
+    auto constexpr canvas_size = clock_radius * 2.5;
+    cb::Canvas canvas{static_cast<u32>(std::round(canvas_size)),
+                      static_cast<u32>(std::round(canvas_size))};
     cb::Color const white{255., 255., 255.};
     auto const offset = canvas.width() / 2;
     for (auto const& point : translated_points) {
