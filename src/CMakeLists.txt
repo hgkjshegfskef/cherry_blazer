@@ -10,3 +10,6 @@ endif()
 
 add_executable(cherry_blazer projectile.cc projectile_main.cc)
 target_link_libraries(cherry_blazer PRIVATE libcherryblazer)
+
+add_executable(clock clock_main.cc)
+target_link_libraries(clock PRIVATE libcherryblazer)
