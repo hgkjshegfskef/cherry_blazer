@@ -572,4 +572,22 @@ TEST(MatrixTest, ShearingPointComponentZAgainstY) { // NOLINT
     }
 }
 
+TEST(MatrixTest, TransformationsAppliedTogether) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point original_point{1., 0., 1.};
+    using namespace std::numbers;
+    using T = decltype(original_point)::value_type;
+    auto const D = decltype(original_point)::size + 1;
+    CHERRY_BLAZER_CONSTEXPR auto rotation_matrix = Matrix<T, D, D>::rotation(Axis::X, pi_v<T> / 2);
+    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix = Matrix<T, D, D>::scaling(Vector{5., 5., 5.});
+    CHERRY_BLAZER_CONSTEXPR auto translation_matrix =
+        Matrix<T, D, D>::translation(Vector{10., 5., 7.});
+    CHERRY_BLAZER_CONSTEXPR auto transformed_point = translate(
+        translation_matrix, scale(scaling_matrix, rotate(rotation_matrix, original_point)));
+    CHERRY_BLAZER_CONSTEXPR Point expected{15., 0., 7.};
+    for (auto row{0U}; row < D - 1; ++row) {
+        EXPECT_NEAR(transformed_point[row], expected[row], abs_error)
+            << "Got:\t\t" << transformed_point << "\nbut expected:\t" << expected;
+    }
+}
+
 } // namespace cherry_blazer
