@@ -1,6 +1,7 @@
 #ifndef CHERRY_BLAZER_SRC_MATRIX_HH_
 #define CHERRY_BLAZER_SRC_MATRIX_HH_
 
+#include "axis.hh"
 #include "safe_numerics_typedefs.hh"
 #include "types.hh"
 #include "util.hh"
@@ -8,6 +9,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cmath>
 #include <cstddef>
 #include <iomanip>
 #include <memory>
@@ -128,10 +130,38 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
     // https://en.wikipedia.org/wiki/Scaling_(geometry)
     [[nodiscard]] static constexpr auto scaling(Vector<T, N - 1> const& scaling_vector) {
         static_assert(N == M, "Only for square matrices.");
-        Matrix<T, N, N> translation_matrix = identity();
+        Matrix<T, N, N> scaling_matrix = identity();
         for (auto row{0U}; row < N - 1; ++row)
-            translation_matrix(row, row) = scaling_vector[row];
-        return translation_matrix;
+            scaling_matrix(row, row) = scaling_vector[row];
+        return scaling_matrix;
+    }
+
+    // https://en.wikipedia.org/wiki/Rotation_matrix
+    // Rotation around X, Y, or Z axis.
+    [[nodiscard]] static constexpr auto rotation(Axis const& axis, T const& radians) {
+        static_assert(N == M, "Only for square matrices.");
+        static_assert(N == 4, "Only for 3D (for now).");
+        Matrix<T, N, N> rotation_matrix = identity();
+        switch (axis) {
+        case Axis::X:
+            rotation_matrix(1, 1) = std::cos(radians);
+            rotation_matrix(1, 2) = -std::sin(radians);
+            rotation_matrix(2, 1) = std::sin(radians);
+            rotation_matrix(2, 2) = std::cos(radians);
+            return rotation_matrix;
+        case Axis::Y:
+            rotation_matrix(0, 0) = std::cos(radians);
+            rotation_matrix(0, 2) = std::sin(radians);
+            rotation_matrix(2, 0) = -std::sin(radians);
+            rotation_matrix(2, 2) = std::cos(radians);
+            return rotation_matrix;
+        case Axis::Z:
+            rotation_matrix(0, 0) = std::cos(radians);
+            rotation_matrix(0, 1) = -std::sin(radians);
+            rotation_matrix(1, 0) = std::sin(radians);
+            rotation_matrix(1, 1) = std::cos(radians);
+            return rotation_matrix;
+        }
     }
 };
 

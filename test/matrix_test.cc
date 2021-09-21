@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <gtest/gtest.h>
 #include <iostream>
+#include <numbers>
 #include <numeric>
 #include <sstream>
 #include <string>
@@ -366,6 +367,124 @@ TEST(MatrixTest, ReflectionIsScalingByNegativeValue) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR auto reflected_point = scale(reflection_matrix, original_point);
     CHERRY_BLAZER_CONSTEXPR Point expected{-2., 3., 4.};
     EXPECT_EQ(reflected_point, expected);
+}
+
+TEST(MatrixTest, RotatingPointAroundXAxisHalfQuarter) { // NOLINT
+    using namespace std::numbers;
+    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
+    CHERRY_BLAZER_CONSTEXPR auto half_quarter_rotation_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size +
+                   1>::rotation(Axis::X, pi_v<decltype(original_point)::value_type> / 4);
+    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
+        rotate(half_quarter_rotation_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{0., sqrt2_v<decltype(original_point)::value_type> / 2,
+                                           sqrt2_v<decltype(original_point)::value_type> / 2};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
+            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, RotatingPointAroundXAxisFullQuarter) { // NOLINT
+    using namespace std::numbers;
+    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
+    CHERRY_BLAZER_CONSTEXPR auto full_quarter_rotation_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size +
+                   1>::rotation(Axis::X, pi_v<decltype(original_point)::value_type> / 2);
+    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
+        rotate(full_quarter_rotation_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{0., 0., 1.};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
+            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, InverseOfXAxisRotationRotatesInOppositeDirection) { // NOLINT
+    using namespace std::numbers;
+    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
+    CHERRY_BLAZER_CONSTEXPR auto half_quarter_rotation_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size +
+                   1>::rotation(Axis::X, pi_v<decltype(original_point)::value_type> / 4);
+    CHERRY_BLAZER_CONSTEXPR auto inversed_half_quarter_rotation_matrix =
+        inverse(half_quarter_rotation_matrix);
+    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
+        rotate(inversed_half_quarter_rotation_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{0., sqrt2_v<decltype(original_point)::value_type> / 2,
+                                           -sqrt2_v<decltype(original_point)::value_type> / 2};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
+            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, RotatingPointAroundYAxisHalfQuarter) { // NOLINT
+    using namespace std::numbers;
+    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 0., 1.};
+    CHERRY_BLAZER_CONSTEXPR auto half_quarter_rotation_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size +
+                   1>::rotation(Axis::Y, pi_v<decltype(original_point)::value_type> / 4);
+    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
+        rotate(half_quarter_rotation_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{sqrt2_v<decltype(original_point)::value_type> / 2, 0.,
+                                           sqrt2_v<decltype(original_point)::value_type> / 2};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
+            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, RotatingPointAroundYAxisFullQuarter) { // NOLINT
+    using namespace std::numbers;
+    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 0., 1.};
+    CHERRY_BLAZER_CONSTEXPR auto full_quarter_rotation_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size +
+                   1>::rotation(Axis::Y, pi_v<decltype(original_point)::value_type> / 2);
+    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
+        rotate(full_quarter_rotation_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{1., 0., 0.};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
+            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, RotatingPointAroundZAxisHalfQuarter) { // NOLINT
+    using namespace std::numbers;
+    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
+    CHERRY_BLAZER_CONSTEXPR auto half_quarter_rotation_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size +
+                   1>::rotation(Axis::Z, pi_v<decltype(original_point)::value_type> / 4);
+    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
+        rotate(half_quarter_rotation_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{-sqrt2_v<decltype(original_point)::value_type> / 2,
+                                           sqrt2_v<decltype(original_point)::value_type> / 2, 0.};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
+            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
+    }
+}
+
+TEST(MatrixTest, RotatingPointAroundZAxisFullQuarter) { // NOLINT
+    using namespace std::numbers;
+    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
+    CHERRY_BLAZER_CONSTEXPR auto full_quarter_rotation_matrix =
+        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
+               decltype(original_point)::size +
+                   1>::rotation(Axis::Z, pi_v<decltype(original_point)::value_type> / 2);
+    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
+        rotate(full_quarter_rotation_matrix, original_point);
+    CHERRY_BLAZER_CONSTEXPR Point expected{-1., 0., 0.};
+    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
+        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
+            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
+    }
 }
 
 } // namespace cherry_blazer

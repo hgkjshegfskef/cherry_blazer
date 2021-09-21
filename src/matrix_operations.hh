@@ -1,6 +1,7 @@
 #ifndef CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
 #define CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
 
+#include "axis.hh"
 #include "matrix.hh"
 #include "point.hh"
 #include "safe_numerics_typedefs.hh"
@@ -186,6 +187,42 @@ template <typename T, u16 D>
         scaled_vector[row] = augmented_scaled_vector[row];
 
     return scaled_vector;
+}
+
+// Rotate around axis.
+template <typename T, u16 D>
+[[nodiscard]] constexpr auto rotate(Matrix<T, D, D> const& rotation_matrix,
+                                    Point<T, D - 1> const& original_point) {
+    Vector<T, D> augmented_vector;
+    for (auto row{0U}; row < D - 1; ++row)
+        augmented_vector[row] = original_point[row];
+    augmented_vector[D - 1] = static_cast<T>(1);
+
+    auto augmented_rotated_vector = rotation_matrix * augmented_vector;
+
+    Point<T, D - 1> rotated_point;
+    for (auto row{0U}; row < D - 1; ++row)
+        rotated_point[row] = augmented_rotated_vector[row];
+
+    return rotated_point;
+}
+
+// Rotate around axis.
+template <typename T, u16 D>
+[[nodiscard]] constexpr auto rotate(Matrix<T, D, D> const& rotation_matrix,
+                                    Vector<T, D - 1> const& original_vector) {
+    Vector<T, D> augmented_vector;
+    for (auto row{0U}; row < D - 1; ++row)
+        augmented_vector[row] = original_vector[row];
+    augmented_vector[D - 1] = static_cast<T>(1);
+
+    auto augmented_rotated_vector = rotation_matrix * augmented_vector;
+
+    Vector<T, D - 1> rotated_vector;
+    for (auto row{0U}; row < D - 1; ++row)
+        rotated_vector[row] = augmented_rotated_vector[row];
+
+    return rotated_vector;
 }
 
 } // namespace cherry_blazer
