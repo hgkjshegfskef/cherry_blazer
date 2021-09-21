@@ -10,13 +10,10 @@ TEST(CanvasCtorTest, CanvasCtor) { // NOLINT
     Canvas c{1, 2};
 }
 
-TEST(CanvasCtorTest, CanvasCtorOutOfRange) {                     // NOLINT
-    EXPECT_THROW({ Canvas cc(0, 1); }, std::system_error);       // NOLINT
-    EXPECT_THROW({ Canvas cc(1, 0); }, std::system_error);       // NOLINT
-    EXPECT_THROW({ Canvas cc(0, 0); }, std::system_error);       // NOLINT
-    EXPECT_THROW({ Canvas cc(3841, 1); }, std::system_error);    // NOLINT
-    EXPECT_THROW({ Canvas cc(1, 2161); }, std::system_error);    // NOLINT
-    EXPECT_THROW({ Canvas cc(3841, 2161); }, std::system_error); // NOLINT
+TEST(CanvasCtorTest, CanvasCtorOutOfRange) {              // NOLINT
+    EXPECT_THROW({ Canvas cc(0, 1); }, std::logic_error); // NOLINT
+    EXPECT_THROW({ Canvas cc(1, 0); }, std::logic_error); // NOLINT
+    EXPECT_THROW({ Canvas cc(0, 0); }, std::logic_error); // NOLINT
 }
 
 TEST(CanvasCtorTest, CanvasIsZeroInitialized) { // NOLINT

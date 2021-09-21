@@ -8,6 +8,7 @@
 #include <boost/pfr/core.hpp>
 #include <cassert>
 #include <cmath>
+#include <exception>
 #include <fstream>
 #include <iomanip>
 #include <string>
@@ -37,36 +38,35 @@ constexpr double scale(double value, Point2d const& source_range, Point2d const&
 
 } // namespace
 
-Canvas::Canvas(width_t const& width, height_t const& height)
-    : canvas_{new Color[u32(width * height)]()}, width_{width}, height_{height} {}
-
-Canvas::width_t const& Canvas::width() const { return width_; }
-
-Canvas::height_t const& Canvas::height() const { return height_; }
-
-Color& Canvas::operator()(col_t const& x, row_t const& y) { return canvas_[y * width_ + x]; }
-
-Color const& Canvas::operator()(col_t const& x, row_t const& y) const {
-    return canvas_[y * width_ + x];
+Canvas::Canvas(u32 width, u32 height)
+    : canvas_{new Color[width * height]()}, width_{width}, height_{height} {
+    if (width == 0 || height == 0)
+        throw std::logic_error{"Canvas: width and height must be non-zero."};
 }
 
-auto Canvas::size() const { return width_ * height_; }
+u32 Canvas::width() const { return width_; }
 
-void Canvas::fill(Color const& color) {
-    std::fill(canvas_.get(), canvas_.get() + u32(size()), color);
-}
+u32 Canvas::height() const { return height_; }
+
+Color& Canvas::operator()(u32 x, u32 y) { return canvas_[y * width_ + x]; }
+
+Color const& Canvas::operator()(u32 x, u32 y) const { return canvas_[y * width_ + x]; }
+
+u64 Canvas::size() const { return width_ * height_; }
+
+void Canvas::fill(Color const& color) { std::fill(canvas_.get(), canvas_.get() + size(), color); }
 
 std::string Canvas::as_ppm() const {
     // Max length of line in PPM file.
-    constexpr safe_uliteral_auto_trap<70> ppm_line_length;
+    constexpr auto ppm_line_length = 70;
     // How much text space one color component (r, g, or b) occupies?
-    constexpr safe_uliteral_auto_trap<4> component_width;
+    constexpr auto component_width = 4;
     // How many primary colors does one color have?
-    constexpr safe_uliteral_auto_trap<3> component_count;
+    constexpr auto component_count = 3;
     // How much text space one color (r, g, and b) occupies?
     constexpr auto color_width = component_width * component_count;
     // How many colors fully fit into one line?
-    constexpr safe_auto<uint_fast8_t> batch_size = ppm_line_length / color_width;
+    constexpr auto batch_size = ppm_line_length / color_width;
     // How many full batches of colors are there to print?
     const auto batch_count = size() / batch_size;
 
@@ -76,7 +76,7 @@ std::string Canvas::as_ppm() const {
     constexpr Point ppm_range{0.0, 255.0};
 
     std::stringstream ss;
-    ss << ppm::generate_header(width_, height_, u32(ppm_range.y));
+    ss << ppm::generate_header(width_, height_, static_cast<u32>(ppm_range.y));
 
     // Print out batch_count batches of batch_size amount of colors each, one batch per line.
     for (auto nth_batch{0U}; nth_batch < batch_count; ++nth_batch) {
@@ -125,8 +125,8 @@ std::ostream& operator<<(std::ostream& os, Canvas const& c) {
     // In order to format the output nicely, it is necessary to print n-1 items with one delimiter,
     // and the nth item with a different delimiter.
 
-    const safe_auto<u16> penultimate_row = c.height_ - 1;
-    const safe_auto<u16> penultimate_col = c.width_ - 1;
+    u32 penultimate_row = c.height_ - 1;
+    u32 penultimate_col = c.width_ - 1;
 
     // for each row except last row
     for (auto y{0U}; y < penultimate_row; ++y) {
