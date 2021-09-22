@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER_SRC_POINT_OPERATIONS_HH_
-#define CHERRY_BLAZER_SRC_POINT_OPERATIONS_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_OPERATIONS_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_OPERATIONS_HH_
 
 #include "point.hh"
 #include "vector.hh"
@@ -67,4 +67,4 @@ template <typename T, std::size_t D>
 
 } // namespace cherry_blazer
 
-#endif // CHERRY_BLAZER_SRC_POINT_OPERATIONS_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_OPERATIONS_HH_

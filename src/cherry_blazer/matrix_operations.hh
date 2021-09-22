@@ -1,10 +1,9 @@
-#ifndef CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
-#define CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_OPERATIONS_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_OPERATIONS_HH_
 
 #include "axis.hh"
 #include "matrix.hh"
 #include "point.hh"
-#include "safe_numerics_typedefs.hh"
 #include "types.hh"
 #include "vector.hh"
 
@@ -62,9 +61,8 @@ template <typename T, u16 N, std::enable_if_t<N == 2U, bool> = true>
 // Get submatrix without certain row and column.
 // https://en.wikipedia.org/wiki/Matrix_(mathematics)#Submatrix
 template <typename T, u16 N, u16 M>
-[[nodiscard]] constexpr auto submatrix(Matrix<T, N, M> const& mat,
-                                       safe_urange_auto<0, N - 1> const& without_row,
-                                       safe_urange_auto<0, M - 1> const& without_col) noexcept {
+[[nodiscard]] constexpr auto submatrix(Matrix<T, N, M> const& mat, u32 const& without_row,
+                                       u32 const& without_col) noexcept {
     static_assert(N >= 2 && M >= 2, "Matrix must be at least 2x2 to have a submatrix.");
     Matrix<T, N - 1, M - 1> submat;
     for (auto src_row{0U}, dst_row{0U}; src_row < N; ++src_row) {
@@ -84,18 +82,16 @@ template <typename T, u16 N, u16 M>
 // Get minor of matrix at element (row, col).
 // https://en.wikipedia.org/wiki/Minor_(linear_algebra)
 template <typename T, u16 N, u16 M>
-[[nodiscard]] constexpr auto minor(Matrix<T, N, M> const& mat,
-                                   safe_urange_auto<0, N - 1> const& row,
-                                   safe_urange_auto<0, M - 1> const& col) noexcept {
+[[nodiscard]] constexpr auto minor(Matrix<T, N, M> const& mat, u32 const& row,
+                                   u32 const& col) noexcept {
     return det(submatrix(mat, row, col));
 }
 
 // Get cofactor of matrix at element (row, col).
 // https://en.wikipedia.org/wiki/Minor_(linear_algebra)
 template <typename T, u16 N, u16 M>
-[[nodiscard]] constexpr auto cofactor(Matrix<T, N, M> const& mat,
-                                      safe_urange_auto<0, N - 1> const& row,
-                                      safe_urange_auto<0, M - 1> const& col) noexcept {
+[[nodiscard]] constexpr auto cofactor(Matrix<T, N, M> const& mat, u32 const& row,
+                                      u32 const& col) noexcept {
     auto result = minor(mat, row, col);
     return (row + col) % 2 == 0 ? result : -result;
 }
@@ -244,4 +240,4 @@ template <typename T, u16 D>
 
 } // namespace cherry_blazer
 
-#endif // CHERRY_BLAZER_SRC_MATRIX_OPERATIONS_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_OPERATIONS_HH_

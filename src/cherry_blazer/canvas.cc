@@ -4,9 +4,10 @@
 #include "ppm.hh"
 #include "types.hh"
 
-#include <algorithm>
 #include <boost/assert.hpp>
 #include <boost/pfr/core.hpp>
+
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include <exception>

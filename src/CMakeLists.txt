@@ -1,15 +1,8 @@
-configure_file(config.hh.in config.hh)
+# Configure the library. This config is includable in user code as <cherry_blazer/config.hh>
+configure_file(cherry_blazer_config.hh.in "${CMAKE_CURRENT_BINARY_DIR}/cherry_blazer/config.hh")
 
-add_library(libcherryblazer canvas.cc color.cc ppm.cc)
-target_include_directories(libcherryblazer PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}"
-                                                  "${CMAKE_CURRENT_BINARY_DIR}")
-target_link_libraries(libcherryblazer PUBLIC cherry_blazer_flags m Boost::headers)
-if(BUILD_TESTING OR CHERRY_BLAZER_TEST)
-    target_link_libraries(libcherryblazer PUBLIC GTest::gtest_main)
-endif()
+# Add the library first, so that other targets can link to it.
+add_subdirectory(cherry_blazer)
 
-add_executable(cherry_blazer projectile.cc projectile_main.cc)
-target_link_libraries(cherry_blazer PRIVATE libcherryblazer)
-
-add_executable(clock clock_main.cc)
-target_link_libraries(clock PRIVATE libcherryblazer)
+add_subdirectory(projectile)
+add_subdirectory(clock)

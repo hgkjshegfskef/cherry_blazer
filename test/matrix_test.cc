@@ -1,13 +1,14 @@
-#include "config.hh"
-#include "matrix.hh"
-#include "matrix_operations.hh"
-#include "point_properties.hh"
-#include "shearing.hh"
-#include "vector.hh"
-#include "vector_properties.hh"
+#include <cherry_blazer/config.hh>
+#include <cherry_blazer/matrix.hh>
+#include <cherry_blazer/matrix_operations.hh>
+#include <cherry_blazer/point_properties.hh>
+#include <cherry_blazer/shearing.hh>
+#include <cherry_blazer/vector.hh>
+#include <cherry_blazer/vector_properties.hh>
+
+#include <gtest/gtest.h>
 
 #include <algorithm>
-#include <gtest/gtest.h>
 #include <iostream>
 #include <numbers>
 #include <numeric>
@@ -22,7 +23,7 @@ namespace {
 inline constexpr double abs_error = 1e-5;
 }
 
-namespace cherry_blazer {
+using namespace cherry_blazer;
 
 // Matrix can be constructed at compile-time, and in many ways.
 TEST(MatrixTest, MatrixConstexprCtors) { // NOLINT
@@ -589,5 +590,3 @@ TEST(MatrixTest, TransformationsAppliedTogether) { // NOLINT
             << "Got:\t\t" << transformed_point << "\nbut expected:\t" << expected;
     }
 }
-
-} // namespace cherry_blazer

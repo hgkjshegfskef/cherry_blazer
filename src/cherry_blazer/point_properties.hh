@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER_SRC_POINT_PROPERTIES_HH_
-#define CHERRY_BLAZER_SRC_POINT_PROPERTIES_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_PROPERTIES_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_PROPERTIES_HH_
 
 #include "point.hh"
 #include "util.hh"
@@ -40,4 +40,4 @@ constexpr auto& operator<<(std::ostream& os, Point<T, D> const& p) noexcept {
 
 } // namespace cherry_blazer
 
-#endif // CHERRY_BLAZER_SRC_POINT_PROPERTIES_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_PROPERTIES_HH_

@@ -1,13 +1,12 @@
-#include "canvas.hh"
-#include "color.hh"
-#include "matrix.hh"
-#include "matrix_operations.hh"
-#include "point.hh"
-#include "point_properties.hh"
-#include "safe_numerics_typedefs.hh"
-#include "types.hh"
-#include "vector.hh"
-#include "vector_operations.hh"
+#include <cherry_blazer/canvas.hh>
+#include <cherry_blazer/color.hh>
+#include <cherry_blazer/matrix.hh>
+#include <cherry_blazer/matrix_operations.hh>
+#include <cherry_blazer/point.hh>
+#include <cherry_blazer/point_properties.hh>
+#include <cherry_blazer/types.hh>
+#include <cherry_blazer/vector.hh>
+#include <cherry_blazer/vector_operations.hh>
 
 #include <cerrno>
 #include <cmath>

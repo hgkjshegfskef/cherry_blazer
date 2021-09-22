@@ -1,10 +1,11 @@
-#include "canvas.hh"
+#include <cherry_blazer/canvas.hh>
 
 #include <gtest/gtest.h>
+
 #include <string>
 #include <system_error>
 
-namespace cherry_blazer {
+using namespace cherry_blazer;
 
 TEST(CanvasCtorTest, CanvasCtor) { // NOLINT
     Canvas c{1, 2};
@@ -123,5 +124,3 @@ TEST_F(CanvasTest, CanvasExportPpmTail) { // NOLINT
                          " 255 204 153 255 204 153 255 204 153\n"};
     EXPECT_EQ(image, expected) << image;
 }
-
-} // namespace cherry_blazer

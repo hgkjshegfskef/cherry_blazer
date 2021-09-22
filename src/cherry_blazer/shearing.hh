@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER_SRC_SHEARING_HH_
-#define CHERRY_BLAZER_SRC_SHEARING_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_SHEARING_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_SHEARING_HH_
 
 #include <variant>
 
@@ -8,7 +8,7 @@ template <class> inline constexpr bool always_false_v = false;
 
 namespace cherry_blazer {
 
-namespace Shear {
+namespace Shear { // NOLINT(readability-identifier-naming)
 
 struct X {
     struct AgainstY {};
@@ -32,4 +32,4 @@ using shear_direction = std::variant<Shear::X::AgainstY, Shear::X::AgainstZ, She
 
 } // namespace cherry_blazer
 
-#endif // CHERRY_BLAZER_SRC_SHEARING_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_SHEARING_HH_

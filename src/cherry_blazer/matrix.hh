@@ -1,12 +1,13 @@
-#ifndef CHERRY_BLAZER_SRC_MATRIX_HH_
-#define CHERRY_BLAZER_SRC_MATRIX_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_HH_
 
 #include "axis.hh"
-#include "safe_numerics_typedefs.hh"
 #include "shearing.hh"
 #include "types.hh"
 #include "util.hh"
 #include "vector.hh"
+
+#include <boost/assert.hpp>
 
 #include <algorithm>
 #include <array>
@@ -73,11 +74,15 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
     [[nodiscard]] const_iterator cbegin() const { return impl::mat_.begin(); }
     [[nodiscard]] const_iterator cend() const { return impl::mat_.end(); }
 
-    constexpr T& operator()(safe_urange_auto<0, N> n, safe_urange_auto<0, M> m) noexcept {
+    constexpr T& operator()(u32 n, u32 m) noexcept {
+        BOOST_VERIFY(n < N);
+        BOOST_VERIFY(m < M);
         return impl::mat_[n * M + m];
     }
 
-    constexpr T operator()(safe_urange_auto<0, N> n, safe_urange_auto<0, M> m) const noexcept {
+    constexpr T operator()(u32 n, u32 m) const noexcept {
+        BOOST_VERIFY(n < N);
+        BOOST_VERIFY(m < M);
         return impl::mat_[n * M + m];
     }
 
@@ -220,4 +225,4 @@ using Mat4d = Matrix<double, 4, 4>; // NOLINT(readability-identifier-naming)
 
 } // namespace cherry_blazer
 
-#endif // CHERRY_BLAZER_SRC_MATRIX_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_HH_

@@ -1,14 +1,13 @@
-#include "canvas.hh"
-#include "color.hh"
-#include "point.hh"
-#include "point_properties.hh"
 #include "projectile.hh"
-#include "safe_numerics_typedefs.hh"
-#include "types.hh"
-#include "vector.hh"
-#include "vector_operations.hh"
 
-#include <boost/safe_numerics/safe_integer.hpp>
+#include <cherry_blazer/canvas.hh>
+#include <cherry_blazer/color.hh>
+#include <cherry_blazer/point.hh>
+#include <cherry_blazer/point_properties.hh>
+#include <cherry_blazer/types.hh>
+#include <cherry_blazer/vector.hh>
+#include <cherry_blazer/vector_operations.hh>
+
 #include <cerrno>
 #include <iostream>
 #include <string>
@@ -62,5 +61,5 @@ int main() {
     }
 
     const std::string image_contents = canvas.as_ppm();
-    image_file.write(image_contents.data(), cb::safe_auto<long>(image_contents.size()));
+    image_file.write(image_contents.data(), i32(image_contents.size()));
 }

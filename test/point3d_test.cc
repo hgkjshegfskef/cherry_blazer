@@ -1,14 +1,15 @@
-#include "config.hh"
-#include "point.hh"
-#include "point_operations.hh"
-#include "point_properties.hh"
-#include "vector.hh"
-#include "vector_properties.hh"
+#include <cherry_blazer/config.hh>
+#include <cherry_blazer/point.hh>
+#include <cherry_blazer/point_operations.hh>
+#include <cherry_blazer/point_properties.hh>
+#include <cherry_blazer/vector.hh>
+#include <cherry_blazer/vector_properties.hh>
 
 #include <gtest/gtest.h>
+
 #include <string>
 
-namespace cherry_blazer {
+using namespace cherry_blazer;
 
 // Everything marked as (=ERROR) is tested to not compile in point_test.cmake.
 
@@ -101,5 +102,3 @@ TEST(Point3dTest, Point3dMinusVector3d) { // NOLINT
 // Point == Vector (= ERROR)
 
 // Point != Vector (= ERROR)
-
-} // namespace cherry_blazer

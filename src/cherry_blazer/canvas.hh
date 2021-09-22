@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER_SRC_CANVAS_HH_
-#define CHERRY_BLAZER_SRC_CANVAS_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_CANVAS_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_CANVAS_HH_
 
 #include "color.hh"
 #include "types.hh"
@@ -43,4 +43,4 @@ class Canvas {
 
 } // namespace cherry_blazer
 
-#endif // CHERRY_BLAZER_SRC_CANVAS_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_CANVAS_HH_

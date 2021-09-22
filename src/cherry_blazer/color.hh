@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER_SRC_COLOR_HH_
-#define CHERRY_BLAZER_SRC_COLOR_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_COLOR_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_COLOR_HH_
 
 #include <ostream>
 
@@ -50,4 +50,4 @@ std::ostream& operator<<(std::ostream& os, Color const& c);
 
 } // namespace cherry_blazer
 
-#endif // CHERRY_BLAZER_SRC_COLOR_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_COLOR_HH_

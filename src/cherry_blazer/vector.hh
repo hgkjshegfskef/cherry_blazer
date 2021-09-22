@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER_SRC_VECTOR_HH_
-#define CHERRY_BLAZER_SRC_VECTOR_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_HH_
 
 #include <cstddef>
 #include <exception>
@@ -129,4 +129,4 @@ using Vec4d = Vector<double, 4>; // NOLINT(readability-identifier-naming)
 
 } // namespace cherry_blazer
 
-#endif // CHERRY_BLAZER_SRC_VECTOR_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_HH_

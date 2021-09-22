@@ -1,9 +1,10 @@
-#include "color.hh"
+#include <cherry_blazer/color.hh>
 
 #include <gtest/gtest.h>
+
 #include <string>
 
-using cherry_blazer::Color;
+using namespace cherry_blazer;
 
 // scalar*Color
 TEST(ColorTest, ScalarTimesColor) { // NOLINT

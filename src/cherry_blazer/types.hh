@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER_SRC_TYPES_HH_
-#define CHERRY_BLAZER_SRC_TYPES_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_TYPES_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_TYPES_HH_
 
 #include <cstdint>
 
@@ -13,4 +13,4 @@ using u16 = uint_fast16_t;
 using u32 = uint_fast32_t;
 using u64 = uint_fast64_t;
 
-#endif // CHERRY_BLAZER_SRC_TYPES_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_TYPES_HH_

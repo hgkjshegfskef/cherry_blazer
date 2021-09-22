@@ -1,8 +1,8 @@
-#ifndef CHERRY_BLAZER_SRC_PROJECTILE_HH_
-#define CHERRY_BLAZER_SRC_PROJECTILE_HH_
+#ifndef CHERRY_BLAZER_SRC_PROJECTILE_PROJECTILE_HH_
+#define CHERRY_BLAZER_SRC_PROJECTILE_PROJECTILE_HH_
 
-#include "point.hh"
-#include "vector.hh"
+#include <cherry_blazer/point.hh>
+#include <cherry_blazer/vector.hh>
 
 namespace cb = cherry_blazer;
 
@@ -18,4 +18,4 @@ struct Environment {
 
 Projectile tick(Environment const& env, Projectile const& proj);
 
-#endif // CHERRY_BLAZER_SRC_PROJECTILE_HH_
+#endif // CHERRY_BLAZER_SRC_PROJECTILE_PROJECTILE_HH_

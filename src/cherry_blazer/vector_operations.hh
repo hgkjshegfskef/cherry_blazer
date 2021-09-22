@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER_SRC_VECTOR_OPERATIONS_HH_
-#define CHERRY_BLAZER_SRC_VECTOR_OPERATIONS_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_OPERATIONS_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_OPERATIONS_HH_
 
 #include "point.hh"
 #include "vector.hh"
@@ -122,4 +122,4 @@ cross(Vector<T, D> const& v1, Vector<T, D> const& v2) noexcept {
 
 } // namespace cherry_blazer
 
-#endif // CHERRY_BLAZER_SRC_VECTOR_OPERATIONS_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_OPERATIONS_HH_
