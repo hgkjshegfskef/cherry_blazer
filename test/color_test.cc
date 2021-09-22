@@ -4,7 +4,7 @@
 
 #include <string>
 
-using namespace cherry_blazer;
+using cherry_blazer::Color;
 
 // scalar*Color
 TEST(ColorTest, ScalarTimesColor) { // NOLINT

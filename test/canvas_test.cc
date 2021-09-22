@@ -5,7 +5,8 @@
 #include <string>
 #include <system_error>
 
-using namespace cherry_blazer;
+using cherry_blazer::Canvas;
+using cherry_blazer::Color;
 
 TEST(CanvasCtorTest, CanvasCtor) { // NOLINT
     Canvas c{1, 2};

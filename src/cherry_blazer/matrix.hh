@@ -170,7 +170,7 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
         }
     }
 
-    [[nodiscard]] static constexpr auto shearing(shear_direction const& direction) {
+    [[nodiscard]] static constexpr auto shearing(ShearDirection const& direction) {
         static_assert(N == M, "Only for square matrices.");
         static_assert(N == 4, "Only for 3D (for now).");
         Matrix<T, N, N> shearing_matrix = identity();

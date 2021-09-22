@@ -9,7 +9,10 @@
 
 #include <string>
 
-using namespace cherry_blazer;
+using cherry_blazer::Point;
+using cherry_blazer::Point3d;
+using cherry_blazer::Vec3d;
+using cherry_blazer::Vector;
 
 // Everything marked as (=ERROR) is tested to not compile in vector_test.cmake.
 

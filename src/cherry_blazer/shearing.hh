@@ -27,7 +27,7 @@ struct Z {
 
 } // namespace Shear
 
-using shear_direction = std::variant<Shear::X::AgainstY, Shear::X::AgainstZ, Shear::Y::AgainstX,
+using ShearDirection = std::variant<Shear::X::AgainstY, Shear::X::AgainstZ, Shear::Y::AgainstX,
                                      Shear::Y::AgainstZ, Shear::Z::AgainstX, Shear::Z::AgainstY>;
 
 } // namespace cherry_blazer

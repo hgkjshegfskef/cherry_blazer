@@ -17,6 +17,15 @@
 #include <system_error>
 #include <vector>
 
+using namespace std::numbers;
+
+using cherry_blazer::Axis;
+using cherry_blazer::Canvas;
+using cherry_blazer::Color;
+using cherry_blazer::Matrix;
+using cherry_blazer::Point;
+using cherry_blazer::Vector;
+
 namespace {
 std::ofstream open_file(std::string const& file) {
     std::ofstream f{file};
@@ -27,47 +36,43 @@ std::ofstream open_file(std::string const& file) {
 
 } // namespace
 
-namespace cb = cherry_blazer;
-
 int main() {
-    cb::Point clock_origin{0., 0., 0.};
+    Point clock_origin{0., 0., 0.};
 
     using T = decltype(clock_origin)::value_type;        // NOLINT(readability-identifier-naming)
     auto constexpr D = decltype(clock_origin)::size + 1; // NOLINT(readability-identifier-naming)
     auto constexpr clock_radius = 40.;
 
-    std::vector const translation_matrices{
-        cb::Matrix<T, D, D>::translation(cb::Vector{0., 1., 0.}),
-        cb::Matrix<T, D, D>::translation(cb::Vector{1., 0., 0.}),
-        cb::Matrix<T, D, D>::translation(cb::Vector{0., -1., 0.}),
-        cb::Matrix<T, D, D>::translation(cb::Vector{-1., 0., 0.})};
+    std::vector const translation_matrices{Matrix<T, D, D>::translation(Vector{0., 1., 0.}),
+                                           Matrix<T, D, D>::translation(Vector{1., 0., 0.}),
+                                           Matrix<T, D, D>::translation(Vector{0., -1., 0.}),
+                                           Matrix<T, D, D>::translation(Vector{-1., 0., 0.})};
 
-    std::vector const rotation_matrices{
-        cb::Matrix<T, D, D>::rotation(Axis::Z, std::numbers::pi_v<T> / 3),
-        cb::Matrix<T, D, D>::rotation(Axis::Z, std::numbers::pi_v<T> / 6)};
+    std::vector const rotation_matrices{Matrix<T, D, D>::rotation(Axis::Z, pi_v<T> / 3),
+                                        Matrix<T, D, D>::rotation(Axis::Z, pi_v<T> / 6)};
 
     auto const scaling_matrix =
-        cb::Matrix<T, D, D>::scaling(cb::Vector{clock_radius, clock_radius, clock_radius});
+        Matrix<T, D, D>::scaling(Vector{clock_radius, clock_radius, clock_radius});
 
-    std::vector<cb::Point<T, D - 1>> translated_points;
+    std::vector<Point<T, D - 1>> translated_points;
     translated_points.reserve(translation_matrices.size() * 2);
     for (auto const& translation_matrix : translation_matrices) {
         translated_points.emplace_back(
-            cb::scale(scaling_matrix, cb::translate(translation_matrix, clock_origin)));
+            scale(scaling_matrix, translate(translation_matrix, clock_origin)));
     }
 
     for (auto const& rotation_matrix : rotation_matrices) {
         for (auto const& translation_matrix : translation_matrices) {
-            translated_points.emplace_back(cb::rotate(
-                rotation_matrix,
-                cb::scale(scaling_matrix, cb::translate(translation_matrix, clock_origin))));
+            translated_points.emplace_back(
+                rotate(rotation_matrix,
+                       scale(scaling_matrix, translate(translation_matrix, clock_origin))));
         }
     }
 
     auto constexpr canvas_size = clock_radius * 2.5;
-    cb::Canvas canvas{static_cast<u32>(std::round(canvas_size)),
-                      static_cast<u32>(std::round(canvas_size))};
-    cb::Color const white{255., 255., 255.};
+    Canvas canvas{static_cast<u32>(std::round(canvas_size)),
+                  static_cast<u32>(std::round(canvas_size))};
+    Color const white{255., 255., 255.};
     auto const offset = canvas.width() / 2;
     for (auto const& point : translated_points) {
         canvas(static_cast<u32>(point.x) + offset, static_cast<u32>(point.y) + offset) = white;

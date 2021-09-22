@@ -19,11 +19,22 @@
 
 using namespace std::string_literals;
 
+using cherry_blazer::Axis;
+using cherry_blazer::Mat2d;
+using cherry_blazer::Mat3d;
+using cherry_blazer::Mat4d;
+using cherry_blazer::Matrix;
+using cherry_blazer::Point;
+using cherry_blazer::ShearDirection;
+using cherry_blazer::Vec4d;
+using cherry_blazer::Vector;
+using cherry_blazer::Shear::X;
+using cherry_blazer::Shear::Y;
+using cherry_blazer::Shear::Z;
+
 namespace {
 inline constexpr double abs_error = 1e-5;
 }
-
-using namespace cherry_blazer;
 
 // Matrix can be constructed at compile-time, and in many ways.
 TEST(MatrixTest, MatrixConstexprCtors) { // NOLINT
@@ -491,7 +502,7 @@ TEST(MatrixTest, RotatingPointAroundZAxisFullQuarter) { // NOLINT
 
 TEST(MatrixTest, ShearingPointComponentXAgainstY) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::X::AgainstY{}};
+    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{X::AgainstY{}};
     CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
         Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
                decltype(original_point)::size + 1>::shearing(direction);
@@ -505,7 +516,7 @@ TEST(MatrixTest, ShearingPointComponentXAgainstY) { // NOLINT
 
 TEST(MatrixTest, ShearingPointComponentXAgainstZ) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::X::AgainstZ{}};
+    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{X::AgainstZ{}};
     CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
         Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
                decltype(original_point)::size + 1>::shearing(direction);
@@ -519,7 +530,7 @@ TEST(MatrixTest, ShearingPointComponentXAgainstZ) { // NOLINT
 
 TEST(MatrixTest, ShearingPointComponentYAgainstX) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::Y::AgainstX{}};
+    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Y::AgainstX{}};
     CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
         Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
                decltype(original_point)::size + 1>::shearing(direction);
@@ -533,7 +544,7 @@ TEST(MatrixTest, ShearingPointComponentYAgainstX) { // NOLINT
 
 TEST(MatrixTest, ShearingPointComponentYAgainstZ) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::Y::AgainstZ{}};
+    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Y::AgainstZ{}};
     CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
         Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
                decltype(original_point)::size + 1>::shearing(direction);
@@ -547,7 +558,7 @@ TEST(MatrixTest, ShearingPointComponentYAgainstZ) { // NOLINT
 
 TEST(MatrixTest, ShearingPointComponentZAgainstX) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::Z::AgainstX{}};
+    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Z::AgainstX{}};
     CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
         Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
                decltype(original_point)::size + 1>::shearing(direction);
@@ -561,7 +572,7 @@ TEST(MatrixTest, ShearingPointComponentZAgainstX) { // NOLINT
 
 TEST(MatrixTest, ShearingPointComponentZAgainstY) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR shear_direction direction{Shear::Z::AgainstY{}};
+    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Z::AgainstY{}};
     CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
         Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
                decltype(original_point)::size + 1>::shearing(direction);
