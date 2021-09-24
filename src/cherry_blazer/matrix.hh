@@ -283,20 +283,25 @@ get(Matrix<Precision, OuterDimension, InnerDimension> const& mat) noexcept {
 // single guide, or at least deduct that T should be std::common_type of all Ts in the pack.
 
 // 2x2 Matrix
-template <typename T, u16 M>
-Matrix(detail::enumerate<0U, T const (&)[M]>, detail::enumerate<1U, T const (&)[M]>)
-    -> Matrix<T, M, M>;
+template <typename Precision, std::size_t InnerDimension>
+Matrix(detail::enumerate<0U, Precision const (&)[InnerDimension]>,
+       detail::enumerate<1U, Precision const (&)[InnerDimension]>)
+    -> Matrix<Precision, InnerDimension, InnerDimension>;
 
 // 3x3 Matrix
-template <typename T, u16 M>
-Matrix(detail::enumerate<0U, T const (&)[M]>, detail::enumerate<1U, T const (&)[M]>,
-       detail::enumerate<2U, T const (&)[M]>) -> Matrix<T, M, M>;
+template <typename Precision, std::size_t InnerDimension>
+Matrix(detail::enumerate<0U, Precision const (&)[InnerDimension]>,
+       detail::enumerate<1U, Precision const (&)[InnerDimension]>,
+       detail::enumerate<2U, Precision const (&)[InnerDimension]>)
+    -> Matrix<Precision, InnerDimension, InnerDimension>;
 
 // 4x4 Matrix
-template <typename T, u16 M>
-Matrix(detail::enumerate<0U, T const (&)[M]>, detail::enumerate<1U, T const (&)[M]>,
-       detail::enumerate<2U, T const (&)[M]>, detail::enumerate<3U, T const (&)[M]>)
-    -> Matrix<T, M, M>;
+template <typename Precision, std::size_t InnerDimension>
+Matrix(detail::enumerate<0U, Precision const (&)[InnerDimension]>,
+       detail::enumerate<1U, Precision const (&)[InnerDimension]>,
+       detail::enumerate<2U, Precision const (&)[InnerDimension]>,
+       detail::enumerate<3U, Precision const (&)[InnerDimension]>)
+    -> Matrix<Precision, InnerDimension, InnerDimension>;
 
 using Mat2f = Matrix<float, 2, 2>;  // NOLINT(readability-identifier-naming)
 using Mat3f = Matrix<float, 3, 3>;  // NOLINT(readability-identifier-naming)
