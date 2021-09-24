@@ -87,7 +87,8 @@ target_compile_options(
         -Werror=missing-field-initializers # partial ctors is an error
         -Wdelete-non-virtual-dtor # https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP52-CPP.+Do+not+delete+a+polymorphic+object+without+a+virtual+destructor
         -Wconversion
-        -Wsign-conversion)
+        -Wsign-conversion
+        -fuse-ld=lld)
 
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     target_compile_options(
@@ -122,11 +123,9 @@ endif()
 if(CHERRY_BLAZER_DEBUG)
     if(NOT CHERRY_BLAZER_OPTIMIZE)
         target_compile_options(cherry_blazer_flags_debug INTERFACE -O0)
-        #include(CheckCXXCompilerFlag)
-        #check_cxx_compiler_flag("-Og" cherry_blazer_compiler_has_og)
-        #if(cherry_blazer_compiler_has_og)
-        #    target_compile_options(cherry_blazer_flags_debug INTERFACE -Og)
-        #endif()
+        # include(CheckCXXCompilerFlag) check_cxx_compiler_flag("-Og" cherry_blazer_compiler_has_og)
+        # if(cherry_blazer_compiler_has_og) target_compile_options(cherry_blazer_flags_debug
+        # INTERFACE -Og) endif()
         target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_debug)
     else()
         # Optimization flags will clash.

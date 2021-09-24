@@ -86,7 +86,7 @@ class Matrix
     constexpr reference at(size_type outer_pos, size_type inner_pos) {
         return base::mat_.at(outer_pos * InnerDimension + inner_pos);
     }
-    constexpr const_reference at(size_type outer_pos, size_type inner_pos) const {
+    [[nodiscard]] constexpr const_reference at(size_type outer_pos, size_type inner_pos) const {
         return base::mat_.at(outer_pos * InnerDimension + inner_pos);
     }
 
@@ -102,35 +102,43 @@ class Matrix
     }
 
     constexpr reference front() { return base::mat_.front(); }
-    constexpr const_reference front() const { return base::mat_.front(); }
+    [[nodiscard]] constexpr const_reference front() const { return base::mat_.front(); }
 
     constexpr reference back() { return base::mat_.back(); }
-    constexpr const_reference back() const { return base::mat_.back(); }
+    [[nodiscard]] constexpr const_reference back() const { return base::mat_.back(); }
 
     constexpr pointer data() noexcept { return base::mat_.data(); }
-    constexpr const_pointer data() const noexcept { return base::mat_.data(); }
+    [[nodiscard]] constexpr const_pointer data() const noexcept { return base::mat_.data(); }
 
     constexpr iterator begin() noexcept { return base::mat_.begin(); }
-    constexpr const_iterator begin() const noexcept { return base::mat_.begin(); }
-    constexpr const_iterator cbegin() const noexcept { return base::mat_.cbegin(); }
+    [[nodiscard]] constexpr const_iterator begin() const noexcept { return base::mat_.begin(); }
+    [[nodiscard]] constexpr const_iterator cbegin() const noexcept { return base::mat_.cbegin(); }
 
     constexpr iterator end() noexcept { return base::mat_.end(); }
-    constexpr const_iterator end() const noexcept { return base::mat_.end(); }
-    constexpr const_iterator cend() const noexcept { return base::mat_.cend(); }
+    [[nodiscard]] constexpr const_iterator end() const noexcept { return base::mat_.end(); }
+    [[nodiscard]] constexpr const_iterator cend() const noexcept { return base::mat_.cend(); }
 
     constexpr reverse_iterator rbegin() noexcept { return base::mat_.rbegin(); }
-    constexpr const_reverse_iterator rbegin() const noexcept { return base::mat_.rbegin(); }
-    constexpr const_reverse_iterator crbegin() const noexcept { return base::mat_.crbegin(); }
+    [[nodiscard]] constexpr const_reverse_iterator rbegin() const noexcept {
+        return base::mat_.rbegin();
+    }
+    [[nodiscard]] constexpr const_reverse_iterator crbegin() const noexcept {
+        return base::mat_.crbegin();
+    }
 
     constexpr reverse_iterator rend() noexcept { return base::mat_.rend(); }
-    constexpr const_reverse_iterator rend() const noexcept { return base::mat_.rend(); }
-    constexpr const_reverse_iterator crend() const noexcept { return base::mat_.crend(); }
+    [[nodiscard]] constexpr const_reverse_iterator rend() const noexcept {
+        return base::mat_.rend();
+    }
+    [[nodiscard]] constexpr const_reverse_iterator crend() const noexcept {
+        return base::mat_.crend();
+    }
 
     [[nodiscard]] constexpr bool empty() const noexcept { return base::mat_.empty(); }
 
-    constexpr size_type size() const noexcept { return base::mat_.size(); }
+    [[nodiscard]] constexpr size_type size() const noexcept { return base::mat_.size(); }
 
-    constexpr size_type max_size() const noexcept { return base::mat_.max_size(); }
+    [[nodiscard]] constexpr size_type max_size() const noexcept { return base::mat_.max_size(); }
 
     constexpr void fill(const_reference value) { return base::mat_.fill(value); }
 
