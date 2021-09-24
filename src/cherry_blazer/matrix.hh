@@ -262,6 +262,23 @@ std::ostream& operator<<(std::ostream& os,
     return os;
 }
 
+template <std::size_t Ith, std::size_t Jth, typename Precision, std::size_t OuterDimension,
+          std::size_t InnerDimension>
+constexpr typename Matrix<Precision, OuterDimension, InnerDimension>::reference
+get(Matrix<Precision, OuterDimension, InnerDimension>& mat) noexcept {
+    static_assert(0 <= Ith && Ith < OuterDimension, "Matrix outer index is out of bounds.");
+    static_assert(0 <= Jth && Jth < InnerDimension, "Matrix inner index is out of bounds.");
+    return mat(Ith, Jth);
+}
+template <std::size_t Ith, std::size_t Jth, typename Precision, std::size_t OuterDimension,
+          std::size_t InnerDimension>
+constexpr typename Matrix<Precision, OuterDimension, InnerDimension>::const_reference
+get(Matrix<Precision, OuterDimension, InnerDimension> const& mat) noexcept {
+    static_assert(0 <= Ith && Ith < OuterDimension, "Matrix outer index is out of bounds.");
+    static_assert(0 <= Jth && Jth < InnerDimension, "Matrix inner index is out of bounds.");
+    return mat(Ith, Jth);
+}
+
 // Deduct a few commonly used matrices. I don't know if it's possible to use variadic pack to make a
 // single guide, or at least deduct that T should be std::common_type of all Ts in the pack.
 
