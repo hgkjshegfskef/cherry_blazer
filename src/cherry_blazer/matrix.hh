@@ -8,11 +8,13 @@
 #include "vector.hh"
 
 #include <boost/assert.hpp>
+#include <boost/io/ios_state.hpp>
 
 #include <algorithm>
 #include <array>
 #include <cmath>
 #include <cstddef>
+#include <cstring>
 #include <iomanip>
 #include <memory>
 #include <type_traits>
@@ -20,134 +22,158 @@
 
 namespace cherry_blazer {
 
-namespace matrix::detail {
-template <std::size_t, typename T> using indexed_type = T;
-} // namespace matrix::detail
+namespace detail {
 
-template <typename T, typename Ns, u16 M> class MatrixImpl;
+template <std::size_t, typename T> using enumerate = T;
 
-template <typename T, std::size_t... Ns, u16 M> class MatrixImpl<T, std::index_sequence<Ns...>, M> {
-    static inline constexpr u32 size = sizeof...(Ns) * M;
+template <typename Precision, typename NthInnerArrayIndexSequence, std::size_t InnerDimension>
+class MatrixBase;
 
+template <typename Precision, std::size_t... NthInnerArrayPack, std::size_t InnerDimension>
+class MatrixBase<Precision, std::index_sequence<NthInnerArrayPack...>, InnerDimension> {
   public:
-    MatrixImpl() = default;
-    constexpr explicit MatrixImpl(
-        matrix::detail::indexed_type<Ns, T const (&)[M]>... arr) noexcept {
-        ((insert(mat_, arr, Ns)), ...);
+    MatrixBase() = default;
+    constexpr explicit MatrixBase(
+        enumerate<NthInnerArrayPack,
+                  Precision const (&)[InnerDimension]>... nth_inner_array) noexcept {
+        ((std::memcpy(mat_.data() + NthInnerArrayPack * InnerDimension, nth_inner_array,
+                      sizeof nth_inner_array)),
+         ...);
     }
 
   protected:
-    std::array<T, size> mat_; // NOLINT(readability-identifier-naming)
-
-  private:
-    constexpr void insert(std::array<T, size>& dst, T const (&src)[M], u16 n) noexcept {
-        for (auto i{n * M}, j{0UL}; i < n * M + M; ++i, ++j)
-            dst[i] = src[j];
-    }
+    std::array<Precision, sizeof...(NthInnerArrayPack) * InnerDimension>
+        mat_; // NOLINT(readability-identifier-naming)
 };
 
+} // namespace detail
+
 // Any NxM Matrix, when size is known at compile time.
-template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index_sequence<N>, M> {
-    static_assert(std::is_floating_point_v<T>);
+template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimension>
+class Matrix
+    : detail::MatrixBase<Precision, std::make_index_sequence<OuterDimension>, InnerDimension> {
+    static_assert(std::is_same_v<Precision, float> || std::is_same_v<Precision, double>,
+                  "Matrix only supports single and double precision.");
 
-    static inline constexpr u32 size = N * M;
-    static_assert(size != 0, "Both dimensions must be non-zero.");
+    static_assert(OuterDimension * InnerDimension != 0, "Both dimensions must be non-zero.");
 
-    using underlying_type = std::array<T, size>;
-    using impl = MatrixImpl<T, std::make_index_sequence<N>, M>;
+    using underlying_type = std::array<Precision, OuterDimension * InnerDimension>;
+    using base =
+        detail::MatrixBase<Precision, std::make_index_sequence<OuterDimension>, InnerDimension>;
 
   public:
+    using value_type = Precision;
+    using size_type = typename underlying_type::size_type;
+    using difference_type = typename underlying_type::difference_type;
+    using reference = value_type&;
+    using const_reference = value_type const&;
+    using pointer = value_type*;
+    using const_pointer = value_type const*;
     using iterator = typename underlying_type::iterator;
     using const_iterator = typename underlying_type::const_iterator;
-    using value_type = T;
-    static inline constexpr u16 row_size = N;
-    static inline constexpr u16 col_size = M;
+    using reverse_iterator = typename underlying_type::reverse_iterator;
+    using const_reverse_iterator = typename underlying_type::const_reverse_iterator;
 
-    // Clang requires ctor to not be aliased: https://bugs.llvm.org/show_bug.cgi?id=22242
-    // This became a subject to a defect report: https://wg21.link/cwg2070
-    using MatrixImpl<T, std::make_index_sequence<N>, M>::MatrixImpl;
+    static inline constexpr std::size_t outer_dimension = OuterDimension;
+    static inline constexpr std::size_t inner_dimension = InnerDimension;
 
-    [[nodiscard]] iterator begin() { return impl::mat_.begin(); }
-    [[nodiscard]] iterator end() { return impl::mat_.end(); }
-    [[nodiscard]] const_iterator begin() const { return impl::mat_.begin(); }
-    [[nodiscard]] const_iterator end() const { return impl::mat_.end(); }
-    [[nodiscard]] const_iterator cbegin() const { return impl::mat_.begin(); }
-    [[nodiscard]] const_iterator cend() const { return impl::mat_.end(); }
+    Matrix() = default;
+    using detail::MatrixBase<Precision, std::make_index_sequence<OuterDimension>,
+                             InnerDimension>::MatrixBase;
 
-    constexpr T& operator()(u32 n, u32 m) noexcept {
-        BOOST_VERIFY(n < N);
-        BOOST_VERIFY(m < M);
-        return impl::mat_[n * M + m];
+    // Implement interface similar to std::array.
+
+    constexpr reference at(size_type outer_pos, size_type inner_pos) {
+        return base::mat_.at(outer_pos * InnerDimension + inner_pos);
+    }
+    constexpr const_reference at(size_type outer_pos, size_type inner_pos) const {
+        return base::mat_.at(outer_pos * InnerDimension + inner_pos);
     }
 
-    constexpr T operator()(u32 n, u32 m) const noexcept {
-        BOOST_VERIFY(n < N);
-        BOOST_VERIFY(m < M);
-        return impl::mat_[n * M + m];
+    constexpr reference operator()(size_type outer_pos, size_type inner_pos) noexcept {
+        BOOST_VERIFY(outer_pos < OuterDimension);
+        BOOST_VERIFY(inner_pos < InnerDimension);
+        return base::mat_[outer_pos * InnerDimension + inner_pos];
+    }
+    constexpr const_reference operator()(size_type outer_pos, size_type inner_pos) const noexcept {
+        BOOST_VERIFY(outer_pos < OuterDimension);
+        BOOST_VERIFY(inner_pos < InnerDimension);
+        return base::mat_[outer_pos * InnerDimension + inner_pos];
     }
 
-    friend constexpr bool operator==(Matrix const& lhs, Matrix const& rhs) noexcept {
-        return std::equal(lhs.cbegin(), lhs.cend(), rhs.cbegin(), rhs.cend(),
-                          [](auto& lhs, auto& rhs) { return almost_equal(lhs, rhs); });
-    }
+    constexpr reference front() { return base::mat_.front(); }
+    constexpr const_reference front() const { return base::mat_.front(); }
 
-    friend constexpr bool operator!=(Matrix const& lhs, Matrix const& rhs) noexcept {
-        return !(lhs == rhs);
-    }
+    constexpr reference back() { return base::mat_.back(); }
+    constexpr const_reference back() const { return base::mat_.back(); }
 
-    friend constexpr std::ostream& operator<<(std::ostream& os, Matrix const& mat) noexcept {
-        for (auto row{0U}; row < N - 1; ++row) {
-            os << "{ ";
-            for (auto col{0U}; col < M - 1; ++col) {
-                os << std::setprecision(std::numeric_limits<T>::max_digits10) << mat(row, col)
-                   << ", ";
-            }
-            os << std::setprecision(std::numeric_limits<T>::max_digits10) << mat(row, M - 1)
-               << " }\n";
-        }
+    constexpr pointer data() noexcept { return base::mat_.data(); }
+    constexpr const_pointer data() const noexcept { return base::mat_.data(); }
 
-        os << "{ ";
-        for (auto col{0U}; col < M - 1; ++col) {
-            os << std::setprecision(std::numeric_limits<T>::max_digits10) << mat(N - 1, col)
-               << ", ";
-        }
-        return os << std::setprecision(std::numeric_limits<T>::max_digits10) << mat(N - 1, M - 1)
-                  << " }";
+    constexpr iterator begin() noexcept { return base::mat_.begin(); }
+    constexpr const_iterator begin() const noexcept { return base::mat_.begin(); }
+    constexpr const_iterator cbegin() const noexcept { return base::mat_.cbegin(); }
+
+    constexpr iterator end() noexcept { return base::mat_.end(); }
+    constexpr const_iterator end() const noexcept { return base::mat_.end(); }
+    constexpr const_iterator cend() const noexcept { return base::mat_.cend(); }
+
+    constexpr reverse_iterator rbegin() noexcept { return base::mat_.rbegin(); }
+    constexpr const_reverse_iterator rbegin() const noexcept { return base::mat_.rbegin(); }
+    constexpr const_reverse_iterator crbegin() const noexcept { return base::mat_.crbegin(); }
+
+    constexpr reverse_iterator rend() noexcept { return base::mat_.rend(); }
+    constexpr const_reverse_iterator rend() const noexcept { return base::mat_.rend(); }
+    constexpr const_reverse_iterator crend() const noexcept { return base::mat_.crend(); }
+
+    [[nodiscard]] constexpr bool empty() const noexcept { return base::mat_.empty(); }
+
+    constexpr size_type size() const noexcept { return base::mat_.size(); }
+
+    constexpr size_type max_size() const noexcept { return base::mat_.max_size(); }
+
+    constexpr void fill(const_reference value) { return base::mat_.fill(value); }
+
+    constexpr void swap(Matrix& other) noexcept(std::is_nothrow_swappable_v<value_type>) {
+        using std::swap;
+        base::mat_.swap(other.base::mat_);
     }
 
     // https://en.wikipedia.org/wiki/Identity_matrix
     [[nodiscard]] static constexpr auto identity() {
-        static_assert(N == M, "Only for square matrices.");
-        Matrix<T, N, N> identity_matrix{};
-        for (auto i{0U}; i < N; ++i)
-            identity_matrix(i, i) = static_cast<T>(1);
+        static_assert(OuterDimension == InnerDimension, "Only for square matrices.");
+        Matrix<Precision, OuterDimension, OuterDimension> identity_matrix{};
+        for (auto i{0U}; i < OuterDimension; ++i)
+            identity_matrix(i, i) = static_cast<Precision>(1);
         return identity_matrix;
     }
 
     // https://en.wikipedia.org/wiki/Translation_(geometry)
-    [[nodiscard]] static constexpr auto translation(Vector<T, N - 1> const& translation_vector) {
-        static_assert(N == M, "Only for square matrices.");
-        Matrix<T, N, N> translation_matrix = identity();
-        for (auto row{0U}; row < N - 1; ++row)
-            translation_matrix(row, N - 1) = translation_vector[row];
+    [[nodiscard]] static constexpr auto
+    translation(Vector<Precision, OuterDimension - 1> const& translation_vector) {
+        static_assert(OuterDimension == InnerDimension, "Only for square matrices.");
+        Matrix<Precision, OuterDimension, OuterDimension> translation_matrix = identity();
+        for (auto row{0U}; row < OuterDimension - 1; ++row)
+            translation_matrix(row, OuterDimension - 1) = translation_vector[row];
         return translation_matrix;
     }
 
     // https://en.wikipedia.org/wiki/Scaling_(geometry)
-    [[nodiscard]] static constexpr auto scaling(Vector<T, N - 1> const& scaling_vector) {
-        static_assert(N == M, "Only for square matrices.");
-        Matrix<T, N, N> scaling_matrix = identity();
-        for (auto row{0U}; row < N - 1; ++row)
+    [[nodiscard]] static constexpr auto
+    scaling(Vector<Precision, OuterDimension - 1> const& scaling_vector) {
+        static_assert(OuterDimension == InnerDimension, "Only for square matrices.");
+        Matrix<Precision, OuterDimension, OuterDimension> scaling_matrix = identity();
+        for (auto row{0U}; row < OuterDimension - 1; ++row)
             scaling_matrix(row, row) = scaling_vector[row];
         return scaling_matrix;
     }
 
     // https://en.wikipedia.org/wiki/Rotation_matrix
     // Rotation around X, Y, or Z axis.
-    [[nodiscard]] static constexpr auto rotation(Axis const& axis, T const& radians) {
-        static_assert(N == M, "Only for square matrices.");
-        static_assert(N == 4, "Only for 3D (for now).");
-        Matrix<T, N, N> rotation_matrix = identity();
+    [[nodiscard]] static constexpr auto rotation(Axis const& axis, Precision const& radians) {
+        static_assert(OuterDimension == InnerDimension, "Only for square matrices.");
+        static_assert(OuterDimension == 4, "Only for 3D (for now).");
+        Matrix<Precision, OuterDimension, OuterDimension> rotation_matrix = identity();
         switch (axis) {
         case Axis::X:
             rotation_matrix(1, 1) = std::cos(radians);
@@ -171,24 +197,24 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
     }
 
     [[nodiscard]] static constexpr auto shearing(ShearDirection const& direction) {
-        static_assert(N == M, "Only for square matrices.");
-        static_assert(N == 4, "Only for 3D (for now).");
-        Matrix<T, N, N> shearing_matrix = identity();
+        static_assert(OuterDimension == InnerDimension, "Only for square matrices.");
+        static_assert(OuterDimension == 4, "Only for 3D (for now).");
+        Matrix<Precision, OuterDimension, OuterDimension> shearing_matrix = identity();
         std::visit(
             [&](auto&& kind) {
                 using shear_kind = std::decay_t<decltype(kind)>;
                 if constexpr (std::is_same_v<shear_kind, Shear::X::AgainstY>) {
-                    shearing_matrix(0, 1) = static_cast<T>(1);
+                    shearing_matrix(0, 1) = static_cast<Precision>(1);
                 } else if constexpr (std::is_same_v<shear_kind, Shear::X::AgainstZ>) {
-                    shearing_matrix(0, 2) = static_cast<T>(1);
+                    shearing_matrix(0, 2) = static_cast<Precision>(1);
                 } else if constexpr (std::is_same_v<shear_kind, Shear::Y::AgainstX>) {
-                    shearing_matrix(1, 0) = static_cast<T>(1);
+                    shearing_matrix(1, 0) = static_cast<Precision>(1);
                 } else if constexpr (std::is_same_v<shear_kind, Shear::Y::AgainstZ>) {
-                    shearing_matrix(1, 2) = static_cast<T>(1);
+                    shearing_matrix(1, 2) = static_cast<Precision>(1);
                 } else if constexpr (std::is_same_v<shear_kind, Shear::Z::AgainstX>) {
-                    shearing_matrix(2, 0) = static_cast<T>(1);
+                    shearing_matrix(2, 0) = static_cast<Precision>(1);
                 } else if constexpr (std::is_same_v<shear_kind, Shear::Z::AgainstY>) {
-                    shearing_matrix(2, 1) = static_cast<T>(1);
+                    shearing_matrix(2, 1) = static_cast<Precision>(1);
                 } else {
                     static_assert(always_false_v<shear_kind>, "non-exhaustive visitor");
                 }
@@ -198,23 +224,62 @@ template <typename T, u16 N, u16 M> class Matrix : MatrixImpl<T, std::make_index
     }
 };
 
+template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimension>
+constexpr bool operator==(Matrix<Precision, OuterDimension, InnerDimension> const& lhs,
+                          Matrix<Precision, OuterDimension, InnerDimension> const& rhs) noexcept {
+    return std::equal(std::cbegin(lhs), std::cend(lhs), std::cbegin(rhs), std::cend(rhs),
+                      [](auto& lhs, auto& rhs) { return almost_equal(lhs, rhs); });
+}
+
+template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimension>
+constexpr bool operator!=(Matrix<Precision, OuterDimension, InnerDimension> const& lhs,
+                          Matrix<Precision, OuterDimension, InnerDimension> const& rhs) noexcept {
+    return !(lhs == rhs);
+}
+
+template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimension>
+std::ostream& operator<<(std::ostream& os,
+                         Matrix<Precision, OuterDimension, InnerDimension> const& mat) noexcept {
+    boost::io::ios_precision_saver ips{os};
+    os.precision(
+        std::numeric_limits<
+            typename Matrix<Precision, OuterDimension, InnerDimension>::value_type>::max_digits10);
+
+    for (auto row{0U}; row < OuterDimension - 1; ++row) {
+        for (auto col{0U}; col < InnerDimension - 1; ++col) {
+            os << mat(row, col) << '\t';
+        }
+        os << mat(row, InnerDimension - 1) << '\n';
+    }
+
+    for (auto col{0U}; col < InnerDimension - 1; ++col) {
+        os << mat(OuterDimension - 1, col) << '\t';
+    }
+    os << mat(OuterDimension - 1, InnerDimension - 1);
+
+    ips.restore();
+
+    return os;
+}
+
 // Deduct a few commonly used matrices. I don't know if it's possible to use variadic pack to make a
 // single guide, or at least deduct that T should be std::common_type of all Ts in the pack.
 
+// 2x2 Matrix
 template <typename T, u16 M>
-Matrix(matrix::detail::indexed_type<0U, T const (&)[M]>,
-       matrix::detail::indexed_type<1U, T const (&)[M]>) -> Matrix<T, M, M>;
+Matrix(detail::enumerate<0U, T const (&)[M]>, detail::enumerate<1U, T const (&)[M]>)
+    -> Matrix<T, M, M>;
 
+// 3x3 Matrix
 template <typename T, u16 M>
-Matrix(matrix::detail::indexed_type<0U, T const (&)[M]>,
-       matrix::detail::indexed_type<1U, T const (&)[M]>,
-       matrix::detail::indexed_type<2U, T const (&)[M]>) -> Matrix<T, M, M>;
+Matrix(detail::enumerate<0U, T const (&)[M]>, detail::enumerate<1U, T const (&)[M]>,
+       detail::enumerate<2U, T const (&)[M]>) -> Matrix<T, M, M>;
 
+// 4x4 Matrix
 template <typename T, u16 M>
-Matrix(matrix::detail::indexed_type<0U, T const (&)[M]>,
-       matrix::detail::indexed_type<1U, T const (&)[M]>,
-       matrix::detail::indexed_type<2U, T const (&)[M]>,
-       matrix::detail::indexed_type<3U, T const (&)[M]>) -> Matrix<T, M, M>;
+Matrix(detail::enumerate<0U, T const (&)[M]>, detail::enumerate<1U, T const (&)[M]>,
+       detail::enumerate<2U, T const (&)[M]>, detail::enumerate<3U, T const (&)[M]>)
+    -> Matrix<T, M, M>;
 
 using Mat2f = Matrix<float, 2, 2>;  // NOLINT(readability-identifier-naming)
 using Mat3f = Matrix<float, 3, 3>;  // NOLINT(readability-identifier-naming)
