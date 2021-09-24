@@ -5,6 +5,7 @@
 
 #include <cmath>
 #include <cstddef>
+#include <iostream>
 #include <limits>
 #include <type_traits>
 
@@ -22,6 +23,11 @@ typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type almost_
            || std::fabs(x - y) < std::numeric_limits<T>::min();
 }
 // TODO: fabs() is not constexpr
+
+[[noreturn]] inline void unreachable(char const* msg) {
+    std::cerr << "Unreachable code reached: " << msg << std::endl;
+    std::terminate();
+}
 
 } // namespace cherry_blazer
 

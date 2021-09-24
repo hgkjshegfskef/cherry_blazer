@@ -1,4 +1,4 @@
-add_library(libcherryblazer canvas.cc color.cc ppm.cc)
+add_library(libcherryblazer canvas.cc color.cc matrix.cc ppm.cc)
 
 # Use "" includes in implementation files, but users will use <cherry_blazer/> includes in their
 # code. NOTE: expects config.hh in CMAKE_CURRENT_BINARY_DIR

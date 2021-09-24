@@ -194,6 +194,7 @@ class Matrix
             rotation_matrix(1, 1) = std::cos(radians);
             return rotation_matrix;
         }
+        unreachable("Axis has only X,Y,Z");
     }
 
     [[nodiscard]] static constexpr auto shearing(ShearDirection const& direction) {
@@ -309,6 +310,8 @@ using Mat4f = Matrix<float, 4, 4>;  // NOLINT(readability-identifier-naming)
 using Mat2d = Matrix<double, 2, 2>; // NOLINT(readability-identifier-naming)
 using Mat3d = Matrix<double, 3, 3>; // NOLINT(readability-identifier-naming)
 using Mat4d = Matrix<double, 4, 4>; // NOLINT(readability-identifier-naming)
+
+extern template class Matrix<double, 4, 4>;
 
 } // namespace cherry_blazer
 
