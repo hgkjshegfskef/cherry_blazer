@@ -1,0 +1,19 @@
+gcc debug:
+
+cmake -S . -B cmake-build-gcc-debug-dev -GNinja -DCHERRY_BLAZER_DEBUG=1 -DCHERRY_BLAZER_NDEBUG=0 -DCHERRY_BLAZER_OPTIMIZE=0 -DCHERRY_BLAZER_ASAN=1 -DCHERRY_BLAZER_TEST=1 -DCHERRY_BLAZER_LLD=1 -DCHERRY_BLAZER_LTO=0
+cmake --build cmake-build-gcc-debug-dev -- -v && ./cmake-build-gcc-debug-dev/bin/cherry_blazer_test --gtest_brief=1 --gtest_color=1
+
+gcc release:
+
+cmake -S . -B cmake-build-gcc-release-dev -GNinja -DCHERRY_BLAZER_DEBUG=1 -DCHERRY_BLAZER_NDEBUG=1 -DCHERRY_BLAZER_OPTIMIZE=1 -DCHERRY_BLAZER_ASAN=0 -DCHERRY_BLAZER_TEST=1 -DCHERRY_BLAZER_LLD=1 -DCHERRY_BLAZER_LTO=1
+cmake --build cmake-build-gcc-release-dev -- -v && ./cmake-build-gcc-release-dev/bin/cherry_blazer_test --gtest_brief=1 --gtest_color=1
+
+clang debug:
+
+CXX=clang++ cmake -S . -B cmake-build-clang-debug-dev -GNinja -D_CMAKE_TOOLCHAIN_PREFIX=llvm- -DCHERRY_BLAZER_DEBUG=1 -DCHERRY_BLAZER_NDEBUG=0 -DCHERRY_BLAZER_OPTIMIZE=0 -DCHERRY_BLAZER_ASAN=1 -DCHERRY_BLAZER_TEST=1 -DCHERRY_BLAZER_LLD=1 -DCHERRY_BLAZER_LTO=0
+cmake --build cmake-build-clang-debug-dev -- -v && ./cmake-build-clang-debug-dev/bin/cherry_blazer_test --gtest_brief=1 --gtest_color=1
+
+clang release:
+
+CXX=clang++ cmake -S . -B cmake-build-clang-release-dev -GNinja -D_CMAKE_TOOLCHAIN_PREFIX=llvm- -DCHERRY_BLAZER_DEBUG=1 -DCHERRY_BLAZER_NDEBUG=1 -DCHERRY_BLAZER_OPTIMIZE=1 -DCHERRY_BLAZER_ASAN=0 -DCHERRY_BLAZER_TEST=1 -DCHERRY_BLAZER_LLD=1 -DCHERRY_BLAZER_LTO=1
+cmake --build cmake-build-clang-release-dev -- -v && ./cmake-build-clang-release-dev/bin/cherry_blazer_test --gtest_brief=1 --gtest_color=1

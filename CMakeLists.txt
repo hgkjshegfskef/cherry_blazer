@@ -31,7 +31,7 @@ option(CHERRY_BLAZER_CI "Set ON if building in CI" OFF)
 
 option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
 add_library(cherry_blazer_flags_debug INTERFACE)
-target_compile_options(cherry_blazer_flags_debug INTERFACE -g)
+target_compile_options(cherry_blazer_flags_debug INTERFACE -g -fno-omit-frame-pointer)
 target_compile_definitions(cherry_blazer_flags_debug INTERFACE CHERRY_BLAZER_DEBUG)
 
 option(CHERRY_BLAZER_NDEBUG "Disable asserts" OFF)
@@ -47,6 +47,10 @@ add_library(cherry_blazer_flags_asan INTERFACE)
 target_compile_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address
                                                           -fno-omit-frame-pointer)
 target_link_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address)
+
+option(CHERRY_BLAZER_LTO "Enable LTO" OFF)
+
+option(CHERRY_BLAZER_LLD "Use lld" OFF)
 
 set(CHERRY_BLAZER_BOOST_VERSION
     "1.77.0"
@@ -69,7 +73,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
 
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_INTERPROCEDURAL_OPTIMIZATION ON)
 
 # ##################################################################################################
 
@@ -87,8 +90,7 @@ target_compile_options(
         -Werror=missing-field-initializers # partial ctors is an error
         -Wdelete-non-virtual-dtor # https://wiki.sei.cmu.edu/confluence/display/cplusplus/OOP52-CPP.+Do+not+delete+a+polymorphic+object+without+a+virtual+destructor
         -Wconversion
-        -Wsign-conversion
-        -fuse-ld=lld)
+        -Wsign-conversion)
 
 if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
     target_compile_options(
@@ -123,12 +125,25 @@ endif()
 if(CHERRY_BLAZER_DEBUG)
     if(NOT CHERRY_BLAZER_OPTIMIZE)
         target_compile_options(cherry_blazer_flags_debug INTERFACE -O0)
-        # include(CheckCXXCompilerFlag) check_cxx_compiler_flag("-Og" cherry_blazer_compiler_has_og)
-        # if(cherry_blazer_compiler_has_og) target_compile_options(cherry_blazer_flags_debug
-        # INTERFACE -Og) endif()
         target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_debug)
     else()
         # Optimization flags will clash.
+    endif()
+endif()
+
+if(CHERRY_BLAZER_LLD)
+    target_link_options(cherry_blazer_flags INTERFACE -fuse-ld=lld)
+endif()
+
+if(CHERRY_BLAZER_LTO)
+    if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+        target_compile_options(cherry_blazer_flags INTERFACE -flto=auto -fwhole-program
+                                                             -fno-fat-lto-objects)
+        target_link_options(cherry_blazer_flags INTERFACE -flto=auto -fwhole-program
+                            -fno-fat-lto-objects)
+    elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+        target_compile_options(cherry_blazer_flags INTERFACE -flto)
+        target_link_options(cherry_blazer_flags INTERFACE -flto)
     endif()
 endif()
 
