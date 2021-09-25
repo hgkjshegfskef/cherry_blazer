@@ -38,6 +38,8 @@ inline constexpr double abs_error = 1e-5;
 
 // Matrix can be constructed at compile-time, and in many ways.
 TEST(MatrixTest, MatrixConstexprCtors) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Matrix<double, 1, 4> mat1x4_default{};
+    CHERRY_BLAZER_CONSTEXPR Matrix mat1x4{{1., 2., 3., 4.}};
     [[maybe_unused]] CHERRY_BLAZER_CONSTEXPR Matrix mat{
         {1., 2., 3., 4.}, {5.5, 6.5, 7.5, 8.5}, {9., 10., 11., 12.}, {13.5, 14.5, 15.5, 16.5}};
 }
