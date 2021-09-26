@@ -36,6 +36,8 @@ template <typename Precision, std::size_t... NthInnerArrayPack, std::size_t Inne
 class MatrixImpl<Precision, std::index_sequence<NthInnerArrayPack...>, InnerDimension> {
   public:
     MatrixImpl() = default;
+
+    // Initialization is row-major. Every inner array is a row.
     constexpr explicit MatrixImpl(
         enumerate<NthInnerArrayPack,
                   Precision const (&)[InnerDimension]>... nth_inner_array) noexcept {
@@ -362,7 +364,7 @@ using Mat4d = Matrix<double, 4, 4>; // NOLINT(readability-identifier-naming)
 
 // Explicitly instantiate commonly used matrices.
 extern template class Matrix<double, 4, 4>;
-extern template class Matrix<double, 1, 4>;
+extern template class Matrix<double, 4, 1>;
 
 } // namespace cherry_blazer
 
