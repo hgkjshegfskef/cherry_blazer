@@ -2,7 +2,8 @@
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_OPERATIONS_HH_
 
 #include "point.hh"
-#include "vector.hh"
+
+#include <boost/assert.hpp>
 
 #include <cstddef>
 
@@ -27,42 +28,62 @@ namespace cherry_blazer {
 // Point -= Point (= ERROR)
 
 // Point - Point = Vector (pointing from rhs to lhs)
-template <typename T, std::size_t D>
-[[nodiscard]] constexpr auto operator-(Point<T, D> const& lhs, Point<T, D> const& rhs) noexcept {
-    Vector<T, D> result;
-    for (auto i{0U}; i < D; ++i)
+template <typename Precision, std::size_t Dimension>
+[[nodiscard]] constexpr auto operator-(Point<Precision, Dimension> const& lhs,
+                                       Point<Precision, Dimension> const& rhs) noexcept {
+    Vector<Precision, Dimension> result;
+
+    for (auto i{0U}; i < Dimension; ++i)
         result[i] = lhs[i] - rhs[i];
+
+    result[Dimension] = static_cast<Precision>(1);
+
+    BOOST_VERIFY(result[Dimension] == static_cast<Precision>(1));
     return result;
 }
 
 // Vector-related operations:
 
 // Point += Vector
-template <typename T, std::size_t D>
-constexpr auto& operator+=(Point<T, D>& lhs, Vector<T, D> const& rhs) noexcept {
-    for (auto i{0U}; i < D; ++i)
+template <typename Precision, std::size_t Dimension>
+constexpr auto& operator+=(Point<Precision, Dimension>& lhs,
+                           Vector<Precision, Dimension> const& rhs) noexcept {
+    for (auto i{0U}; i < Dimension; ++i)
         lhs[i] += rhs[i];
+
+    BOOST_VERIFY(lhs[Dimension] == static_cast<Precision>(1));
     return lhs;
 }
 
 // Point + Vector = Point
-template <typename T, std::size_t D>
-[[nodiscard]] constexpr auto operator+(Point<T, D> lhs, Vector<T, D> const& rhs) noexcept {
-    return lhs += rhs;
+template <typename Precision, std::size_t Dimension>
+[[nodiscard]] constexpr auto operator+(Point<Precision, Dimension> lhs,
+                                       Vector<Precision, Dimension> const& rhs) noexcept {
+    lhs += rhs;
+
+    BOOST_VERIFY(lhs[Dimension] == static_cast<Precision>(1));
+    return lhs;
 }
 
 // Point -= Vector
-template <typename T, std::size_t D>
-constexpr auto& operator-=(Point<T, D>& lhs, Vector<T, D> const& rhs) noexcept {
-    for (auto i{0U}; i < D; ++i)
+template <typename Precision, std::size_t Dimension>
+constexpr auto& operator-=(Point<Precision, Dimension>& lhs,
+                           Vector<Precision, Dimension> const& rhs) noexcept {
+    for (auto i{0U}; i < Dimension; ++i)
         lhs[i] -= rhs[i];
+
+    BOOST_VERIFY(lhs[Dimension] == static_cast<Precision>(1));
     return lhs;
 }
 
 // Point - Vector = Point (move backward by vector)
-template <typename T, std::size_t D>
-[[nodiscard]] constexpr auto operator-(Point<T, D> lhs, Vector<T, D> const& rhs) noexcept {
-    return lhs -= rhs;
+template <typename Precision, std::size_t Dimension>
+[[nodiscard]] constexpr auto operator-(Point<Precision, Dimension> lhs,
+                                       Vector<Precision, Dimension> const& rhs) noexcept {
+    lhs -= rhs;
+
+    BOOST_VERIFY(lhs[Dimension] == static_cast<Precision>(1));
+    return lhs;
 }
 
 } // namespace cherry_blazer

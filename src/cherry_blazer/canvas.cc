@@ -25,38 +25,38 @@ namespace {
 // is the straight line between these points. Value of x must be in the interval [x0;x1].
 constexpr double linear_interpolation(double x, Point2d const& left_point,
                                       Point2d const& right_point) {
-    assert(left_point.x <= x && x <= right_point.x);
-    return left_point.y +
-           (x - left_point.x) * (right_point.y - left_point.y) / (right_point.x - left_point.x);
+    BOOST_VERIFY(left_point[0] <= x && x <= right_point[0]);
+    return left_point[1] + (x - left_point[0]) * (right_point[1] - left_point[1]) /
+                               (right_point[0] - left_point[0]);
 }
 
 // Scale a number between two (possibly overlapping) ranges.
 // Use-case example: given a value in range [0;1], find out its respective value in range [0;255].
 // Further reading: https://gamedev.stackexchange.com/a/33445
 constexpr double scale(double value, Point2d const& source_range, Point2d const& target_range) {
-    return linear_interpolation(value, {source_range.x, target_range.x},
-                                {source_range.y, target_range.y});
+    return linear_interpolation(value, {source_range[0], target_range[0]},
+                                {source_range[1], target_range[1]});
 }
 
 } // namespace
 
-Canvas::Canvas(u32 width, u32 height)
+Canvas::Canvas(stdsize_t width, stdsize_t height)
     : canvas_{new Color[width * height]()}, width_{width}, height_{height} {
     if (width == 0 || height == 0)
         throw std::logic_error{"Canvas: width and height must be non-zero."};
 }
 
-u32 Canvas::width() const { return width_; }
+stdsize_t Canvas::width() const { return width_; }
 
-u32 Canvas::height() const { return height_; }
+stdsize_t Canvas::height() const { return height_; }
 
-Color& Canvas::operator()(u32 x, u32 y) {
+Color& Canvas::operator()(stdsize_t x, stdsize_t y) {
     BOOST_VERIFY(x < width_);
     BOOST_VERIFY(y < height_);
     return canvas_[y * width_ + x];
 }
 
-Color const& Canvas::operator()(u32 x, u32 y) const {
+Color const& Canvas::operator()(stdsize_t x, stdsize_t y) const {
     BOOST_VERIFY(x < width_);
     BOOST_VERIFY(y < height_);
     return canvas_[y * width_ + x];
@@ -86,7 +86,7 @@ std::string Canvas::as_ppm() const {
     constexpr Point ppm_range{0.0, 255.0};
 
     std::stringstream ss;
-    ss << ppm::generate_header(width_, height_, static_cast<u32>(ppm_range.y));
+    ss << ppm::generate_header(width_, height_, static_cast<stdsize_t>(ppm_range[1]));
 
     // Print out batch_count batches of batch_size amount of colors each, one batch per line.
     for (auto nth_batch{0U}; nth_batch < batch_count; ++nth_batch) {
@@ -94,10 +94,10 @@ std::string Canvas::as_ppm() const {
             // Clamp color components to the source range, then scale them to the target range.
             boost::pfr::for_each_field(
                 canvas_[nth_batch * batch_size + nth_color], [&](auto const& component) {
-                    ss << std::setw(component_width)
-                       << std::round(
-                              scale(std::clamp(component, component_range.x, component_range.y),
-                                    component_range, ppm_range));
+                    auto clamped = std::clamp(component, component_range[0], component_range[1]);
+                    auto scaled = scale(clamped, component_range, ppm_range);
+                    auto rounded = std::round(scaled);
+                    ss << std::setw(component_width) << rounded;
                 });
         }
         ss << "\n";
@@ -107,9 +107,10 @@ std::string Canvas::as_ppm() const {
         auto already_processed = batch_count * batch_size;
         for (auto leftover{already_processed}; leftover < size(); ++leftover) {
             boost::pfr::for_each_field(canvas_[leftover], [&](auto const& component) {
-                ss << std::setw(component_width)
-                   << std::round(scale(std::clamp(component, component_range.x, component_range.y),
-                                       component_range, ppm_range));
+                auto const clamped = std::clamp(component, component_range[0], component_range[1]);
+                auto const scaled = scale(clamped, component_range, ppm_range);
+                auto const rounded = std::round(scaled);
+                ss << std::setw(component_width) << rounded;
             });
         }
         ss << "\n";
@@ -135,8 +136,8 @@ std::ostream& operator<<(std::ostream& os, Canvas const& c) {
     // In order to format the output nicely, it is necessary to print n-1 items with one delimiter,
     // and the nth item with a different delimiter.
 
-    u32 penultimate_row = c.height_ - 1;
-    u32 penultimate_col = c.width_ - 1;
+    stdsize_t penultimate_row = c.height_ - 1;
+    stdsize_t penultimate_col = c.width_ - 1;
 
     // for each row except last row
     for (auto y{0U}; y < penultimate_row; ++y) {

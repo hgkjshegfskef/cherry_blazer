@@ -15,13 +15,13 @@ namespace cherry_blazer {
 // Y grows from up to down.
 class Canvas {
   public:
-    Canvas(u32 width, u32 height);
+    Canvas(stdsize_t width, stdsize_t height);
 
-    [[nodiscard]] u32 width() const;
-    [[nodiscard]] u32 height() const;
+    [[nodiscard]] stdsize_t width() const;
+    [[nodiscard]] stdsize_t height() const;
 
-    [[nodiscard]] Color const& operator()(u32 x, u32 y) const;
-    Color& operator()(u32 x, u32 y);
+    [[nodiscard]] Color const& operator()(stdsize_t x, stdsize_t y) const;
+    Color& operator()(stdsize_t x, stdsize_t y);
 
     // Fill whole canvas with a single color.
     void fill(Color const& color);
@@ -35,8 +35,8 @@ class Canvas {
 
   private:
     std::unique_ptr<Color[]> canvas_; // 2D, but in 1D array
-    u32 width_;
-    u32 height_;
+    stdsize_t width_;
+    stdsize_t height_;
 
     [[nodiscard]] u64 size() const;
 };

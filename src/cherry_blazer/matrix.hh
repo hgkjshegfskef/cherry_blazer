@@ -5,7 +5,6 @@
 #include "shearing.hh"
 #include "types.hh"
 #include "util.hh"
-#include "vector.hh"
 
 #include <boost/assert.hpp>
 #include <boost/io/ios_state.hpp>
@@ -80,6 +79,7 @@ class MatrixBase
 
     static_assert(OuterDimension * InnerDimension != 0, "Both dimensions must be non-zero.");
 
+  protected:
     using impl = MatrixImpl<Precision, std::make_index_sequence<OuterDimension>, InnerDimension>;
     using underlying_type = typename impl::underlying_type;
 
@@ -117,7 +117,8 @@ class MatrixBase
         BOOST_VERIFY(inner_pos < InnerDimension);
         return impl::mat_[outer_pos * InnerDimension + inner_pos];
     }
-    constexpr const_reference operator()(size_type outer_pos, size_type inner_pos) const noexcept {
+    [[nodiscard]] constexpr const_reference operator()(size_type outer_pos,
+                                                       size_type inner_pos) const noexcept {
         BOOST_VERIFY(outer_pos < OuterDimension);
         BOOST_VERIFY(inner_pos < InnerDimension);
         return impl::mat_[outer_pos * InnerDimension + inner_pos];
@@ -166,7 +167,7 @@ class MatrixBase
 
     constexpr void swap(MatrixBase& other) noexcept(std::is_nothrow_swappable_v<value_type>) {
         using std::swap;
-        impl::mat_.swap(other.impl::mat_);
+        swap(impl::mat_, other.impl::mat_);
     }
 };
 
@@ -196,50 +197,51 @@ class Matrix<Precision, Dimension, Dimension>
         return identity_matrix;
     }
 
+    // For translation, scaling, reflection, rotation, shearing see:
+    // https://en.wikipedia.org/wiki/Affine_transformation#Image_transformation
+
     // https://en.wikipedia.org/wiki/Translation_(geometry)
     [[nodiscard]] static constexpr auto
-    translation(Vector<Precision, Dimension - 1> const& translation_vector) {
-        auto translation_matrix = identity();
-        for (auto row{0U}; row < Dimension - 1; ++row)
-            translation_matrix(row, Dimension - 1) = translation_vector[row];
-        return translation_matrix;
+    translation(Matrix<Precision, Dimension - 1, 1> const& vec) {
+        auto mat = identity();
+        for (auto row{0U}; row < Dimension; ++row)
+            mat(row, Dimension - 1) = vec[row];
+        return mat;
     }
 
     // https://en.wikipedia.org/wiki/Scaling_(geometry)
-    [[nodiscard]] static constexpr auto
-    scaling(Vector<Precision, Dimension - 1> const& scaling_vector) {
-        auto scaling_matrix = identity();
-        for (auto row{0U}; row < Dimension - 1; ++row)
-            scaling_matrix(row, row) = scaling_vector[row];
-        return scaling_matrix;
+    [[nodiscard]] static constexpr auto scaling(Matrix<Precision, Dimension - 1, 1> const& vec) {
+        auto mat = identity();
+        for (auto row{0U}; row < Dimension; ++row)
+            mat(row, row) = vec[row];
+        return mat;
     }
 
     // https://en.wikipedia.org/wiki/Rotation_matrix
     // Rotation around X, Y, or Z axis.
     [[nodiscard]] static constexpr auto rotation(Axis const& axis, Precision const& radians) {
-        static_assert(Dimension == 4, "Only for 3D.");
         auto const sine = std::sin(radians);
         auto const cosine = std::cos(radians);
-        auto rotation_matrix = identity();
+        auto mat = identity();
         switch (axis) {
         case Axis::X:
-            rotation_matrix(1, 1) = cosine;
-            rotation_matrix(1, 2) = -sine;
-            rotation_matrix(2, 1) = sine;
-            rotation_matrix(2, 2) = cosine;
-            return rotation_matrix;
+            mat(1, 1) = cosine;
+            mat(1, 2) = -sine;
+            mat(2, 1) = sine;
+            mat(2, 2) = cosine;
+            return mat;
         case Axis::Y:
-            rotation_matrix(0, 0) = cosine;
-            rotation_matrix(0, 2) = sine;
-            rotation_matrix(2, 0) = -sine;
-            rotation_matrix(2, 2) = cosine;
-            return rotation_matrix;
+            mat(0, 0) = cosine;
+            mat(0, 2) = sine;
+            mat(2, 0) = -sine;
+            mat(2, 2) = cosine;
+            return mat;
         case Axis::Z:
-            rotation_matrix(0, 0) = cosine;
-            rotation_matrix(0, 1) = -sine;
-            rotation_matrix(1, 0) = sine;
-            rotation_matrix(1, 1) = cosine;
-            return rotation_matrix;
+            mat(0, 0) = cosine;
+            mat(0, 1) = -sine;
+            mat(1, 0) = sine;
+            mat(1, 1) = cosine;
+            return mat;
         }
         unreachable("Axis has only X,Y,Z");
     }
@@ -276,7 +278,7 @@ constexpr bool operator==(Matrix<Precision, OuterDimension, InnerDimension> cons
                           Matrix<Precision, OuterDimension, InnerDimension> const& rhs) noexcept {
     // TODO: almost_equal is not constexpr
     return std::equal(std::cbegin(lhs), std::cend(lhs), std::cbegin(rhs), std::cend(rhs),
-                      [](auto& lhs, auto& rhs) { return almost_equal(lhs, rhs); });
+                      [](auto const& lhs, auto const& rhs) { return almost_equal(lhs, rhs); });
 }
 
 template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimension>
@@ -363,8 +365,8 @@ using Mat3d = Matrix<double, 3, 3>; // NOLINT(readability-identifier-naming)
 using Mat4d = Matrix<double, 4, 4>; // NOLINT(readability-identifier-naming)
 
 // Explicitly instantiate commonly used matrices.
-extern template class Matrix<double, 4, 4>;
-extern template class Matrix<double, 4, 1>;
+// extern template class Matrix<double, 4, 4>;
+// extern template class Matrix<double, 4, 1>;
 
 } // namespace cherry_blazer
 

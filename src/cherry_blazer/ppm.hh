@@ -7,7 +7,7 @@
 
 namespace cherry_blazer::ppm {
 
-std::string generate_header(u32 width, u32 height, u32 color_component_max);
+std::string generate_header(stdsize_t width, stdsize_t height, stdsize_t color_component_max);
 
 } // namespace cherry_blazer::ppm
 

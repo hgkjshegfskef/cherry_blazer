@@ -1,10 +1,9 @@
 #include <cherry_blazer/config.hh>
 #include <cherry_blazer/matrix.hh>
 #include <cherry_blazer/matrix_operations.hh>
-#include <cherry_blazer/point_properties.hh>
+#include <cherry_blazer/point.hh>
 #include <cherry_blazer/shearing.hh>
 #include <cherry_blazer/vector.hh>
-#include <cherry_blazer/vector_properties.hh>
 
 #include <gtest/gtest.h>
 
@@ -26,8 +25,8 @@ using cherry_blazer::Mat4d;
 using cherry_blazer::Matrix;
 using cherry_blazer::Point;
 using cherry_blazer::ShearDirection;
-using cherry_blazer::Vec4d;
-using cherry_blazer::Vector;
+// using cherry_blazer::Vec4d;
+// using cherry_blazer::Vector;
 using cherry_blazer::Shear::X;
 using cherry_blazer::Shear::Y;
 using cherry_blazer::Shear::Z;
@@ -38,9 +37,6 @@ inline constexpr double abs_error = 1e-5;
 
 // Matrix can be constructed at compile-time, and in many ways.
 TEST(MatrixTest, MatrixConstexprCtors) { // NOLINT
-    [[maybe_unused]] CHERRY_BLAZER_CONSTEXPR Matrix<double, 1, 4> mat1x4_default{};
-    [[maybe_unused]] CHERRY_BLAZER_CONSTEXPR Matrix mat1x4{{1., 2., 3., 4.}};
-    [[maybe_unused]] CHERRY_BLAZER_CONSTEXPR Matrix<double, 4, 1> mat4x1{{1.}, {2.}, {3.}, {4.}};
     [[maybe_unused]] CHERRY_BLAZER_CONSTEXPR Matrix mat{
         {1., 2., 3., 4.}, {5.5, 6.5, 7.5, 8.5}, {9., 10., 11., 12.}, {13.5, 14.5, 15.5, 16.5}};
 }
@@ -117,9 +113,9 @@ TEST(MatrixTest, MatrixTimesMatrix) { // NOLINT
 TEST(MatrixTest, MatrixTimesVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Matrix mat{
         {1., 2., 3., 4.}, {2., 4., 4., 2.}, {8., 6., 4., 1.}, {0., 0., 0., 1.}};
-    CHERRY_BLAZER_CONSTEXPR Vector vec{1., 2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Matrix vec{1., 2., 3.};
     CHERRY_BLAZER_CONSTEXPR auto result = mat * vec;
-    EXPECT_EQ(result, (Vec4d{18, 24, 33, 1}));
+    EXPECT_EQ(result, (Matrix{18., 24., 33.}));
 }
 
 TEST(MatrixTest, MatrixIdentityMatrix) { // NOLINT
@@ -144,9 +140,9 @@ TEST(MatrixTest, MatrixTimesIdentityMatrix) { // NOLINT
 
 TEST(MatrixTest, IdentityMatrixTimesVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Matrix identity = Matrix<double, 4, 4>::identity();
-    CHERRY_BLAZER_CONSTEXPR Vector vec{1., 2., 3., 4.};
+    CHERRY_BLAZER_CONSTEXPR Matrix vec{1., 2., 3.};
     CHERRY_BLAZER_CONSTEXPR auto result = identity * vec;
-    EXPECT_EQ(result, (Vec4d{1, 2, 3, 4}));
+    EXPECT_EQ(result, (Matrix{1., 2., 3.}));
 }
 
 TEST(MatrixTest, TransposeMatrix) { // NOLINT
@@ -332,275 +328,5 @@ TEST(MatrixTest, InverseOfTransposeVsTransposeOfInverse) { // NOLINT
             EXPECT_NEAR(transposed_inverse_of_a(row, col), inverted_transpose_of_a(row, col),
                         abs_error);
         }
-    }
-}
-
-TEST(MatrixTest, TranslationMatrixTimesPoint) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Point original_point{-3., 4., 5.};
-    CHERRY_BLAZER_CONSTEXPR auto translation_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size + 1>::translation(Vector{5., -3., 2.});
-    CHERRY_BLAZER_CONSTEXPR auto translated_point = translate(translation_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{2., 1., 7.};
-    EXPECT_EQ(translated_point, expected);
-}
-
-TEST(MatrixTest, ScalingMatrixTimesPoint) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Point original_point{-4., 6., 8.};
-    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size + 1>::scaling(Vector{2., 3., 4.});
-    CHERRY_BLAZER_CONSTEXPR auto scaled_point = scale(scaling_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{-8., 18., 32.};
-    EXPECT_EQ(scaled_point, expected);
-}
-
-TEST(MatrixTest, ScalingMatrixTimesVector) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Vector original_vector{-4., 6., 8.};
-    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix =
-        Matrix<decltype(original_vector)::value_type, decltype(original_vector)::size + 1,
-               decltype(original_vector)::size + 1>::scaling(Vector{2., 3., 4.});
-    CHERRY_BLAZER_CONSTEXPR auto scaled_vector = scale(scaling_matrix, original_vector);
-    CHERRY_BLAZER_CONSTEXPR Vector expected{-8., 18., 32.};
-    EXPECT_EQ(scaled_vector, expected);
-}
-
-TEST(MatrixTest, InverseOfScalingMatrixTimesVector) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Vector original_vector{-4., 6., 8.};
-    CHERRY_BLAZER_CONSTEXPR auto inversed_scaling_matrix =
-        inverse(Matrix<decltype(original_vector)::value_type, decltype(original_vector)::size + 1,
-                       decltype(original_vector)::size + 1>::scaling(Vector{2., 3., 4.}));
-    CHERRY_BLAZER_CONSTEXPR auto shrinked_vector = scale(inversed_scaling_matrix, original_vector);
-    CHERRY_BLAZER_CONSTEXPR Vector expected{-2., 2., 2.};
-    EXPECT_EQ(shrinked_vector, expected);
-}
-
-TEST(MatrixTest, ReflectionIsScalingByNegativeValue) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR auto reflection_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size + 1>::scaling(Vector{-1., 1., 1.});
-    CHERRY_BLAZER_CONSTEXPR auto reflected_point = scale(reflection_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{-2., 3., 4.};
-    EXPECT_EQ(reflected_point, expected);
-}
-
-TEST(MatrixTest, RotatingPointAroundXAxisHalfQuarter) { // NOLINT
-    using namespace std::numbers;
-    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
-    CHERRY_BLAZER_CONSTEXPR auto half_quarter_rotation_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size +
-                   1>::rotation(Axis::X, pi_v<decltype(original_point)::value_type> / 4);
-    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
-        rotate(half_quarter_rotation_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{0., sqrt2_v<decltype(original_point)::value_type> / 2,
-                                           sqrt2_v<decltype(original_point)::value_type> / 2};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
-            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, RotatingPointAroundXAxisFullQuarter) { // NOLINT
-    using namespace std::numbers;
-    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
-    CHERRY_BLAZER_CONSTEXPR auto full_quarter_rotation_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size +
-                   1>::rotation(Axis::X, pi_v<decltype(original_point)::value_type> / 2);
-    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
-        rotate(full_quarter_rotation_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{0., 0., 1.};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
-            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, InverseOfXAxisRotationRotatesInOppositeDirection) { // NOLINT
-    using namespace std::numbers;
-    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
-    CHERRY_BLAZER_CONSTEXPR auto half_quarter_rotation_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size +
-                   1>::rotation(Axis::X, pi_v<decltype(original_point)::value_type> / 4);
-    CHERRY_BLAZER_CONSTEXPR auto inversed_half_quarter_rotation_matrix =
-        inverse(half_quarter_rotation_matrix);
-    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
-        rotate(inversed_half_quarter_rotation_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{0., sqrt2_v<decltype(original_point)::value_type> / 2,
-                                           -sqrt2_v<decltype(original_point)::value_type> / 2};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
-            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, RotatingPointAroundYAxisHalfQuarter) { // NOLINT
-    using namespace std::numbers;
-    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 0., 1.};
-    CHERRY_BLAZER_CONSTEXPR auto half_quarter_rotation_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size +
-                   1>::rotation(Axis::Y, pi_v<decltype(original_point)::value_type> / 4);
-    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
-        rotate(half_quarter_rotation_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{sqrt2_v<decltype(original_point)::value_type> / 2, 0.,
-                                           sqrt2_v<decltype(original_point)::value_type> / 2};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
-            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, RotatingPointAroundYAxisFullQuarter) { // NOLINT
-    using namespace std::numbers;
-    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 0., 1.};
-    CHERRY_BLAZER_CONSTEXPR auto full_quarter_rotation_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size +
-                   1>::rotation(Axis::Y, pi_v<decltype(original_point)::value_type> / 2);
-    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
-        rotate(full_quarter_rotation_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{1., 0., 0.};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
-            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, RotatingPointAroundZAxisHalfQuarter) { // NOLINT
-    using namespace std::numbers;
-    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
-    CHERRY_BLAZER_CONSTEXPR auto half_quarter_rotation_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size +
-                   1>::rotation(Axis::Z, pi_v<decltype(original_point)::value_type> / 4);
-    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
-        rotate(half_quarter_rotation_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{-sqrt2_v<decltype(original_point)::value_type> / 2,
-                                           sqrt2_v<decltype(original_point)::value_type> / 2, 0.};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
-            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, RotatingPointAroundZAxisFullQuarter) { // NOLINT
-    using namespace std::numbers;
-    CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
-    CHERRY_BLAZER_CONSTEXPR auto full_quarter_rotation_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size +
-                   1>::rotation(Axis::Z, pi_v<decltype(original_point)::value_type> / 2);
-    CHERRY_BLAZER_CONSTEXPR auto rotated_point =
-        rotate(full_quarter_rotation_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{-1., 0., 0.};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(rotated_point[row], expected[row], abs_error)
-            << "Got:\t\t" << rotated_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, ShearingPointComponentXAgainstY) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{X::AgainstY{}};
-    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size + 1>::shearing(direction);
-    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{5., 3., 4.};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
-            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, ShearingPointComponentXAgainstZ) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{X::AgainstZ{}};
-    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size + 1>::shearing(direction);
-    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{6., 3., 4.};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
-            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, ShearingPointComponentYAgainstX) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Y::AgainstX{}};
-    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size + 1>::shearing(direction);
-    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{2., 5., 4.};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
-            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, ShearingPointComponentYAgainstZ) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Y::AgainstZ{}};
-    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size + 1>::shearing(direction);
-    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{2., 7., 4.};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
-            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, ShearingPointComponentZAgainstX) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Z::AgainstX{}};
-    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size + 1>::shearing(direction);
-    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{2., 3., 6.};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
-            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, ShearingPointComponentZAgainstY) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
-    CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Z::AgainstY{}};
-    CHERRY_BLAZER_CONSTEXPR auto shearing_matrix =
-        Matrix<decltype(original_point)::value_type, decltype(original_point)::size + 1,
-               decltype(original_point)::size + 1>::shearing(direction);
-    CHERRY_BLAZER_CONSTEXPR auto sheared_point = shear(shearing_matrix, original_point);
-    CHERRY_BLAZER_CONSTEXPR Point expected{2., 3., 7.};
-    for (auto row{0U}; row < decltype(original_point)::size; ++row) {
-        EXPECT_NEAR(sheared_point[row], expected[row], abs_error)
-            << "Got:\t\t" << sheared_point << "\nbut expected:\t" << expected;
-    }
-}
-
-TEST(MatrixTest, TransformationsAppliedTogether) { // NOLINT
-    CHERRY_BLAZER_CONSTEXPR Point original_point{1., 0., 1.};
-    using namespace std::numbers;
-    using T = decltype(original_point)::value_type;    // NOLINT(readability-identifier-naming)
-    auto const D = decltype(original_point)::size + 1; // NOLINT(readability-identifier-naming)
-    CHERRY_BLAZER_CONSTEXPR auto rotation_matrix = Matrix<T, D, D>::rotation(Axis::X, pi_v<T> / 2);
-    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix = Matrix<T, D, D>::scaling(Vector{5., 5., 5.});
-    CHERRY_BLAZER_CONSTEXPR auto translation_matrix =
-        Matrix<T, D, D>::translation(Vector{10., 5., 7.});
-    CHERRY_BLAZER_CONSTEXPR auto transformed_point = translate(
-        translation_matrix, scale(scaling_matrix, rotate(rotation_matrix, original_point)));
-    CHERRY_BLAZER_CONSTEXPR Point expected{15., 0., 7.};
-    for (auto row{0U}; row < D - 1; ++row) {
-        EXPECT_NEAR(transformed_point[row], expected[row], abs_error)
-            << "Got:\t\t" << transformed_point << "\nbut expected:\t" << expected;
     }
 }

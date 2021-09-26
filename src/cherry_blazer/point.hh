@@ -1,131 +1,69 @@
 #ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_HH_
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_HH_
 
+#include "vector.hh"
+
+#include <boost/assert.hpp>
+
 #include <cstddef>
-#include <exception>
-#include <type_traits>
 
 namespace cherry_blazer {
 
-template <typename T, std::size_t D> struct Point {
-    static_assert(1 <= D && D <= 4, "Point is only available for 1D-4D.");
-};
+template <typename Precision, std::size_t Dimension> class Point {
+  private:
+    Vector<Precision, Dimension> vec_;
 
-template <typename... T> Point(T...) -> Point<typename std::common_type_t<T...>, sizeof...(T)>;
+  public:
+    static inline constexpr std::size_t size = Dimension;
 
-template <typename T> struct Point<T, 2> {
-    static_assert(std::is_floating_point_v<T>);
+    using value_type = decltype(vec_);
 
-    using value_type = T;
-    static inline constexpr size_t size = 2;
+    Point() = default;
 
-    T x, y;
+    template <typename... VectorComponents>
+    constexpr Point(VectorComponents... components) : vec_{components...} {}
 
-    constexpr T& operator[](size_t index) noexcept {
-        switch (index) {
-        case 0:
-            return x;
-        case 1:
-            return y;
-        default:
-            std::terminate();
-        }
+    constexpr typename value_type::reference at(typename value_type::size_type pos) {
+        return vec_.at(pos);
+    }
+    [[nodiscard]] constexpr typename value_type::reference
+    at(typename value_type::size_type pos) const {
+        return vec_.at(pos);
     }
 
-    constexpr T operator[](size_t index) const noexcept {
-        switch (index) {
-        case 0:
-            return x;
-        case 1:
-            return y;
-        default:
-            std::terminate();
-        }
+    constexpr typename value_type::reference
+    operator[](typename value_type::size_type pos) noexcept {
+        // TODO: replace with https://github.com/gpakosz/PPK_ASSERT
+        BOOST_VERIFY(pos < Dimension + 1);
+        return vec_[pos];
+    }
+    [[nodiscard]] constexpr typename value_type::const_reference
+    operator[](typename value_type::size_type pos) const noexcept {
+        BOOST_VERIFY(pos < Dimension + 1);
+        return vec_[pos];
+    }
+
+    friend constexpr auto operator==(Point const& lhs, Point const& rhs) noexcept {
+        return lhs.vec_ == rhs.vec_;
+    }
+
+    friend constexpr auto operator!=(Point const& lhs, Point const& rhs) noexcept {
+        return !(lhs == rhs);
+    }
+
+    friend constexpr auto& operator<<(std::ostream& os, Point const& p) noexcept {
+        return os << p.vec_;
     }
 };
+
+template <typename... VectorComponents>
+Point(VectorComponents...)
+    -> Point<typename std::common_type_t<VectorComponents...>, sizeof...(VectorComponents)>;
 
 using Point2f = Point<float, 2>;  // NOLINT(readability-identifier-naming)
-using Point2d = Point<double, 2>; // NOLINT(readability-identifier-naming)
-
-template <typename T> struct Point<T, 3> {
-    static_assert(std::is_floating_point_v<T>);
-
-    using value_type = T;
-    static inline constexpr size_t size = 3;
-
-    T x, y, z;
-
-    constexpr T& operator[](size_t index) noexcept {
-        switch (index) {
-        case 0:
-            return x;
-        case 1:
-            return y;
-        case 2:
-            return z;
-        default:
-            std::terminate();
-        }
-    }
-
-    constexpr T operator[](size_t index) const noexcept {
-        switch (index) {
-        case 0:
-            return x;
-        case 1:
-            return y;
-        case 2:
-            return z;
-        default:
-            std::terminate();
-        }
-    }
-};
-
 using Point3f = Point<float, 3>;  // NOLINT(readability-identifier-naming)
+using Point2d = Point<double, 2>; // NOLINT(readability-identifier-naming)
 using Point3d = Point<double, 3>; // NOLINT(readability-identifier-naming)
-
-template <typename T> struct Point<T, 4> {
-    static_assert(std::is_floating_point_v<T>);
-
-    using value_type = T;
-    static inline constexpr size_t size = 4;
-
-    T x, y, z, w;
-
-    constexpr T& operator[](size_t index) noexcept {
-        switch (index) {
-        case 0:
-            return x;
-        case 1:
-            return y;
-        case 2:
-            return z;
-        case 3:
-            return w;
-        default:
-            std::terminate();
-        }
-    }
-
-    constexpr T operator[](size_t index) const noexcept {
-        switch (index) {
-        case 0:
-            return x;
-        case 1:
-            return y;
-        case 2:
-            return z;
-        case 3:
-            return w;
-        default:
-            std::terminate();
-        }
-    }
-};
-
-using Point4f = Point<float, 4>;  // NOLINT(readability-identifier-naming)
-using Point4d = Point<double, 4>; // NOLINT(readability-identifier-naming)
 
 } // namespace cherry_blazer
 
