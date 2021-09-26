@@ -43,7 +43,7 @@ template <typename T, u16 N, u16 M>
 // https://en.wikipedia.org/wiki/Transpose
 template <typename T, u16 N, u16 M>
 [[nodiscard]] constexpr auto transpose(Matrix<T, N, M> const& mat) noexcept {
-    Matrix<T, N, M> result{};
+    Matrix<T, N, M> result;
     for (auto row{0U}; row < N; ++row) {
         for (auto col{0U}; col < M; ++col)
             result(col, row) = mat(row, col);
