@@ -19,8 +19,8 @@ class Canvas {
     Canvas(int width, int height);
     Canvas(double width, double height);
 
-    [[nodiscard]] std::size_t width() const;
-    [[nodiscard]] std::size_t height() const;
+    [[nodiscard]] unsigned width() const;
+    [[nodiscard]] unsigned height() const;
 
     [[nodiscard]] Color const& operator()(std::size_t x, std::size_t y) const;
     [[nodiscard]] Color const& operator()(unsigned x, unsigned y) const;

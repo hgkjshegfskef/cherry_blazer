@@ -61,9 +61,9 @@ Canvas::Canvas(int width, int height) : Canvas(std::size_t(width), std::size_t(h
 Canvas::Canvas(double width, double height)
     : Canvas(std::size_t(std::round(width)), std::size_t(std::round(height))) {}
 
-std::size_t Canvas::width() const { return width_; }
+unsigned Canvas::width() const { return unsigned(width_); }
 
-std::size_t Canvas::height() const { return height_; }
+unsigned Canvas::height() const { return unsigned(height_); }
 
 Color& Canvas::operator()(std::size_t x, std::size_t y) {
     BOOST_VERIFY(x < width_);
@@ -99,7 +99,7 @@ Color const& Canvas::operator()(double x, double y) const {
     return this->operator()(std::size_t(std::round(x)), std::size_t(std::round(y)));
 }
 
-uint64_t Canvas::size() const { return width_ * height_; }
+std::size_t Canvas::size() const { return width_ * height_; }
 
 void Canvas::fill(Color const& color) { std::fill(canvas_.get(), canvas_.get() + size(), color); }
 
