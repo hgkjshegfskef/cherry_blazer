@@ -364,9 +364,7 @@ using Mat2d = Matrix<double, 2, 2>; // NOLINT(readability-identifier-naming)
 using Mat3d = Matrix<double, 3, 3>; // NOLINT(readability-identifier-naming)
 using Mat4d = Matrix<double, 4, 4>; // NOLINT(readability-identifier-naming)
 
-// Explicitly instantiate commonly used matrices.
-// extern template class Matrix<double, 4, 4>;
-// extern template class Matrix<double, 4, 1>;
+extern template class Matrix<double, 4, 4>;
 
 } // namespace cherry_blazer
 

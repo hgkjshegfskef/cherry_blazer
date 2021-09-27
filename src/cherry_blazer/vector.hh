@@ -41,7 +41,7 @@ class Matrix<Precision, OuterDimension, 1>
     constexpr typename base::reference at(typename base::size_type pos) {
         return impl::mat_.at(pos);
     }
-    [[nodiscard]] constexpr typename base::reference at(typename base::size_type pos) const {
+    [[nodiscard]] constexpr typename base::const_reference at(typename base::size_type pos) const {
         return impl::mat_.at(pos);
     }
 
@@ -87,6 +87,9 @@ using Vec3d = Matrix<double, 3, 1>; // NOLINT(readability-identifier-naming)
 //                           Matrix<Precision, OuterDimension, 1> const& rhs) noexcept {
 //     return !(lhs == rhs);
 // }
+
+// This is actually a Vector, but it cannot be named.
+extern template class Matrix<double, 3, 1>;
 
 } // namespace cherry_blazer
 
