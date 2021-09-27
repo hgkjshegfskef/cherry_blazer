@@ -2,7 +2,6 @@
 
 #include "point.hh"
 #include "ppm.hh"
-#include "types.hh"
 
 #include <boost/assert.hpp>
 #include <boost/pfr/core.hpp>
@@ -10,6 +9,8 @@
 #include <algorithm>
 #include <cassert>
 #include <cmath>
+#include <cstddef>
+#include <cstdint>
 #include <exception>
 #include <fstream>
 #include <iomanip>
@@ -40,29 +41,65 @@ constexpr double scale(double value, Point2d const& source_range, Point2d const&
 
 } // namespace
 
-Canvas::Canvas(stdsize_t width, stdsize_t height)
-    : canvas_{new Color[width * height]()}, width_{width}, height_{height} {
+Canvas::Canvas(std::size_t width, std::size_t height) {
     if (width == 0 || height == 0)
         throw std::logic_error{"Canvas: width and height must be non-zero."};
+    if (width > 4096)
+        throw std::logic_error{"Canvas: width should be <= 4096."};
+    if (height > 2160)
+        throw std::logic_error{"Canvas: height should be <= 2160."};
+
+    canvas_ = std::make_unique<Color[]>(width * height);
+    width_ = width;
+    height_ = height;
 }
 
-stdsize_t Canvas::width() const { return width_; }
+Canvas::Canvas(unsigned width, unsigned height) : Canvas(std::size_t(width), std::size_t(height)) {}
 
-stdsize_t Canvas::height() const { return height_; }
+Canvas::Canvas(int width, int height) : Canvas(std::size_t(width), std::size_t(height)) {}
 
-Color& Canvas::operator()(stdsize_t x, stdsize_t y) {
+Canvas::Canvas(double width, double height)
+    : Canvas(std::size_t(std::round(width)), std::size_t(std::round(height))) {}
+
+std::size_t Canvas::width() const { return width_; }
+
+std::size_t Canvas::height() const { return height_; }
+
+Color& Canvas::operator()(std::size_t x, std::size_t y) {
     BOOST_VERIFY(x < width_);
     BOOST_VERIFY(y < height_);
     return canvas_[y * width_ + x];
 }
 
-Color const& Canvas::operator()(stdsize_t x, stdsize_t y) const {
+Color& Canvas::operator()(unsigned x, unsigned y) {
+    return this->operator()(std::size_t(x), std::size_t(y));
+}
+
+Color& Canvas::operator()(int x, int y) { return this->operator()(std::size_t(x), std::size_t(y)); }
+
+Color& Canvas::operator()(double x, double y) {
+    return this->operator()(std::size_t(std::round(x)), std::size_t(std::round(y)));
+}
+
+Color const& Canvas::operator()(std::size_t x, std::size_t y) const {
     BOOST_VERIFY(x < width_);
     BOOST_VERIFY(y < height_);
     return canvas_[y * width_ + x];
 }
 
-u64 Canvas::size() const { return width_ * height_; }
+Color const& Canvas::operator()(unsigned x, unsigned y) const {
+    return this->operator()(std::size_t(x), std::size_t(y));
+}
+
+Color const& Canvas::operator()(int x, int y) const {
+    return this->operator()(std::size_t(x), std::size_t(y));
+}
+
+Color const& Canvas::operator()(double x, double y) const {
+    return this->operator()(std::size_t(std::round(x)), std::size_t(std::round(y)));
+}
+
+uint64_t Canvas::size() const { return width_ * height_; }
 
 void Canvas::fill(Color const& color) { std::fill(canvas_.get(), canvas_.get() + size(), color); }
 
@@ -86,7 +123,7 @@ std::string Canvas::as_ppm() const {
     constexpr Point ppm_range{0.0, 255.0};
 
     std::stringstream ss;
-    ss << ppm::generate_header(width_, height_, static_cast<stdsize_t>(ppm_range[1]));
+    ss << ppm::generate_header(width_, height_, std::size_t(std::round(ppm_range[1])));
 
     // Print out batch_count batches of batch_size amount of colors each, one batch per line.
     for (auto nth_batch{0U}; nth_batch < batch_count; ++nth_batch) {
@@ -94,9 +131,10 @@ std::string Canvas::as_ppm() const {
             // Clamp color components to the source range, then scale them to the target range.
             boost::pfr::for_each_field(
                 canvas_[nth_batch * batch_size + nth_color], [&](auto const& component) {
-                    auto clamped = std::clamp(component, component_range[0], component_range[1]);
-                    auto scaled = scale(clamped, component_range, ppm_range);
-                    auto rounded = std::round(scaled);
+                    auto const clamped =
+                        std::clamp(component, component_range[0], component_range[1]);
+                    auto const scaled = scale(clamped, component_range, ppm_range);
+                    auto const rounded = std::round(scaled);
                     ss << std::setw(component_width) << rounded;
                 });
         }
@@ -136,8 +174,8 @@ std::ostream& operator<<(std::ostream& os, Canvas const& c) {
     // In order to format the output nicely, it is necessary to print n-1 items with one delimiter,
     // and the nth item with a different delimiter.
 
-    stdsize_t penultimate_row = c.height_ - 1;
-    stdsize_t penultimate_col = c.width_ - 1;
+    std::size_t penultimate_row = c.height_ - 1;
+    std::size_t penultimate_col = c.width_ - 1;
 
     // for each row except last row
     for (auto y{0U}; y < penultimate_row; ++y) {

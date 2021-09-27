@@ -2,7 +2,6 @@
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_CANVAS_HH_
 
 #include "color.hh"
-#include "types.hh"
 
 #include <fstream>
 #include <memory>
@@ -15,13 +14,23 @@ namespace cherry_blazer {
 // Y grows from up to down.
 class Canvas {
   public:
-    Canvas(stdsize_t width, stdsize_t height);
+    Canvas(std::size_t width, std::size_t height);
+    Canvas(unsigned width, unsigned height);
+    Canvas(int width, int height);
+    Canvas(double width, double height);
 
-    [[nodiscard]] stdsize_t width() const;
-    [[nodiscard]] stdsize_t height() const;
+    [[nodiscard]] std::size_t width() const;
+    [[nodiscard]] std::size_t height() const;
 
-    [[nodiscard]] Color const& operator()(stdsize_t x, stdsize_t y) const;
-    Color& operator()(stdsize_t x, stdsize_t y);
+    [[nodiscard]] Color const& operator()(std::size_t x, std::size_t y) const;
+    [[nodiscard]] Color const& operator()(unsigned x, unsigned y) const;
+    [[nodiscard]] Color const& operator()(int x, int y) const;
+    [[nodiscard]] Color const& operator()(double x, double y) const;
+
+    Color& operator()(std::size_t x, std::size_t y);
+    Color& operator()(unsigned x, unsigned y);
+    Color& operator()(int x, int y);
+    Color& operator()(double x, double y);
 
     // Fill whole canvas with a single color.
     void fill(Color const& color);
@@ -35,10 +44,10 @@ class Canvas {
 
   private:
     std::unique_ptr<Color[]> canvas_; // 2D, but in 1D array
-    stdsize_t width_;
-    stdsize_t height_;
+    std::size_t width_;
+    std::size_t height_;
 
-    [[nodiscard]] u64 size() const;
+    [[nodiscard]] std::size_t size() const;
 };
 
 } // namespace cherry_blazer

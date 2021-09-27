@@ -10,35 +10,38 @@
 namespace cherry_blazer {
 
 template <typename Precision, std::size_t Dimension> class Point {
+
   private:
     Vector<Precision, Dimension> vec_;
+
+    using underlying_type = decltype(vec_);
 
   public:
     static inline constexpr std::size_t size = Dimension;
 
-    using value_type = decltype(vec_);
+    using value_type = Precision;
 
     Point() = default;
 
     template <typename... VectorComponents>
     constexpr Point(VectorComponents... components) : vec_{components...} {}
 
-    constexpr typename value_type::reference at(typename value_type::size_type pos) {
+    constexpr typename underlying_type::reference at(typename underlying_type::size_type pos) {
         return vec_.at(pos);
     }
-    [[nodiscard]] constexpr typename value_type::reference
-    at(typename value_type::size_type pos) const {
+    [[nodiscard]] constexpr typename underlying_type::reference
+    at(typename underlying_type::size_type pos) const {
         return vec_.at(pos);
     }
 
-    constexpr typename value_type::reference
-    operator[](typename value_type::size_type pos) noexcept {
+    constexpr typename underlying_type::reference
+    operator[](typename underlying_type::size_type pos) noexcept {
         // TODO: replace with https://github.com/gpakosz/PPK_ASSERT
         BOOST_VERIFY(pos < Dimension + 1);
         return vec_[pos];
     }
-    [[nodiscard]] constexpr typename value_type::const_reference
-    operator[](typename value_type::size_type pos) const noexcept {
+    [[nodiscard]] constexpr typename underlying_type::const_reference
+    operator[](typename underlying_type::size_type pos) const noexcept {
         BOOST_VERIFY(pos < Dimension + 1);
         return vec_[pos];
     }

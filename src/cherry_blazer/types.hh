@@ -10,7 +10,7 @@ using i64 = int_fast64_t;
 
 using u8 = uint_fast8_t;
 using u16 = uint_fast16_t;
-using stdsize_t = uint_fast32_t;
+using u32 = uint_fast32_t;
 using u64 = uint_fast64_t;
 
 #endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_TYPES_HH_
