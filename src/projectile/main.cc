@@ -33,7 +33,7 @@ int main() {
 #if __cpp_deduction_guides >= 201907
     Projectile proj{Point{0., 1., 0.}, normalize(Vector{1., 1.8, 0.}) * 11.25};
 #else
-    Projectile proj{{0., 1., 0.}, normalize(Matrix{1., 1.8, 0.}) * 11.25};
+    Projectile proj{Point{0., 1., 0.}, normalize(Matrix{1., 1.8, 0.}) * 11.25};
 #endif
 
     // gravity -0.1 unit/tick, and wind is -0.01 unit/tick.

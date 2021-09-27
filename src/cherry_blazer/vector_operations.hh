@@ -126,9 +126,8 @@ template <typename Precision, std::size_t Dimension>
     return std::sqrt(result); // TODO: not constexpr
 }
 
-template <typename Precision, std::size_t Dimension, std::size_t InnerDimension = 1>
-[[nodiscard]] constexpr auto
-normalize(Matrix<Precision, Dimension, InnerDimension> const& v) noexcept {
+template <typename Precision, std::size_t Dimension>
+[[nodiscard]] constexpr auto normalize(Vector<Precision, Dimension> const& v) noexcept {
     std::remove_cvref_t<decltype(v)> result;
 
     /*constexpr*/ auto const mag = magnitude(v);
