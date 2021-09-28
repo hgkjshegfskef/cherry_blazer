@@ -6,11 +6,13 @@ using cherry_blazer::Point;
 using cherry_blazer::Point3d;
 using cherry_blazer::Ray;
 
+namespace {
 #if __cpp_deduction_guides >= 201907
 using Vec = cherry_blazer::Vec3d; // NOLINT(readability-identifier-naming)
 #else
 using Vec = cherry_blazer::Matrix<double, 3, 1>; // NOLINT(readability-identifier-naming)
 #endif
+} // namespace
 
 TEST(RayTest, RayIsConstructible) { // NOLINT
     Ray ray{Point{1., 2., 3.}, Vec{4., 5., 6.}};
