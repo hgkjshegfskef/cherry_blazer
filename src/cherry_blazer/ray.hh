@@ -6,9 +6,15 @@
 
 namespace cherry_blazer {
 
-struct Ray {
-    Point3d origin;
-    Vec3d direction;
+class Ray {
+  public:
+    Ray(Point3d const& origin, Vec3d const& direction);
+
+    [[nodiscard]] Point3d position(double time) const;
+
+  private:
+    Point3d origin_;
+    Vec3d direction_;
 };
 
 } // namespace cherry_blazer
