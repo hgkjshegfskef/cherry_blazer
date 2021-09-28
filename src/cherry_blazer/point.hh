@@ -29,7 +29,7 @@ template <typename Precision, std::size_t Dimension> class Point {
     constexpr typename underlying_type::reference at(typename underlying_type::size_type pos) {
         return vec_.at(pos);
     }
-    [[nodiscard]] constexpr typename underlying_type::reference
+    [[nodiscard]] constexpr typename underlying_type::const_reference
     at(typename underlying_type::size_type pos) const {
         return vec_.at(pos);
     }
@@ -67,6 +67,8 @@ using Point2f = Point<float, 2>;  // NOLINT(readability-identifier-naming)
 using Point3f = Point<float, 3>;  // NOLINT(readability-identifier-naming)
 using Point2d = Point<double, 2>; // NOLINT(readability-identifier-naming)
 using Point3d = Point<double, 3>; // NOLINT(readability-identifier-naming)
+
+extern template class Point<double, 3>;
 
 } // namespace cherry_blazer
 

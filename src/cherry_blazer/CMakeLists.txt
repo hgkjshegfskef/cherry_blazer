@@ -3,6 +3,7 @@ add_library(
     canvas.cc
     color.cc
     mat4d.cc
+    point3d.cc
     ppm.cc
     ray.cc
     sphere.cc
