@@ -3,6 +3,8 @@
 
 #include "point.hh"
 #include "vector.hh"
+#include "intersection.hh"
+
 
 #include <cstddef>
 

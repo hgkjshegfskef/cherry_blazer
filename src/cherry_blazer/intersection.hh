@@ -8,7 +8,7 @@
 namespace cherry_blazer {
 
 class Sphere;
-class Ray;
+struct Ray;
 
 struct Intersection {
     double place;
@@ -18,6 +18,8 @@ struct Intersection {
 };
 
 std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray);
+
+Intersection const*  hit(std::vector<Intersection> const& intersections);
 
 } // namespace cherry_blazer
 

@@ -6,6 +6,12 @@
 #include "util.hh"
 #include "vector_operations.hh"
 
+#include <limits>
+
+#if __cpp_lib_ranges >= 202106L
+#include <ranges>
+#endif
+
 namespace cherry_blazer {
 
 Intersection::Intersection(double place, std::shared_ptr<Sphere> object)
@@ -38,6 +44,28 @@ std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
 
     return {{-b - sqrt_discriminant, std::make_shared<Sphere>(sphere)},
             {-b + sqrt_discriminant, std::make_shared<Sphere>(sphere)}};
+}
+
+Intersection const* hit(std::vector<Intersection> const& intersections) {
+#if __cpp_lib_ranges >= 202106L
+    auto nonnegative =
+        std::views::filter(intersections, [](auto const& i) { return i.place >= 0.; });
+    auto const smallest_nonnegative =
+        std::min_element(std::cbegin(nonnegative), std::cend(nonnegative));
+    if (smallest_nonnegative == std::cend(nonnegative))
+        return nullptr;
+    return &(*smallest_nonnegative);
+#else
+    Intersection const* first_intersection = nullptr;
+    double smallest_nonnegative{std::numeric_limits<double>::max()};
+    for (auto const& i : intersections) {
+        if (i.place >= 0. && i.place < smallest_nonnegative) {
+            smallest_nonnegative = i.place;
+            first_intersection = &i;
+        }
+    }
+    return first_intersection;
+#endif
 }
 
 } // namespace cherry_blazer
