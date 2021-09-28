@@ -1,12 +1,10 @@
-#include <ak_toolkit/markable.hpp>
+#include <cherry_blazer/optional_double.hh>
 #include <cherry_blazer/point.hh>
 #include <cherry_blazer/ray.hh>
 #include <cherry_blazer/sphere.hh>
 #include <cherry_blazer/vector.hh>
 
 #include <gtest/gtest.h>
-
-#include <iostream>
 
 using cherry_blazer::Point;
 using cherry_blazer::Ray;
