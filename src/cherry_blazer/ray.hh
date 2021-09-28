@@ -4,6 +4,8 @@
 #include "point.hh"
 #include "vector.hh"
 
+#include <cstddef>
+
 namespace cherry_blazer {
 
 struct Ray {

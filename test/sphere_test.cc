@@ -1,8 +1,6 @@
-#include <cherry_blazer/optional_double.hh>
-#include <cherry_blazer/point.hh>
+#include <cherry_blazer/intersection.hh>
 #include <cherry_blazer/ray.hh>
 #include <cherry_blazer/sphere.hh>
-#include <cherry_blazer/vector.hh>
 
 #include <gtest/gtest.h>
 
@@ -40,42 +38,47 @@ TEST(SphereTest, SphereIdEqualsNotEquals) { // NOLINT
 
 TEST(SphereTest, RayIntersectsSphereAtTwoPoints) { // NOLINT
     Ray ray{Point{0., 0., -5.}, Vec{0., 0., 1.}};
-    auto const result = Sphere::intersect(ray);
-    ASSERT_TRUE(result.first.has_value());
-    ASSERT_TRUE(result.second.has_value());
-    EXPECT_EQ(result.first.value(), 4.);
-    EXPECT_EQ(result.second.value(), 6.);
+
+    auto const intersections = intersect(Sphere{}, ray);
+
+    EXPECT_EQ(intersections.size(), 2);
+    EXPECT_EQ(intersections[0].place, 4.);
+    EXPECT_EQ(intersections[1].place, 6.);
 }
 
 TEST(SphereTest, RayIntersectsSphereAtOnePoint) { // NOLINT
     Ray ray{Point{0., 1., -5.}, Vec{0., 0., 1.}};
-    auto const result = Sphere::intersect(ray);
-    ASSERT_TRUE(result.first.has_value());
-    ASSERT_FALSE(result.second.has_value());
-    EXPECT_EQ(result.first.value(), 5.);
+
+    auto const intersections = intersect(Sphere{}, ray);
+
+    EXPECT_EQ(intersections.size(), 1);
+    EXPECT_EQ(intersections[0].place, 5.);
 }
 
 TEST(SphereTest, RayDoesntIntersectSphere) { // NOLINT
     Ray ray{Point{0., 2., -5.}, Vec{0., 0., 1.}};
-    auto const result = Sphere::intersect(ray);
-    EXPECT_FALSE(result.first.has_value());
-    EXPECT_FALSE(result.second.has_value());
+
+    auto const intersections = intersect(Sphere{}, ray);
+
+    EXPECT_EQ(intersections.size(), 0);
 }
 
 TEST(SphereTest, RayOriginatesInsideSphereAndIntersectsAtTwoPoints) { // NOLINT
     Ray ray{Point{0., 0., 0.}, Vec{0., 0., 1.}};
-    auto const result = Sphere::intersect(ray);
-    ASSERT_TRUE(result.first.has_value());
-    ASSERT_TRUE(result.second.has_value());
-    EXPECT_EQ(result.first.value(), -1.);
-    EXPECT_EQ(result.second.value(), 1.);
+
+    auto const intersections = intersect(Sphere{}, ray);
+
+    EXPECT_EQ(intersections.size(), 2);
+    EXPECT_EQ(intersections[0].place, -1.);
+    EXPECT_EQ(intersections[1].place, 1.);
 }
 
 TEST(SphereTest, RayOriginatesBehindSphereAndIntersectsAtTwoPoints) { // NOLINT
     Ray ray{Point{0., 0., 5.}, Vec{0., 0., 1.}};
-    auto const result = Sphere::intersect(ray);
-    ASSERT_TRUE(result.first.has_value());
-    ASSERT_TRUE(result.second.has_value());
-    EXPECT_EQ(result.first.value(), -6.);
-    EXPECT_EQ(result.second.value(), -4.);
+
+    auto const intersections = intersect(Sphere{}, ray);
+
+    EXPECT_EQ(intersections.size(), 2);
+    EXPECT_EQ(intersections[0].place, -6.);
+    EXPECT_EQ(intersections[1].place, -4.);
 }

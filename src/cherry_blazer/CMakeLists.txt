@@ -2,6 +2,7 @@ add_library(
     libcherryblazer
     canvas.cc
     color.cc
+    intersection.cc
     mat4d.cc
     point3d.cc
     ppm.cc

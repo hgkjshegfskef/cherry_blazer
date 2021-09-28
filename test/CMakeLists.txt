@@ -11,6 +11,7 @@ add_executable(
     cherry_blazer_test
     canvas_test.cc
     color_test.cc
+    intersection_test.cc
     matrix_test.cc
     matrix_transformations_test.cc
     point_test.cc

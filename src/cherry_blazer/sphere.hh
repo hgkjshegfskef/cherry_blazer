@@ -1,12 +1,6 @@
 #ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_SPHERE_HH_
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_SPHERE_HH_
 
-#include "optional_double.hh"
-#include "ray.hh"
-
-#include <optional>
-#include <utility>
-
 namespace cherry_blazer {
 
 // Sphere has radius 1 and is centered at the world origin (0,0,0).
@@ -15,8 +9,6 @@ class Sphere {
     Sphere();
 
     [[nodiscard]] unsigned id() const;
-
-    [[nodiscard]] static std::pair<optional_double, optional_double> intersect(Ray const& ray);
 
   private:
     unsigned id_;
