@@ -15,7 +15,7 @@
 namespace cherry_blazer {
 
 Intersection::Intersection(double place, std::shared_ptr<Sphere> object)
-    : place{place}, object{std::move(object)} {}
+    : t{place}, object{std::move(object)} {}
 
 // https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
 std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
@@ -59,8 +59,8 @@ Intersection const* hit(std::vector<Intersection> const& intersections) {
     Intersection const* first_intersection = nullptr;
     double smallest_nonnegative{std::numeric_limits<double>::max()};
     for (auto const& i : intersections) {
-        if (i.place >= 0. && i.place < smallest_nonnegative) {
-            smallest_nonnegative = i.place;
+        if (i.t >= 0. && i.t < smallest_nonnegative) {
+            smallest_nonnegative = i.t;
             first_intersection = &i;
         }
     }

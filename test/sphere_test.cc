@@ -42,8 +42,8 @@ TEST(SphereTest, RayIntersectsSphereAtTwoPoints) { // NOLINT
     auto const intersections = intersect(Sphere{}, ray);
 
     EXPECT_EQ(intersections.size(), 2);
-    EXPECT_EQ(intersections[0].place, 4.);
-    EXPECT_EQ(intersections[1].place, 6.);
+    EXPECT_EQ(intersections[0].t, 4.);
+    EXPECT_EQ(intersections[1].t, 6.);
 }
 
 TEST(SphereTest, RayIntersectsSphereAtOnePoint) { // NOLINT
@@ -52,7 +52,7 @@ TEST(SphereTest, RayIntersectsSphereAtOnePoint) { // NOLINT
     auto const intersections = intersect(Sphere{}, ray);
 
     EXPECT_EQ(intersections.size(), 1);
-    EXPECT_EQ(intersections[0].place, 5.);
+    EXPECT_EQ(intersections[0].t, 5.);
 }
 
 TEST(SphereTest, RayDoesntIntersectSphere) { // NOLINT
@@ -69,8 +69,8 @@ TEST(SphereTest, RayOriginatesInsideSphereAndIntersectsAtTwoPoints) { // NOLINT
     auto const intersections = intersect(Sphere{}, ray);
 
     EXPECT_EQ(intersections.size(), 2);
-    EXPECT_EQ(intersections[0].place, -1.);
-    EXPECT_EQ(intersections[1].place, 1.);
+    EXPECT_EQ(intersections[0].t, -1.);
+    EXPECT_EQ(intersections[1].t, 1.);
 }
 
 TEST(SphereTest, RayOriginatesBehindSphereAndIntersectsAtTwoPoints) { // NOLINT
@@ -79,6 +79,6 @@ TEST(SphereTest, RayOriginatesBehindSphereAndIntersectsAtTwoPoints) { // NOLINT
     auto const intersections = intersect(Sphere{}, ray);
 
     EXPECT_EQ(intersections.size(), 2);
-    EXPECT_EQ(intersections[0].place, -6.);
-    EXPECT_EQ(intersections[1].place, -4.);
+    EXPECT_EQ(intersections[0].t, -6.);
+    EXPECT_EQ(intersections[1].t, -4.);
 }

@@ -11,7 +11,7 @@ class Sphere;
 struct Ray;
 
 struct Intersection {
-    double place;
+    double t;
     std::shared_ptr<Sphere> object;
 
     Intersection(double place, std::shared_ptr<Sphere> object);
@@ -19,7 +19,7 @@ struct Intersection {
 
 std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray);
 
-Intersection const*  hit(std::vector<Intersection> const& intersections);
+Intersection const* hit(std::vector<Intersection> const& intersections);
 
 } // namespace cherry_blazer
 

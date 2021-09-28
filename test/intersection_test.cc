@@ -17,7 +17,7 @@ TEST(IntersectionTest, HitTestAllIntersectionsHavePositivePlace) { // NOLINT
     std::vector<Intersection> intersections{{1., std::make_shared<Sphere>(sphere1)},
                                             {2., std::make_shared<Sphere>(sphere2)}};
     auto const* const first_hit = hit(intersections);
-    EXPECT_EQ(first_hit->place, 1.);
+    EXPECT_EQ(first_hit->t, 1.);
     EXPECT_EQ(*first_hit->object, sphere1);
 }
 
@@ -27,7 +27,7 @@ TEST(IntersectionTest, HitTestSomeIntersectionsHaveNegativePlace) { // NOLINT
     std::vector<Intersection> intersections{{-1., std::make_shared<Sphere>(sphere1)},
                                             {1., std::make_shared<Sphere>(sphere2)}};
     auto const* const first_hit = hit(intersections);
-    EXPECT_EQ(first_hit->place, 1.);
+    EXPECT_EQ(first_hit->t, 1.);
     EXPECT_EQ(*first_hit->object, sphere2);
 }
 
@@ -50,6 +50,6 @@ TEST(IntersectionTest, HitTestAlwaysLowestNonNegativePlace) { // NOLINT
                                             {-3., std::make_shared<Sphere>(sphere3)},
                                             {2., std::make_shared<Sphere>(sphere4)}};
     auto const* const first_hit = hit(intersections);
-    EXPECT_EQ(first_hit->place, 2.);
+    EXPECT_EQ(first_hit->t, 2.);
     EXPECT_EQ(*first_hit->object, sphere4);
 }
