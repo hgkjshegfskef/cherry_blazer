@@ -60,9 +60,9 @@ using Vector = // NOLINT(readability-identifier-naming)
 // In C++20 we have class template argument deduction consider aliases (which significantly improves
 // usability with Vector type alias). This is implemented in GCC 10, yet to be implemented by Clang,
 // as of Clang 12. https://wg21.link/P1814R0 : __cpp_deduction_guides >= 201907
-template <typename... VectorComponents, std::size_t InnerDimension = 1>
-Matrix(VectorComponents...) -> Matrix<typename std::common_type_t<VectorComponents...>,
-                                      sizeof...(VectorComponents), InnerDimension>;
+template <typename... VectorComponents>
+Matrix(VectorComponents...)
+    -> Matrix<typename std::common_type_t<VectorComponents...>, sizeof...(VectorComponents), 1>;
 
 using Vec2f = Matrix<float, 2, 1>;  // NOLINT(readability-identifier-naming)
 using Vec3f = Matrix<float, 3, 1>;  // NOLINT(readability-identifier-naming)
