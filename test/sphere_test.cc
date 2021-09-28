@@ -76,7 +76,6 @@ TEST(SphereTest, RayOriginatesInsideSphereAndIntersectsAtTwoPoints) { // NOLINT
 TEST(SphereTest, RayOriginatesBehindSphereAndIntersectsAtTwoPoints) { // NOLINT
     Ray ray{Point{0., 0., 5.}, Vec{0., 0., 1.}};
     auto const result = Sphere::intersect(ray);
-    std::cout << "sizeof result: " << sizeof result << std::endl;
     ASSERT_TRUE(result.first.has_value());
     ASSERT_TRUE(result.second.has_value());
     EXPECT_EQ(result.first.value(), -6.);
