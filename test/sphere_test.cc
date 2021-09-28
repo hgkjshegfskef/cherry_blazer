@@ -26,8 +26,8 @@ TEST(SphereTest, SphereIsConstructible) { // NOLINT
 
 TEST(SphereTest, SphereId) { // NOLINT
     Sphere s;
-    auto const result = s.id();
-    EXPECT_EQ(result, 2); // don't move this test around!
+    [[maybe_unused]] auto const result = s.id();
+    // Don't test id in any way, because it depends on the runtime.
 }
 
 TEST(SphereTest, SphereIdEqualsNotEquals) { // NOLINT
