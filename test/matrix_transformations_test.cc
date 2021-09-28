@@ -33,13 +33,13 @@ namespace {
 inline constexpr double abs_error = 1e-5;
 }
 
-class TranslationMatrixTest : public testing::Test {
+class MatrixTransformationsTest : public testing::Test {
   protected:
     using T = double;                          // NOLINT(readability-identifier-naming)
     constexpr static inline std::size_t D = 4; // NOLINT(readability-identifier-naming)
 };
 
-TEST_F(TranslationMatrixTest, TranslationMatrixTimesPoint) { // NOLINT
+TEST_F(MatrixTransformationsTest, TranslationMatrixTimesPoint) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{-3., 4., 5.};
     CHERRY_BLAZER_CONSTEXPR auto translation_matrix =
         Matrix<T, D, D>::translation(Matrix{5., -3., 2.});
@@ -50,7 +50,7 @@ TEST_F(TranslationMatrixTest, TranslationMatrixTimesPoint) { // NOLINT
     EXPECT_EQ(translated_point, expected);
 }
 
-TEST_F(TranslationMatrixTest, ScalingMatrixTimesPoint) { // NOLINT
+TEST_F(MatrixTransformationsTest, ScalingMatrixTimesPoint) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{-4., 6., 8.};
     CHERRY_BLAZER_CONSTEXPR auto scaling_matrix = Matrix<T, D, D>::scaling(Matrix{2., 3., 4.});
 
@@ -60,7 +60,7 @@ TEST_F(TranslationMatrixTest, ScalingMatrixTimesPoint) { // NOLINT
     EXPECT_EQ(scaled_point, expected);
 }
 
-TEST_F(TranslationMatrixTest, ScalingMatrixTimesVector) { // NOLINT
+TEST_F(MatrixTransformationsTest, ScalingMatrixTimesVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Matrix original_vector{-4., 6., 8.};
     CHERRY_BLAZER_CONSTEXPR auto scaling_matrix = Matrix<T, D, D>::scaling(Matrix{2., 3., 4.});
 
@@ -70,7 +70,7 @@ TEST_F(TranslationMatrixTest, ScalingMatrixTimesVector) { // NOLINT
     EXPECT_EQ(scaled_vector, expected);
 }
 
-TEST_F(TranslationMatrixTest, InverseOfScalingMatrixTimesVector) { // NOLINT
+TEST_F(MatrixTransformationsTest, InverseOfScalingMatrixTimesVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Matrix original_vector{-4., 6., 8.};
     CHERRY_BLAZER_CONSTEXPR auto inverse_of_scaling_matrix =
         inverse(Matrix<T, D, D>::scaling(Matrix{2., 3., 4.}));
@@ -81,7 +81,7 @@ TEST_F(TranslationMatrixTest, InverseOfScalingMatrixTimesVector) { // NOLINT
     EXPECT_EQ(shrunk_vector, expected);
 }
 
-TEST_F(TranslationMatrixTest, ReflectionIsScalingByNegativeValue) { // NOLINT
+TEST_F(MatrixTransformationsTest, ReflectionIsScalingByNegativeValue) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
 
     CHERRY_BLAZER_CONSTEXPR auto reflection_matrix = Matrix<T, D, D>::scaling(Matrix{-1., 1., 1.});
@@ -91,7 +91,7 @@ TEST_F(TranslationMatrixTest, ReflectionIsScalingByNegativeValue) { // NOLINT
     EXPECT_EQ(reflected_point, expected);
 }
 
-TEST_F(TranslationMatrixTest, RotatingPointAroundXAxisHalfQuarter) { // NOLINT
+TEST_F(MatrixTransformationsTest, RotatingPointAroundXAxisHalfQuarter) { // NOLINT
     using namespace std::numbers;
     CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
 
@@ -106,7 +106,7 @@ TEST_F(TranslationMatrixTest, RotatingPointAroundXAxisHalfQuarter) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, RotatingPointAroundXAxisFullQuarter) { // NOLINT
+TEST_F(MatrixTransformationsTest, RotatingPointAroundXAxisFullQuarter) { // NOLINT
     using namespace std::numbers;
     CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
 
@@ -121,7 +121,7 @@ TEST_F(TranslationMatrixTest, RotatingPointAroundXAxisFullQuarter) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, InverseOfXAxisRotationRotatesInOppositeDirection) { // NOLINT
+TEST_F(MatrixTransformationsTest, InverseOfXAxisRotationRotatesInOppositeDirection) { // NOLINT
     using namespace std::numbers;
     CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
 
@@ -139,7 +139,7 @@ TEST_F(TranslationMatrixTest, InverseOfXAxisRotationRotatesInOppositeDirection) 
     }
 }
 
-TEST_F(TranslationMatrixTest, RotatingPointAroundYAxisHalfQuarter) { // NOLINT
+TEST_F(MatrixTransformationsTest, RotatingPointAroundYAxisHalfQuarter) { // NOLINT
     using namespace std::numbers;
     CHERRY_BLAZER_CONSTEXPR Point original_point{0., 0., 1.};
 
@@ -154,7 +154,7 @@ TEST_F(TranslationMatrixTest, RotatingPointAroundYAxisHalfQuarter) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, RotatingPointAroundYAxisFullQuarter) { // NOLINT
+TEST_F(MatrixTransformationsTest, RotatingPointAroundYAxisFullQuarter) { // NOLINT
     using namespace std::numbers;
     CHERRY_BLAZER_CONSTEXPR Point original_point{0., 0., 1.};
 
@@ -169,7 +169,7 @@ TEST_F(TranslationMatrixTest, RotatingPointAroundYAxisFullQuarter) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, RotatingPointAroundZAxisHalfQuarter) { // NOLINT
+TEST_F(MatrixTransformationsTest, RotatingPointAroundZAxisHalfQuarter) { // NOLINT
     using namespace std::numbers;
     CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
 
@@ -184,7 +184,7 @@ TEST_F(TranslationMatrixTest, RotatingPointAroundZAxisHalfQuarter) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, RotatingPointAroundZAxisFullQuarter) { // NOLINT
+TEST_F(MatrixTransformationsTest, RotatingPointAroundZAxisFullQuarter) { // NOLINT
     using namespace std::numbers;
     CHERRY_BLAZER_CONSTEXPR Point original_point{0., 1., 0.};
 
@@ -199,7 +199,7 @@ TEST_F(TranslationMatrixTest, RotatingPointAroundZAxisFullQuarter) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, ShearingPointComponentXAgainstY) { // NOLINT
+TEST_F(MatrixTransformationsTest, ShearingPointComponentXAgainstY) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
 
     CHERRY_BLAZER_CONSTEXPR ShearDirection direction{X::AgainstY{}};
@@ -213,7 +213,7 @@ TEST_F(TranslationMatrixTest, ShearingPointComponentXAgainstY) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, ShearingPointComponentXAgainstZ) { // NOLINT
+TEST_F(MatrixTransformationsTest, ShearingPointComponentXAgainstZ) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
 
     CHERRY_BLAZER_CONSTEXPR ShearDirection direction{X::AgainstZ{}};
@@ -227,7 +227,7 @@ TEST_F(TranslationMatrixTest, ShearingPointComponentXAgainstZ) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, ShearingPointComponentYAgainstX) { // NOLINT
+TEST_F(MatrixTransformationsTest, ShearingPointComponentYAgainstX) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
 
     CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Y::AgainstX{}};
@@ -241,7 +241,7 @@ TEST_F(TranslationMatrixTest, ShearingPointComponentYAgainstX) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, ShearingPointComponentYAgainstZ) { // NOLINT
+TEST_F(MatrixTransformationsTest, ShearingPointComponentYAgainstZ) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
 
     CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Y::AgainstZ{}};
@@ -255,7 +255,7 @@ TEST_F(TranslationMatrixTest, ShearingPointComponentYAgainstZ) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, ShearingPointComponentZAgainstX) { // NOLINT
+TEST_F(MatrixTransformationsTest, ShearingPointComponentZAgainstX) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
 
     CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Z::AgainstX{}};
@@ -269,7 +269,7 @@ TEST_F(TranslationMatrixTest, ShearingPointComponentZAgainstX) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, ShearingPointComponentZAgainstY) { // NOLINT
+TEST_F(MatrixTransformationsTest, ShearingPointComponentZAgainstY) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
 
     CHERRY_BLAZER_CONSTEXPR ShearDirection direction{Z::AgainstY{}};
@@ -283,7 +283,7 @@ TEST_F(TranslationMatrixTest, ShearingPointComponentZAgainstY) { // NOLINT
     }
 }
 
-TEST_F(TranslationMatrixTest, TransformationsAppliedTogether) { // NOLINT
+TEST_F(MatrixTransformationsTest, TransformationsAppliedTogether) { // NOLINT
     using namespace std::numbers;
     CHERRY_BLAZER_CONSTEXPR Point original_point{1., 0., 1.};
 
