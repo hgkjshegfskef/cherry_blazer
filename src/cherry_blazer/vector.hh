@@ -25,7 +25,8 @@ class Matrix<Precision, OuterDimension, 1>
 
     Matrix() = default;
 
-    template <typename... VectorComponents> constexpr Matrix(VectorComponents... components) {
+    template <typename... VectorComponents>
+    constexpr explicit Matrix(VectorComponents... components) {
         constexpr auto dimension = sizeof...(components);
         static_assert(2 <= dimension && dimension <= 3,
                       "Vector must be constructed with either 2 or 3 components.");

@@ -1,6 +1,4 @@
 #include <cherry_blazer/config.hh>
-//#include <cherry_blazer/point.hh>
-//#include <cherry_blazer/point_properties.hh>
 #include <cherry_blazer/vector.hh>
 #include <cherry_blazer/vector_operations.hh>
 

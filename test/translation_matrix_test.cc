@@ -25,8 +25,6 @@ using cherry_blazer::Mat4d;
 using cherry_blazer::Matrix;
 using cherry_blazer::Point;
 using cherry_blazer::ShearDirection;
-// using cherry_blazer::Vec4d;
-// using cherry_blazer::Vector;
 using cherry_blazer::Shear::X;
 using cherry_blazer::Shear::Y;
 using cherry_blazer::Shear::Z;
@@ -43,8 +41,9 @@ class TranslationMatrixTest : public testing::Test {
 
 TEST_F(TranslationMatrixTest, TranslationMatrixTimesPoint) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{-3., 4., 5.};
+    CHERRY_BLAZER_CONSTEXPR auto translation_matrix =
+        Matrix<T, D, D>::translation(Matrix{5., -3., 2.});
 
-    CHERRY_BLAZER_CONSTEXPR auto translation_matrix = Matrix<T, D, D>::translation({5., -3., 2.});
     CHERRY_BLAZER_CONSTEXPR auto translated_point = translation_matrix * original_point;
 
     CHERRY_BLAZER_CONSTEXPR Point expected{2., 1., 7.};
@@ -53,8 +52,8 @@ TEST_F(TranslationMatrixTest, TranslationMatrixTimesPoint) { // NOLINT
 
 TEST_F(TranslationMatrixTest, ScalingMatrixTimesPoint) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{-4., 6., 8.};
+    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix = Matrix<T, D, D>::scaling(Matrix{2., 3., 4.});
 
-    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix = Matrix<T, D, D>::scaling({2., 3., 4.});
     CHERRY_BLAZER_CONSTEXPR auto scaled_point = scaling_matrix * original_point;
 
     CHERRY_BLAZER_CONSTEXPR Point expected{-8., 18., 32.};
@@ -63,8 +62,8 @@ TEST_F(TranslationMatrixTest, ScalingMatrixTimesPoint) { // NOLINT
 
 TEST_F(TranslationMatrixTest, ScalingMatrixTimesVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Matrix original_vector{-4., 6., 8.};
+    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix = Matrix<T, D, D>::scaling(Matrix{2., 3., 4.});
 
-    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix = Matrix<T, D, D>::scaling({2., 3., 4.});
     CHERRY_BLAZER_CONSTEXPR auto scaled_vector = scaling_matrix * original_vector;
 
     CHERRY_BLAZER_CONSTEXPR Matrix expected{-8., 18., 32.};
@@ -73,9 +72,9 @@ TEST_F(TranslationMatrixTest, ScalingMatrixTimesVector) { // NOLINT
 
 TEST_F(TranslationMatrixTest, InverseOfScalingMatrixTimesVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Matrix original_vector{-4., 6., 8.};
-
     CHERRY_BLAZER_CONSTEXPR auto inverse_of_scaling_matrix =
-        inverse(Matrix<T, D, D>::scaling({2., 3., 4.}));
+        inverse(Matrix<T, D, D>::scaling(Matrix{2., 3., 4.}));
+
     CHERRY_BLAZER_CONSTEXPR auto shrunk_vector = inverse_of_scaling_matrix * original_vector;
 
     CHERRY_BLAZER_CONSTEXPR Matrix expected{-2., 2., 2.};
@@ -85,7 +84,7 @@ TEST_F(TranslationMatrixTest, InverseOfScalingMatrixTimesVector) { // NOLINT
 TEST_F(TranslationMatrixTest, ReflectionIsScalingByNegativeValue) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{2., 3., 4.};
 
-    CHERRY_BLAZER_CONSTEXPR auto reflection_matrix = Matrix<T, D, D>::scaling({-1., 1., 1.});
+    CHERRY_BLAZER_CONSTEXPR auto reflection_matrix = Matrix<T, D, D>::scaling(Matrix{-1., 1., 1.});
     CHERRY_BLAZER_CONSTEXPR auto reflected_point = reflection_matrix * original_point;
 
     CHERRY_BLAZER_CONSTEXPR Point expected{-2., 3., 4.};
@@ -289,8 +288,9 @@ TEST_F(TranslationMatrixTest, TransformationsAppliedTogether) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point original_point{1., 0., 1.};
 
     CHERRY_BLAZER_CONSTEXPR auto rotation_matrix = Matrix<T, D, D>::rotation(Axis::X, pi_v<T> / 2);
-    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix = Matrix<T, D, D>::scaling({5., 5., 5.});
-    CHERRY_BLAZER_CONSTEXPR auto translation_matrix = Matrix<T, D, D>::translation({10., 5., 7.});
+    CHERRY_BLAZER_CONSTEXPR auto scaling_matrix = Matrix<T, D, D>::scaling(Matrix{5., 5., 5.});
+    CHERRY_BLAZER_CONSTEXPR auto translation_matrix =
+        Matrix<T, D, D>::translation(Matrix{10., 5., 7.});
     CHERRY_BLAZER_CONSTEXPR auto shearing_matrix = Matrix<T, D, D>::shearing(Z::AgainstX{});
 
     CHERRY_BLAZER_CONSTEXPR auto transformed_point =

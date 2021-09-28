@@ -153,8 +153,13 @@ template <typename Precision, std::size_t Dimension>
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr std::enable_if_t<Dimension == 3, Vector<Precision, Dimension>>
 cross(Vector<Precision, Dimension> const& v1, Vector<Precision, Dimension> const& v2) noexcept {
-    return {v1[1] * v2[2] - v1[2] * v2[1], v1[2] * v2[0] - v1[0] * v2[2],
-            v1[0] * v2[1] - v1[1] * v2[0]};
+#if __cpp_deduction_guides >= 201907
+    return Vector{v1[1] * v2[2] - v1[2] * v2[1], v1[2] * v2[0] - v1[0] * v2[2],
+                  v1[0] * v2[1] - v1[1] * v2[0]};
+#else
+    return Matrix{v1[1] * v2[2] - v1[2] * v2[1], v1[2] * v2[0] - v1[0] * v2[2],
+                  v1[0] * v2[1] - v1[1] * v2[0]};
+#endif
 }
 
 } // namespace cherry_blazer
