@@ -111,6 +111,8 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
                                          # one can patch clang to use uint64.
             -fconstexpr-backtrace-limit=0 # to see what code led to "too many steps" above
     )
+    add_compile_options(-stdlib=libc++) # feature parity with compiler
+    add_link_options(-stdlib=libc++ -lc++abi)
 endif()
 
 # Force colors in Ninja: https://github.com/ninja-build/ninja/wiki/FAQ
@@ -169,6 +171,9 @@ cherry_blazer_dependency_apply_patch(googletest thirdparty-patches/googletest.pa
 
 option(BUILD_GMOCK OFF)
 option(INSTALL_GTEST OFF)
+if("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
+    option(GTEST_USE_LIBCPP ON)
+endif()
 
 list(APPEND CMAKE_MESSAGE_CONTEXT "googletest")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src"

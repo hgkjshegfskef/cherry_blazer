@@ -14,6 +14,7 @@
 #include <exception>
 #include <fstream>
 #include <iomanip>
+#include <sstream>
 #include <string>
 #include <utility>
 

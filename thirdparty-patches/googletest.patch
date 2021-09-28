@@ -1,5 +1,5 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index ea81ab1..9a67d3c 100644
+index ea81ab1..06b7a17 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -7,7 +7,11 @@ if (POLICY CMP0048)
@@ -15,6 +15,19 @@ index ea81ab1..9a67d3c 100644
  set(GOOGLETEST_VERSION 1.11.0)
  
  if (CMAKE_VERSION VERSION_GREATER "3.0.2")
+@@ -24,6 +28,12 @@ include(GNUInstallDirs)
+ #Note that googlemock target already builds googletest
+ option(BUILD_GMOCK "Builds the googlemock subproject" ON)
+ option(INSTALL_GTEST "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)" ON)
++option(GTEST_USE_LIBCPP "Use libc++" OFF)
++
++if (GTEST_USE_LIBCPP)
++    add_compile_options(-stdlib=libc++)
++    add_link_options(-stdlib=libc++ -lc++abi)
++endif ()
+ 
+ if(BUILD_GMOCK)
+   add_subdirectory( googlemock )
 diff --git a/googletest/CMakeLists.txt b/googletest/CMakeLists.txt
 index abdd98b..9a54f82 100644
 --- a/googletest/CMakeLists.txt
