@@ -33,7 +33,7 @@ TEST(PointTest, Point3dCtor) { // NOLINT
 TEST(PointTest, PointCopyConstructable) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point p1{1., 2., 3.};
     CHERRY_BLAZER_CONSTEXPR Point p2{p1};
-    EXPECT_EQ(p2, (Vec3d{1., 2., 3.}));
+    EXPECT_EQ(p2, (Point3d{1., 2., 3.}));
 }
 
 // Point == Point
