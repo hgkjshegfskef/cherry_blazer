@@ -48,6 +48,7 @@ template <typename Precision, std::size_t Dimension>
 template <typename Precision, std::size_t Dimension>
 constexpr auto& operator+=(Point<Precision, Dimension>& lhs,
                            Vector<Precision, Dimension> const& rhs) noexcept {
+    // Implemented in Vector and here, to omit unnecessary inclusion of whole vector_operations.hh
     for (auto i{0U}; i < Dimension; ++i)
         lhs[i] += rhs[i];
 

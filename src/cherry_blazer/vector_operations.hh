@@ -1,7 +1,7 @@
 #ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_OPERATIONS_HH_
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_OPERATIONS_HH_
 
-//#include "point.hh"
+#include "point.hh"
 #include "vector.hh"
 
 #include <cmath>
@@ -102,14 +102,16 @@ template <typename Precision, std::size_t Dimension>
 // Vector += Point (= ERROR)
 
 // Vector + Point = Point
-// template <typename Precision, std::size_t Dimension>
-//[[nodiscard]] constexpr auto operator+(Vector<Precision, Dimension> const& lhs,
-//                                       Point<Precision, Dimension> rhs) noexcept {
-//    // Implemented in Point and here, to omit unnecessary inclusion of whole point_operations.hh
-//    for (auto i{0U}; i < Dimension; ++i)
-//        rhs[i] += lhs[i];
-//    return rhs;
-//}
+template <typename Precision, std::size_t Dimension>
+[[nodiscard]] constexpr auto operator+(Vector<Precision, Dimension> const& lhs,
+                                       Point<Precision, Dimension> rhs) noexcept {
+    // Implemented in Point and here, to omit unnecessary inclusion of whole point_operations.hh
+    for (auto i{0U}; i < Dimension; ++i)
+        rhs[i] += lhs[i];
+
+    BOOST_VERIFY(rhs[Dimension] == static_cast<Precision>(1));
+    return rhs;
+}
 
 // Vector -= Point (= ERROR)
 

@@ -1,4 +1,5 @@
 #include <cherry_blazer/config.hh>
+#include <cherry_blazer/point.hh>
 #include <cherry_blazer/vector.hh>
 #include <cherry_blazer/vector_operations.hh>
 
@@ -9,6 +10,8 @@
 // This can be removed when Clang supports CTAD aliases.
 using cherry_blazer::Matrix;
 
+using cherry_blazer::Point;
+using cherry_blazer::Point3d;
 using cherry_blazer::Vec3d;
 using cherry_blazer::Vector;
 
@@ -196,12 +199,12 @@ TEST(VectorTest, VectorCrossProduct) { // NOLINT
 // Vector += Point (= ERROR)
 
 // Vector + Point = Point
-// TEST(VectorTest, VectorPlusPoint) { // NOLINT
-//    CHERRY_BLAZER_CONSTEXPR Vector v{3., -2., 5.};
-//    CHERRY_BLAZER_CONSTEXPR Point p{-2., 3., 1.};
-//    CHERRY_BLAZER_CONSTEXPR Point p2 = v + p;
-//    EXPECT_EQ(p2, (Point3d{1, 1, 6}));
-//}
+TEST(VectorTest, VectorPlusPoint) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Matrix v{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Point p{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Point p2 = v + p;
+    EXPECT_EQ(p2, (Point3d{1., 1., 6.}));
+}
 
 // Vector -= Point (= ERROR)
 
