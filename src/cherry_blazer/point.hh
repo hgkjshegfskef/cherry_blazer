@@ -24,7 +24,7 @@ template <typename Precision, std::size_t Dimension> class Point {
     Point() = default;
 
     template <typename... VectorComponents>
-    constexpr Point(VectorComponents... components) : vec_{components...} {}
+    constexpr explicit Point(VectorComponents... components) : vec_{components...} {}
 
     constexpr typename underlying_type::reference at(typename underlying_type::size_type pos) {
         return vec_.at(pos);

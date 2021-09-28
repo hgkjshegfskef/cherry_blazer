@@ -35,8 +35,8 @@ constexpr double linear_interpolation(double x, Point2d const& left_point,
 // Use-case example: given a value in range [0;1], find out its respective value in range [0;255].
 // Further reading: https://gamedev.stackexchange.com/a/33445
 constexpr double scale(double value, Point2d const& source_range, Point2d const& target_range) {
-    return linear_interpolation(value, {source_range[0], target_range[0]},
-                                {source_range[1], target_range[1]});
+    return linear_interpolation(value, Point2d{source_range[0], target_range[0]},
+                                Point2d{source_range[1], target_range[1]});
 }
 
 } // namespace
