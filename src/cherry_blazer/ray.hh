@@ -1,10 +1,9 @@
 #ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_RAY_HH_
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_RAY_HH_
 
+#include "intersection.hh"
 #include "point.hh"
 #include "vector.hh"
-#include "intersection.hh"
-
 
 #include <cstddef>
 
@@ -18,6 +17,8 @@ struct Ray {
 
     [[nodiscard]] Point3d position(double time) const;
 };
+
+Ray transform(Ray const& ray, Matrix<double, 4, 4> const& transformation_matrix);
 
 } // namespace cherry_blazer
 

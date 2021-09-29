@@ -1,5 +1,6 @@
 #include "ray.hh"
 
+#include "matrix_operations.hh"
 #include "point_operations.hh"
 #include "vector_operations.hh"
 
