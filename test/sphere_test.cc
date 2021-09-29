@@ -4,6 +4,7 @@
 
 #include <gtest/gtest.h>
 
+using cherry_blazer::Matrix;
 using cherry_blazer::Point;
 using cherry_blazer::Ray;
 using cherry_blazer::Sphere;
@@ -81,4 +82,16 @@ TEST(SphereTest, RayOriginatesBehindSphereAndIntersectsAtTwoPoints) { // NOLINT
     EXPECT_EQ(intersections.size(), 2);
     EXPECT_EQ(intersections[0].t, -6.);
     EXPECT_EQ(intersections[1].t, -4.);
+}
+
+TEST(SphereTest, SphereDefaultTransformation) { // NOLINT
+    Sphere sphere;
+
+    EXPECT_EQ(sphere.transformation, (Matrix<double, 4, 4>::identity()));
+}
+
+TEST(SphereTest, SphereSetTransformation) { // NOLINT
+    Sphere sphere{Matrix<double, 4, 4>::translation(Vec{2., 3., 4.})};
+
+    EXPECT_EQ(sphere.transformation, (Matrix<double, 4, 4>::translation(Vec{2., 3., 4.})));
 }

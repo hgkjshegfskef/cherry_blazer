@@ -1,12 +1,17 @@
 #ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_SPHERE_HH_
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_SPHERE_HH_
 
+#include "matrix.hh"
+
 namespace cherry_blazer {
 
 // Sphere has radius 1 and is centered at the world origin (0,0,0).
 class Sphere {
   public:
+    Matrix<double, 4, 4> transformation;
+
     Sphere();
+    explicit Sphere(Matrix<double, 4, 4> const& transformation);
 
     [[nodiscard]] unsigned id() const;
 
