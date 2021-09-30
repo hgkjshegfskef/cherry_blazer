@@ -20,14 +20,11 @@ class Matrix<Precision, Dimension, Dimension>
     Matrix() = default;
     using detail::MatrixBase<Precision, Dimension, Dimension>::MatrixBase;
 
-    enum class Type { Any, Identity, Translation, Scaling, Rotation, Shearing } type{Type::Any};
-
     // https://en.wikipedia.org/wiki/Identity_matrix
     [[nodiscard]] static constexpr auto identity() {
         Matrix<Precision, Dimension, Dimension> identity_matrix{};
         for (auto i{0U}; i < Dimension; ++i)
             identity_matrix(i, i) = static_cast<Precision>(1);
-        identity_matrix.type = Type::Identity;
         return identity_matrix;
     }
 
@@ -40,7 +37,6 @@ class Matrix<Precision, Dimension, Dimension>
         auto mat = identity();
         for (auto row{0U}; row < Dimension; ++row)
             mat(row, Dimension - 1) = vec[row];
-        mat.type = Type::Translation;
         return mat;
     }
 
@@ -49,7 +45,6 @@ class Matrix<Precision, Dimension, Dimension>
         auto mat = identity();
         for (auto row{0U}; row < Dimension; ++row)
             mat(row, row) = vec[row];
-        mat.type = Type::Scaling;
         return mat;
     }
 
@@ -59,7 +54,6 @@ class Matrix<Precision, Dimension, Dimension>
         auto const sine = std::sin(radians);
         auto const cosine = std::cos(radians);
         auto mat = identity();
-        mat.type = Type::Rotation;
         switch (axis) {
         case Axis::X:
             mat(1, 1) = cosine;
@@ -104,11 +98,10 @@ class Matrix<Precision, Dimension, Dimension>
                 } else if constexpr (std::is_same_v<shear_kind, Shear::Z::AgainstY>) {
                     shearing_matrix(2, 1) = static_cast<Precision>(1);
                 } else {
-                    static_assert(always_false_v<shear_kind>, "non-exhaustive visitor");
+                    __builtin_unreachable();
                 }
             },
             direction);
-        shearing_matrix.type = Type::Shearing;
         return shearing_matrix;
     }
 };
