@@ -3,6 +3,7 @@
 #include <cherry_blazer/matrix_operations.hh>
 #include <cherry_blazer/point.hh>
 #include <cherry_blazer/shearing.hh>
+#include <cherry_blazer/square_matrix.hh>
 #include <cherry_blazer/vector.hh>
 
 #include <gtest/gtest.h>

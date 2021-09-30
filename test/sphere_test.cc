@@ -95,3 +95,14 @@ TEST(SphereTest, SphereSetTransformation) { // NOLINT
 
     EXPECT_EQ(sphere.transformation, (Matrix<double, 4, 4>::translation(Vec{2., 3., 4.})));
 }
+
+TEST(SphereTest, RayIntersectsScaledSphere) { // NOLINT
+    Ray ray{Point{0., 0., -5.}, Vec{0., 0., 1.}};
+    Sphere sphere{Matrix<double, 4, 4>::scaling(Vec{2., 2., 2.})};
+
+    auto const intersections = intersect(sphere, ray);
+
+    EXPECT_EQ(intersections.size(), 2);
+    EXPECT_EQ(intersections[0].t, 3.);
+    EXPECT_EQ(intersections[1].t, 7.);
+}

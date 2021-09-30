@@ -1,9 +1,9 @@
 #include <cherry_blazer/canvas.hh>
 #include <cherry_blazer/color.hh>
-#include <cherry_blazer/matrix.hh>
+#include <cherry_blazer/detail/types.hh>
 #include <cherry_blazer/matrix_operations.hh>
 #include <cherry_blazer/point.hh>
-#include <cherry_blazer/types.hh>
+#include <cherry_blazer/square_matrix.hh>
 #include <cherry_blazer/vector.hh>
 #include <cherry_blazer/vector_operations.hh>
 

@@ -9,7 +9,7 @@
 #include <limits>
 #include <type_traits>
 
-namespace cherry_blazer {
+namespace cherry_blazer::detail {
 
 // Taken from: https://en.cppreference.com/w/cpp/types/numeric_limits/epsilon
 // ULP=4 was chosen arbitrarily as common value.
@@ -29,6 +29,6 @@ typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type almost_
     std::terminate();
 }
 
-} // namespace cherry_blazer
+} // namespace cherry_blazer::detail
 
 #endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_UTIL_HH_

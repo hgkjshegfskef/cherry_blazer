@@ -1,6 +1,6 @@
-#include <cherry_blazer/matrix.hh>
 #include <cherry_blazer/matrix_operations.hh>
 #include <cherry_blazer/ray.hh>
+#include <cherry_blazer/square_matrix.hh>
 
 #include <gtest/gtest.h>
 

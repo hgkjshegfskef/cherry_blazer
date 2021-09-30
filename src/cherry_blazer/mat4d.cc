@@ -1,5 +1,4 @@
-#include "matrix.hh"
-#include "vector.hh"
+#include "square_matrix.hh"
 
 namespace cherry_blazer {
 

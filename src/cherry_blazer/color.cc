@@ -1,6 +1,6 @@
 #include "color.hh"
 
-#include "util.hh"
+#include "detail/util.hh"
 
 #include <iomanip>
 
@@ -45,7 +45,8 @@ Color operator*(Color lhs, Color const& rhs) { return lhs *= rhs; }
 
 bool operator==(Color const& lhs, Color const& rhs) {
     // floating-point comparison through epsilon
-    return almost_equal(lhs.r, rhs.r) && almost_equal(lhs.g, rhs.g) && almost_equal(lhs.b, rhs.b);
+    return detail::almost_equal(lhs.r, rhs.r) && detail::almost_equal(lhs.g, rhs.g) &&
+           detail::almost_equal(lhs.b, rhs.b);
 }
 
 bool operator!=(Color const& lhs, Color const& rhs) { return !(lhs == rhs); }

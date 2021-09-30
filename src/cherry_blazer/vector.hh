@@ -1,11 +1,13 @@
 #ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_HH_
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_HH_
 
-#include "matrix.hh"
+#include "detail/matrix_base.hh"
 
 #include <boost/assert.hpp>
 
 namespace cherry_blazer {
+
+template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimension> class Matrix;
 
 // Nx1 matrix, a.k.a. Vector.
 template <typename Precision, std::size_t OuterDimension>
@@ -74,5 +76,7 @@ using Vec3d = Matrix<double, 3, 1>; // NOLINT(readability-identifier-naming)
 extern template class Matrix<double, 3, 1>;
 
 } // namespace cherry_blazer
+
+#include "matrix_properties.hh"
 
 #endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_VECTOR_HH_

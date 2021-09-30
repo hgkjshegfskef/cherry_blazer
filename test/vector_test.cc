@@ -22,15 +22,12 @@ TEST(VectorTest, VectorCtors) { // NOLINT
     [[maybe_unused]] Vector vec3{1., 2., 3.};
     //    [[maybe_unused]] Vector vec4{1., 2., 3., 4.};     // OK: won't compile: 4 arguments
     //    [[maybe_unused]] Vector vec5{{1.}, {2.}};         // OK: won't compile: ambiguous
-    [[maybe_unused]] Matrix mat1{{1., 2.}, {1., 2.}}; // OK: Matrix<2,2>
-    [[maybe_unused]] Vector mat2{{1., 2.}, {1., 2.}}; // OK: Matrix<2,2>, but Vector is CTAD aliased
 #endif
     [[maybe_unused]] Matrix<double, 2, 1> vec6;
     [[maybe_unused]] Matrix vec7{1., 2.};
     [[maybe_unused]] Matrix vec8{1., 2., 3.};
     //    [[maybe_unused]] Matrix vec9{1., 2., 3., 4.};      // OK: won't compile: 4 arguments
     //    [[maybe_unused]] Matrix vec10{{1.}, {2.}};         // OK: won't compile: ambiguous
-    [[maybe_unused]] Matrix vec11{{1., 2.}, {1., 2.}}; // OK: Matrix<2,2>
 }
 
 TEST(VectorTest, Vector2dCtor) { // NOLINT

@@ -1,7 +1,7 @@
 #ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_SPHERE_HH_
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_SPHERE_HH_
 
-#include "matrix.hh"
+#include "square_matrix.hh"
 
 namespace cherry_blazer {
 

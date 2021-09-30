@@ -2,9 +2,9 @@
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_OPERATIONS_HH_
 
 #include "axis.hh"
+#include "detail/types.hh"
 #include "matrix.hh"
 #include "point.hh"
-#include "types.hh"
 #include "vector.hh"
 
 #include <boost/assert.hpp>

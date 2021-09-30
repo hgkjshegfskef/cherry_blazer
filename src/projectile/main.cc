@@ -3,7 +3,6 @@
 #include <cherry_blazer/canvas.hh>
 #include <cherry_blazer/color.hh>
 #include <cherry_blazer/point.hh>
-#include <cherry_blazer/types.hh>
 #include <cherry_blazer/vector.hh>
 #include <cherry_blazer/vector_operations.hh>
 
@@ -72,5 +71,5 @@ int main() {
     }
 
     const std::string image_contents = canvas.as_ppm();
-    image_file.write(image_contents.data(), i32(image_contents.size()));
+    image_file.write(image_contents.data(), long(image_contents.size()));
 }

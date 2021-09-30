@@ -1,9 +1,9 @@
 #include "intersection.hh"
 
+#include "detail/util.hh"
 #include "point_operations.hh"
 #include "ray.hh"
 #include "sphere.hh"
-#include "util.hh"
 #include "vector_operations.hh"
 
 #include <limits>
@@ -38,7 +38,7 @@ std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
 
     auto const sqrt_discriminant = std::sqrt(discriminant);
 
-    if (almost_equal(discriminant, 0.)) {
+    if (detail::almost_equal(discriminant, 0.)) {
         return {{-b - sqrt_discriminant, std::make_shared<Sphere>(sphere)}};
     }
 

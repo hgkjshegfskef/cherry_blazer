@@ -1,7 +1,7 @@
 #ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_PPM_HH_
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_PPM_HH_
 
-#include "types.hh"
+#include "detail/types.hh"
 
 #include <string>
 
