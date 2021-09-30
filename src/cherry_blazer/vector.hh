@@ -73,6 +73,7 @@ using Vec2d = Matrix<double, 2, 1>; // NOLINT(readability-identifier-naming)
 using Vec3d = Matrix<double, 3, 1>; // NOLINT(readability-identifier-naming)
 
 // This is actually a Vector, but it cannot be named.
+extern template class Matrix<float, 3, 1>;
 extern template class Matrix<double, 3, 1>;
 
 } // namespace cherry_blazer

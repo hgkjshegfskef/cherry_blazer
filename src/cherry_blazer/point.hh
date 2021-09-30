@@ -68,6 +68,7 @@ using Point3f = Point<float, 3>;  // NOLINT(readability-identifier-naming)
 using Point2d = Point<double, 2>; // NOLINT(readability-identifier-naming)
 using Point3d = Point<double, 3>; // NOLINT(readability-identifier-naming)
 
+extern template class Point<float, 3>;
 extern template class Point<double, 3>;
 
 } // namespace cherry_blazer

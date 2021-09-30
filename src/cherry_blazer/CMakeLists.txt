@@ -4,11 +4,14 @@ add_library(
     color.cc
     intersection.cc
     mat4d.cc
+    mat4f.cc
     point3d.cc
+    point3f.cc
     ppm.cc
     ray.cc
     sphere.cc
-    vec3d.cc)
+    vec3d.cc
+    vec3f.cc)
 
 # Use "" includes in implementation files, but users will use <cherry_blazer/> includes in their
 # code. NOTE: expects config.hh in CMAKE_CURRENT_BINARY_DIR
