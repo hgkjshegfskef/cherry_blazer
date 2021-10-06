@@ -19,8 +19,10 @@ class MatrixBase
 
     static_assert(OuterDimension * InnerDimension != 0, "Both dimensions must be non-zero.");
 
+    using base = MatrixImpl<Precision, std::make_index_sequence<OuterDimension>, InnerDimension>;
+
   protected:
-    using impl = MatrixImpl<Precision, std::make_index_sequence<OuterDimension>, InnerDimension>;
+    using impl = base;
     using underlying_type = typename impl::underlying_type;
 
   public:

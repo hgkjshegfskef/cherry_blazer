@@ -1,13 +1,19 @@
 #include <cherry_blazer/intersection.hh>
+#include <cherry_blazer/matrix_operations.hh>
 #include <cherry_blazer/ray.hh>
 #include <cherry_blazer/sphere.hh>
+#include <cherry_blazer/point_operations.hh>
 
 #include <gtest/gtest.h>
 
+#include <memory>
+
+using cherry_blazer::Mat4d;
 using cherry_blazer::Matrix;
 using cherry_blazer::Point;
 using cherry_blazer::Ray;
 using cherry_blazer::Sphere;
+using cherry_blazer::Transformation;
 
 namespace {
 #if __cpp_deduction_guides >= 201907
@@ -87,22 +93,49 @@ TEST(SphereTest, RayOriginatesBehindSphereAndIntersectsAtTwoPoints) { // NOLINT
 TEST(SphereTest, SphereDefaultTransformation) { // NOLINT
     Sphere sphere;
 
-    EXPECT_EQ(sphere.transformation, (Matrix<double, 4, 4>::identity()));
+    EXPECT_EQ(sphere.transformation.mat, nullptr);
+    EXPECT_EQ(sphere.transformation.kind, Transformation::Kind::Identity);
 }
 
 TEST(SphereTest, SphereSetTransformation) { // NOLINT
-    Sphere sphere{Matrix<double, 4, 4>::translation(Vec{2., 3., 4.})};
+    auto const t = Transformation{std::make_shared<Mat4d>(Mat4d::translation(Vec{2., 3., 4.})),
+                                  Transformation::Kind::Translation};
+    Sphere sphere{t};
 
-    EXPECT_EQ(sphere.transformation, (Matrix<double, 4, 4>::translation(Vec{2., 3., 4.})));
+    EXPECT_EQ(*sphere.transformation.mat, (Matrix<double, 4, 4>::translation(Vec{2., 3., 4.})));
+    EXPECT_EQ(sphere.transformation.kind, Transformation::Kind::Translation);
 }
 
 TEST(SphereTest, RayIntersectsScaledSphere) { // NOLINT
     Ray ray{Point{0., 0., -5.}, Vec{0., 0., 1.}};
-    Sphere sphere{Matrix<double, 4, 4>::scaling(Vec{2., 2., 2.})};
+    auto const t = Transformation{std::make_shared<Mat4d>(inverse(Mat4d::scaling(Vec{2., 2., 2.}))),
+                                  Transformation::Kind::Scaling};
+    Sphere sphere{t};
+    // inverted scaled point:  0 0 -2.5
+    // inverted scaled vector: 0 0  0.5
+
+    //    std::cout << "inversed scaling matrix:\n" << *t.mat << std::endl;
 
     auto const intersections = intersect(sphere, ray);
+
+    //    std::cout << "intersections[0].sphere.mat:\n"
+    //              << *intersections[0].object->transformation.mat << std::endl;
+    //    std::cout << "intersections[1].sphere.mat:\n"
+    //              << *intersections[1].object->transformation.mat << std::endl;
 
     EXPECT_EQ(intersections.size(), 2);
     EXPECT_EQ(intersections[0].t, 3.);
     EXPECT_EQ(intersections[1].t, 7.);
+}
+
+TEST(SphereTest, RayIntersectsTranslatedSphere) { // NOLINT
+    Ray ray{Point{0., 0., -5.}, Vec{0., 0., 1.}};
+    auto const t =
+        Transformation{std::make_shared<Mat4d>(inverse(Mat4d::translation(Vec{5., 0., 0.}))),
+                       Transformation::Kind::Translation};
+    Sphere sphere{t};
+
+    auto const intersections = intersect(sphere, ray);
+
+    EXPECT_EQ(intersections.size(), 0);
 }

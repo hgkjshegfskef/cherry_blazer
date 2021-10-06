@@ -3,6 +3,7 @@
 
 #include "intersection.hh"
 #include "point.hh"
+#include "transformation.hh"
 #include "vector.hh"
 
 #include <cstddef>
@@ -13,12 +14,12 @@ struct Ray {
     Point3d origin;
     Vec3d direction;
 
-    Ray(Point3d const& origin, Vec3d const& direction);
+    Ray(Point3d const& origin, Vec3d const& direction) noexcept;
 
-    [[nodiscard]] Point3d position(double time) const;
+    [[nodiscard]] Point3d position(double time) const noexcept;
 };
 
-Ray transform(Ray const& ray, Matrix<double, 4, 4> const& transformation_matrix);
+Ray transform(Ray const& ray, Transformation const& t) noexcept;
 
 } // namespace cherry_blazer
 

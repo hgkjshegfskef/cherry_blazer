@@ -16,7 +16,12 @@ template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimen
 template <typename Precision, std::size_t Dimension>
 class Matrix<Precision, Dimension, Dimension>
     : public detail::MatrixBase<Precision, Dimension, Dimension> {
+
+    using base = detail::MatrixBase<Precision, Dimension, Dimension>;
+
   public:
+    using typename base::impl;
+
     Matrix() = default;
     using detail::MatrixBase<Precision, Dimension, Dimension>::MatrixBase;
 

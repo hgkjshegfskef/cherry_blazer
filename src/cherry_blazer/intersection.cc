@@ -1,6 +1,7 @@
 #include "intersection.hh"
 
 #include "detail/util.hh"
+#include "matrix_operations.hh"
 #include "point_operations.hh"
 #include "ray.hh"
 #include "sphere.hh"
@@ -23,15 +24,37 @@ std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
     auto const sphere_center = Point{0., 0., 0.};
     auto const sphere_radius = 1.;
 
+    // Account for the transformations applied to sphere (so, apply the inverse of them to ray).
+    auto transformed_ray = transform(ray, sphere.transformation);
+
+    std::cerr << "normalizing transformed_ray.direction" << std::endl;
+    transformed_ray.direction = normalize(transformed_ray.direction);
+
+    std::cerr << "transformed_ray.origin \n"
+              << transformed_ray.origin << "\n transformed_ray.direction \n"
+              << transformed_ray.direction << std::endl;
+    auto p1 = transformed_ray.position(1.5);
+    auto p2 = transformed_ray.position(3.5);
+    std::cerr << "transformed_ray p1: \n" << p1 << std::endl;
+    std::cerr << "transformed_ray p2: \n" << p2 << std::endl;
+    auto const scaling_mat = Mat4d::scaling(Vec3d{2., 2., 2.});
+    std::cerr << "transformed_ray p1: \n" << p1 << std::endl;
+    std::cerr << "transformed_ray p2: \n" << p2 << std::endl;
+    auto transformed_p1 = scaling_mat * p1;
+    auto transformed_p2 = scaling_mat * p2;
+    std::cerr << "transformed_ray transformed_p1: \n" << transformed_p1 << std::endl;
+    std::cerr << "transformed_ray transformed_p2: \n" << transformed_p2 << std::endl;
+
     // Create vector from the sphere center towards ray origin.
-    auto const from_sphere_to_ray = ray.origin - sphere_center;
+    auto const from_sphere_to_transformed_ray = transformed_ray.origin - sphere_center;
 
     // Make the ray direction a unit vector (enables better formula).
-    auto const ray_direction = normalize(ray.direction);
+    auto const transformed_ray_direction = normalize(transformed_ray.direction);
 
-    auto const b = dot(ray_direction, from_sphere_to_ray);
+    auto const b = dot(transformed_ray_direction, from_sphere_to_transformed_ray);
     auto const discriminant =
-        b * b - (dot(from_sphere_to_ray, from_sphere_to_ray) - sphere_radius * sphere_radius);
+        b * b - (dot(from_sphere_to_transformed_ray, from_sphere_to_transformed_ray) -
+                 sphere_radius * sphere_radius);
 
     if (discriminant < 0.)
         return {};

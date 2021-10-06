@@ -10,6 +10,7 @@ add_library(
     ppm.cc
     ray.cc
     sphere.cc
+    transformation.cc
     vec3d.cc
     vec3f.cc)
 
