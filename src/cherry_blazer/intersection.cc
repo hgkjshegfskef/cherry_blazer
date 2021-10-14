@@ -8,10 +8,11 @@
 #include "sphere.hh"
 #include "vector_operations.hh"
 
-#include <limits>
-
 #if CHERRY_BLAZER_RANGES
+#include <algorithm>
 #include <ranges>
+#else
+#include <limits>
 #endif
 
 namespace cherry_blazer {
