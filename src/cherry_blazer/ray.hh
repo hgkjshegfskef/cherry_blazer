@@ -19,7 +19,7 @@ struct Ray {
     [[nodiscard]] Point3d position(double time) const noexcept;
 };
 
-Ray transform(Ray const& ray, Transformation const& t) noexcept;
+Ray transform(Ray const& ray, Transformation const& tform) noexcept;
 
 } // namespace cherry_blazer
 

@@ -41,8 +41,8 @@ TEST(RayTest, RayPosition) { // NOLINT
 
 TEST(RayTest, RayTranslation) { // NOLINT
     Ray const ray{Point{1., 2., 3.}, Vec{0., 1., 0.}};
-    auto const t = Transformation{std::make_shared<Mat4d>(Mat4d::translation(Vec{3., 4., 5.})),
-                                  Transformation::Kind::Translation};
+    auto const t =
+        Transformation{Mat4d::translation(Vec{3., 4., 5.}), Transformation::Kind::Translation};
 
     auto const transformed_ray = transform(ray, t);
 
@@ -50,10 +50,9 @@ TEST(RayTest, RayTranslation) { // NOLINT
     EXPECT_EQ(transformed_ray.direction, (Vec3d{0., 1., 0.}));
 }
 
-TEST(RayTest, DISABLED_RayScaling) { // NOLINT
+TEST(RayTest, RayScaling) { // NOLINT
     Ray const ray{Point{1., 2., 3.}, Vec{0., 1., 0.}};
-    auto const t = Transformation{std::make_shared<Mat4d>(Mat4d::scaling(Vec{2., 3., 4.})),
-                                  Transformation::Kind::Scaling};
+    auto const t = Transformation{Mat4d::scaling(Vec{2., 3., 4.}), Transformation::Kind::Scaling};
 
     auto const transformed_ray = transform(ray, t);
 

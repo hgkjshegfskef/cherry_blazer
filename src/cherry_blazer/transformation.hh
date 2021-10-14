@@ -9,11 +9,11 @@ namespace cherry_blazer {
 
 class Transformation {
   public:
-    std::shared_ptr<Mat4d> mat;
+    Mat4d mat;
     enum class Kind { Identity, Translation, Scaling } kind;
 
-    Transformation() = default;
-    Transformation(std::shared_ptr<Mat4d> mat, Kind const& kind);
+    Transformation() : mat{Mat4d::identity()}, kind{Kind::Identity} {}
+    Transformation(Mat4d const& mat, Kind const& kind);
 };
 
 } // namespace cherry_blazer

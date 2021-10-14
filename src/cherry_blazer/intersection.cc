@@ -15,8 +15,7 @@
 
 namespace cherry_blazer {
 
-Intersection::Intersection(double place, std::shared_ptr<Sphere> object)
-    : t{place}, object{std::move(object)} {}
+Intersection::Intersection(double t, Sphere const& object) : t{t}, object{object} {}
 
 // https://en.wikipedia.org/wiki/Line%E2%80%93sphere_intersection
 std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
@@ -25,25 +24,10 @@ std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
     auto const sphere_radius = 1.;
 
     // Account for the transformations applied to sphere (so, apply the inverse of them to ray).
-    auto transformed_ray = transform(ray, sphere.transformation);
+    auto transformed_ray = transform(
+        ray, Transformation{inverse(sphere.transformation.mat), sphere.transformation.kind});
 
-    std::cerr << "normalizing transformed_ray.direction" << std::endl;
     transformed_ray.direction = normalize(transformed_ray.direction);
-
-    std::cerr << "transformed_ray.origin \n"
-              << transformed_ray.origin << "\n transformed_ray.direction \n"
-              << transformed_ray.direction << std::endl;
-    auto p1 = transformed_ray.position(1.5);
-    auto p2 = transformed_ray.position(3.5);
-    std::cerr << "transformed_ray p1: \n" << p1 << std::endl;
-    std::cerr << "transformed_ray p2: \n" << p2 << std::endl;
-    auto const scaling_mat = Mat4d::scaling(Vec3d{2., 2., 2.});
-    std::cerr << "transformed_ray p1: \n" << p1 << std::endl;
-    std::cerr << "transformed_ray p2: \n" << p2 << std::endl;
-    auto transformed_p1 = scaling_mat * p1;
-    auto transformed_p2 = scaling_mat * p2;
-    std::cerr << "transformed_ray transformed_p1: \n" << transformed_p1 << std::endl;
-    std::cerr << "transformed_ray transformed_p2: \n" << transformed_p2 << std::endl;
 
     // Create vector from the sphere center towards ray origin.
     auto const from_sphere_to_transformed_ray = transformed_ray.origin - sphere_center;
@@ -62,11 +46,10 @@ std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
     auto const sqrt_discriminant = std::sqrt(discriminant);
 
     if (detail::almost_equal(discriminant, 0.)) {
-        return {{-b - sqrt_discriminant, std::make_shared<Sphere>(sphere)}};
+        return {{-b - sqrt_discriminant, sphere}};
     }
 
-    return {{-b - sqrt_discriminant, std::make_shared<Sphere>(sphere)},
-            {-b + sqrt_discriminant, std::make_shared<Sphere>(sphere)}};
+    return {{-b - sqrt_discriminant, sphere}, {-b + sqrt_discriminant, sphere}};
 }
 
 Intersection const* hit(std::vector<Intersection> const& intersections) {

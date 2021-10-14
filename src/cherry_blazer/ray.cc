@@ -13,14 +13,14 @@ Ray::Ray(Point3d const& origin, Vec3d const& direction) noexcept
 
 Point3d Ray::position(double time) const noexcept { return origin + direction * time; }
 
-Ray transform(Ray const& ray, Transformation const& t) noexcept {
-    switch (t.kind) {
+Ray transform(Ray const& ray, Transformation const& tform) noexcept {
+    switch (tform.kind) {
     case Transformation::Kind::Identity:
         return {ray.origin, ray.direction};
     case Transformation::Kind::Translation:
-        return {*t.mat * ray.origin, ray.direction};
+        return {tform.mat * ray.origin, ray.direction};
     case Transformation::Kind::Scaling:
-        return {*t.mat * ray.origin, *t.mat * ray.direction};
+        return {tform.mat * ray.origin, tform.mat * ray.direction};
     }
 }
 

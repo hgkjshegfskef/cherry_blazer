@@ -12,7 +12,7 @@ class Sphere {
   public:
     Transformation transformation;
 
-    Sphere();
+    Sphere() : transformation{}, id_{++id_counter} {}
     Sphere(Transformation const& transformation);
 
     [[nodiscard]] unsigned id() const;

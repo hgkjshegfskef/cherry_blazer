@@ -2,8 +2,6 @@
 
 namespace cherry_blazer {
 
-Sphere::Sphere() : transformation{}, id_{++id_counter} {}
-
 Sphere::Sphere(Transformation const& transformation)
     : transformation{transformation}, id_{++id_counter} {}
 
