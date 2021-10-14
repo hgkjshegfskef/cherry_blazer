@@ -60,6 +60,10 @@ set(CHERRY_BLAZER_USE_CONSTEXPR
     OFF
     CACHE BOOL "Calculate most things at compile-time.")
 
+set(CHERRY_BLAZER_USE_RANGES
+    OFF
+    CACHE BOOL "Use code with new 'ranges' library.")
+
 # ##################################################################################################
 # CMAKE_ settings
 

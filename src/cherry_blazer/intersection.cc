@@ -1,5 +1,6 @@
 #include "intersection.hh"
 
+#include "config.hh"
 #include "detail/util.hh"
 #include "matrix_operations.hh"
 #include "point_operations.hh"
@@ -9,13 +10,15 @@
 
 #include <limits>
 
-#if __cpp_lib_ranges >= 202106L
+#if CHERRY_BLAZER_RANGES
 #include <ranges>
 #endif
 
 namespace cherry_blazer {
 
 Intersection::Intersection(double t, Sphere const& object) : t{t}, object{object} {}
+
+bool operator<(Intersection const& lhs, Intersection const& rhs) { return lhs.t < rhs.t; }
 
 std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
     // Account for the transformations applied to sphere (so, apply the inverse of them to ray).
@@ -33,23 +36,22 @@ std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
     if (discriminant < 0.)
         return {};
 
-    auto const sqrt_discriminant = std::sqrt(discriminant);
+    auto const two_a = 2. * a;
 
     if (detail::almost_equal(discriminant, 0.)) {
-        return {{(-b) / (2. * a), sphere}};
+        return {{-b / two_a, sphere}};
     }
 
-    return {{(-b - sqrt_discriminant) / (2. * a), sphere},
-            {(-b + sqrt_discriminant) / (2. * a), sphere}};
+    auto const sqrt_discriminant = std::sqrt(discriminant);
+
+    return {{(-b - sqrt_discriminant) / two_a, sphere}, {(-b + sqrt_discriminant) / two_a, sphere}};
 }
 
 Intersection const* hit(std::vector<Intersection> const& intersections) {
-#if __cpp_lib_ranges >= 202106L
-    auto nonnegative =
-        std::views::filter(intersections, [](auto const& i) { return i.place >= 0.; });
-    auto const smallest_nonnegative =
-        std::min_element(std::cbegin(nonnegative), std::cend(nonnegative));
-    if (smallest_nonnegative == std::cend(nonnegative))
+#if CHERRY_BLAZER_RANGES
+    auto nonnegative = std::views::filter(intersections, [](auto const& i) { return i.t >= 0.; });
+    auto const smallest_nonnegative = std::min_element(nonnegative.begin(), nonnegative.end());
+    if (smallest_nonnegative == nonnegative.end())
         return nullptr;
     return &(*smallest_nonnegative);
 #else
