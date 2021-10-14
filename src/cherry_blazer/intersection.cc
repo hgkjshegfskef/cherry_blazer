@@ -19,10 +19,8 @@ Intersection::Intersection(double t, Sphere const& object) : t{t}, object{object
 
 std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
     // Account for the transformations applied to sphere (so, apply the inverse of them to ray).
-    auto transformed_ray = transform(
-        ray, Transformation{inverse(sphere.transformation.mat), sphere.transformation.kind});
-
-    transformed_ray.direction = normalize(transformed_ray.direction);
+    auto transformed_ray =
+        transform(ray, {inverse(sphere.transformation.mat), sphere.transformation.kind});
 
     // Create vector from the sphere center towards ray origin.
     auto const from_sphere_to_transformed_ray = transformed_ray.origin - Point{0., 0., 0.};

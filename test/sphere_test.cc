@@ -106,7 +106,7 @@ TEST(SphereTest, SphereSetTransformation) { // NOLINT
 
 TEST(SphereTest, RayIntersectsScaledSphere) { // NOLINT
     Ray ray{Point{0., 0., -5.}, Vec{0., 0., 1.}};
-    Sphere sphere{Transformation{Mat4d::scaling(Vec{2., 2., 2.}), Transformation::Kind::Scaling}};
+    Sphere sphere{{Mat4d::scaling(Vec{2., 2., 2.}), Transformation::Kind::Scaling}};
 
     auto const intersections = intersect(sphere, ray);
 
