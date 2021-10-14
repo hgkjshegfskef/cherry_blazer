@@ -60,6 +60,8 @@ set(CHERRY_BLAZER_USE_CONSTEXPR
     OFF
     CACHE BOOL "Calculate most things at compile-time.")
 
+# Despite the test __cpp_lib_ranges >= 202106L not working on both gcc 11 and clang 12, ranges work
+# on gcc, but not on clang.
 set(CHERRY_BLAZER_USE_RANGES
     OFF
     CACHE BOOL "Use code with new 'ranges' library.")
