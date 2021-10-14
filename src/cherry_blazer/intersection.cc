@@ -57,7 +57,7 @@ Intersection const* hit(std::vector<Intersection> const& intersections) {
     return &(*smallest_nonnegative);
 #else
     Intersection const* first_intersection = nullptr;
-    double smallest_nonnegative{std::numeric_limits<double>::max()};
+    auto smallest_nonnegative{std::numeric_limits<double>::max()};
     for (auto const& i : intersections) {
         if (i.t >= 0. && i.t < smallest_nonnegative) {
             smallest_nonnegative = i.t;
