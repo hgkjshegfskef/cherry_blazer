@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_TRANSFORMATIONS_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_TRANSFORMATIONS_HH_
+#pragma once
 
 #include "ray.hh"
 #include "square_matrix.hh"

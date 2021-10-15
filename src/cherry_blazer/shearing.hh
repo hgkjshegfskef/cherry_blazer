@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_SHEARING_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_SHEARING_HH_
+#pragma once
 
 #include <variant>
 
@@ -27,9 +26,8 @@ struct Z {
 
 } // namespace Shear
 
-using ShearDirection = std::variant<Shear::X::AgainstY, Shear::X::AgainstZ, Shear::Y::AgainstX,
-                                     Shear::Y::AgainstZ, Shear::Z::AgainstX, Shear::Z::AgainstY>;
+using ShearDirection // NOLINT(readability-identifier-naming)
+    = std::variant<Shear::X::AgainstY, Shear::X::AgainstZ, Shear::Y::AgainstX, Shear::Y::AgainstZ,
+                   Shear::Z::AgainstX, Shear::Z::AgainstY>;
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_SHEARING_HH_

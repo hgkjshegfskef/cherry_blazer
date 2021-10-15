@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_OPTIONAL_DOUBLE_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_OPTIONAL_DOUBLE_HH_
+#pragma once
 
 #include <ak_toolkit/markable.hpp>
 
@@ -9,5 +8,3 @@ namespace cherry_blazer {
 using optional_double = ak_toolkit::markable<ak_toolkit::markable_ns::mark_fp_nan<double>>;
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_OPTIONAL_DOUBLE_HH_

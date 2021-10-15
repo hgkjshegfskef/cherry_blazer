@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_PROPERTIES_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_PROPERTIES_HH_
+#pragma once
 
 #include "detail/detail.hh"
 
@@ -72,5 +71,3 @@ get(Matrix<Precision, OuterDimension, InnerDimension> const& mat) noexcept {
 }
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_PROPERTIES_HH_

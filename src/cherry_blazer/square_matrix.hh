@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_SQUARE_MATRIX_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_SQUARE_MATRIX_HH_
+#pragma once
 
 #include "axis.hh"
 #include "detail/matrix_base.hh"
@@ -145,5 +144,3 @@ extern template class Matrix<double, 4, 4>;
 } // namespace cherry_blazer
 
 #include "matrix_properties.hh"
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_SQUARE_MATRIX_HH_

@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_OPERATIONS_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_OPERATIONS_HH_
+#pragma once
 
 #include "point.hh"
 
@@ -88,5 +87,3 @@ template <typename Precision, std::size_t Dimension>
 }
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_OPERATIONS_HH_

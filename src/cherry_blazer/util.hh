@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_UTIL_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_UTIL_HH_
+#pragma once
 
 #include "point.hh"
 
@@ -15,5 +14,3 @@ constexpr double lerp(double x, Point2d const& left_point, Point2d const& right_
 }
 
 } // namespace cherry_blazer::util
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_UTIL_HH_

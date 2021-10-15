@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_COLOR_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_COLOR_HH_
+#pragma once
 
 #include <ostream>
 
@@ -49,5 +48,3 @@ bool operator!=(Color const& lhs, Color const& rhs);
 std::ostream& operator<<(std::ostream& os, Color const& c);
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_COLOR_HH_

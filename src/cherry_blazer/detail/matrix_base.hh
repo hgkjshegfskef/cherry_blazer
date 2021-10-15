@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_PRIVATE_MATRIX_BASE_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_PRIVATE_MATRIX_BASE_HH_
+#pragma once
 
 #include "matrix_impl.hh"
 
@@ -114,5 +113,3 @@ class MatrixBase
 };
 
 } // namespace cherry_blazer::detail
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_PRIVATE_MATRIX_BASE_HH_

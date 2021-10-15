@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_TYPES_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_TYPES_HH_
+#pragma once
 
 #include <cstdint>
 
@@ -30,5 +29,3 @@ using detail::u64;
 using detail::u8;
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_TYPES_HH_

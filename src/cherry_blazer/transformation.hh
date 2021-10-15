@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_TRANSFORMATION_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_TRANSFORMATION_HH_
+#pragma once
 
 #include "square_matrix.hh"
 
@@ -17,5 +16,3 @@ class Transformation {
 };
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_TRANSFORMATION_HH_

@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_INTERSECTION_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_INTERSECTION_HH_
+#pragma once
 
 #include "sphere.hh"
 
@@ -24,5 +23,3 @@ std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray);
 Intersection const* hit(std::vector<Intersection> const& intersections);
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_INTERSECTION_HH_

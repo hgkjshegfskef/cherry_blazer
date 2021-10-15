@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_SPHERE_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_SPHERE_HH_
+#pragma once
 
 #include "transformation.hh"
 
@@ -27,5 +26,3 @@ class Sphere {
 bool operator==(Sphere const& lhs, Sphere const& rhs);
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_SPHERE_HH_

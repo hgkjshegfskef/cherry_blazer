@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_HH_
+#pragma once
 
 #include "vector.hh"
 
@@ -72,5 +71,3 @@ extern template class Point<float, 3>;
 extern template class Point<double, 3>;
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_POINT_HH_

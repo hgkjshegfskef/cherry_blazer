@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_PRIVATE_MATRIX_IMPL_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_PRIVATE_MATRIX_IMPL_HH_
+#pragma once
 
 #include <array>
 #include <cstddef>
@@ -55,5 +54,3 @@ class MatrixImpl<Precision, std::index_sequence<NthInnerArrayPack...>, InnerDime
 };
 
 } // namespace cherry_blazer::detail
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_PRIVATE_MATRIX_IMPL_HH_

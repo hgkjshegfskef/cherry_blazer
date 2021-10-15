@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_RAY_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_RAY_HH_
+#pragma once
 
 #include "intersection.hh"
 #include "point.hh"
@@ -22,5 +21,3 @@ struct Ray {
 Ray transform(Ray const& ray, Transformation const& tform) noexcept;
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_RAY_HH_

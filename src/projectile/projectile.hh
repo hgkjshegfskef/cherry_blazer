@@ -1,5 +1,4 @@
-#ifndef CHERRY_BLAZER_SRC_PROJECTILE_PROJECTILE_HH_
-#define CHERRY_BLAZER_SRC_PROJECTILE_PROJECTILE_HH_
+#pragma once
 
 #include <cherry_blazer/point.hh>
 #include <cherry_blazer/vector.hh>
@@ -17,5 +16,3 @@ struct Environment {
 };
 
 Projectile tick(Environment const& env, Projectile const& proj);
-
-#endif // CHERRY_BLAZER_SRC_PROJECTILE_PROJECTILE_HH_
