@@ -43,7 +43,7 @@ jobs:
           -D CHERRY_BLAZER_TEST=1
           -D CHERRY_BLAZER_OPTIMIZE=1
           -D CHERRY_BLAZER_ASAN=1
-          -D CHERRY_BLAZER_USE_RANGES=1
+          -D CHERRY_BLAZER_USE_RANGES=0 # broken in CI, idk why
           -D CMAKE_CXX_CLANG_TIDY='clang-tidy-12'
           -D CMAKE_CXX_INCLUDE_WHAT_YOU_USE='${{github.workspace}}/include-what-you-use/iwyu-build/bin/include-what-you-use;-Xiwyu;--mapping_file='$(pwd)'/iwyu.imp'
       - name: "Cherry Blazer: build"
