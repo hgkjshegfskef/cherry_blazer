@@ -1,5 +1,5 @@
-#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_UTIL_HH_
-#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_UTIL_HH_
+#ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_DETAIL_DETAIL_HH_
+#define CHERRY_BLAZER_SRC_CHERRY_BLAZER_DETAIL_DETAIL_HH_
 
 #include "types.hh"
 
@@ -31,4 +31,4 @@ typename std::enable_if<!std::numeric_limits<T>::is_integer, bool>::type almost_
 
 } // namespace cherry_blazer::detail
 
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_UTIL_HH_
+#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_DETAIL_DETAIL_HH_

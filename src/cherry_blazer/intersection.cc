@@ -1,7 +1,7 @@
 #include "intersection.hh"
 
 #include "config.hh"
-#include "detail/util.hh"
+#include "detail/detail.hh"
 #include "matrix_operations.hh"
 #include "point_operations.hh"
 #include "ray.hh"

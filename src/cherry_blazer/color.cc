@@ -1,6 +1,6 @@
 #include "color.hh"
 
-#include "detail/util.hh"
+#include "detail/detail.hh"
 
 #include <iomanip>
 

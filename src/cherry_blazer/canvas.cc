@@ -2,6 +2,7 @@
 
 #include "point.hh"
 #include "ppm.hh"
+#include "util.hh"
 
 #include <boost/assert.hpp>
 #include <boost/pfr/core.hpp>
@@ -22,22 +23,12 @@ namespace cherry_blazer {
 
 namespace {
 
-// https://en.wikipedia.org/wiki/Linear_interpolation
-// If the two known points are given by the coordinates (x0,y0) and (x1,y1), the linear interpolant
-// is the straight line between these points. Value of x must be in the interval [x0;x1].
-constexpr double linear_interpolation(double x, Point2d const& left_point,
-                                      Point2d const& right_point) {
-    BOOST_VERIFY(left_point[0] <= x && x <= right_point[0]);
-    return left_point[1] + (x - left_point[0]) * (right_point[1] - left_point[1]) /
-                               (right_point[0] - left_point[0]);
-}
-
 // Scale a number between two (possibly overlapping) ranges.
 // Use-case example: given a value in range [0;1], find out its respective value in range [0;255].
 // Further reading: https://gamedev.stackexchange.com/a/33445
 constexpr double scale(double value, Point2d const& source_range, Point2d const& target_range) {
-    return linear_interpolation(value, Point2d{source_range[0], target_range[0]},
-                                Point2d{source_range[1], target_range[1]});
+    return util::lerp(value, Point2d{source_range[0], target_range[0]},
+                      Point2d{source_range[1], target_range[1]});
 }
 
 } // namespace

@@ -11,6 +11,7 @@ add_library(
     ray.cc
     sphere.cc
     transformation.cc
+    util.cc
     vec3d.cc
     vec3f.cc)
 

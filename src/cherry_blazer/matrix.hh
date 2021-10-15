@@ -1,9 +1,9 @@
 #ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_HH_
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_HH_
 
+#include "detail/detail.hh"
 #include "detail/matrix_base.hh"
 #include "detail/types.hh"
-#include "detail/util.hh"
 
 namespace cherry_blazer {
 

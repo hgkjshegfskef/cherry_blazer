@@ -1,7 +1,7 @@
 #ifndef CHERRY_BLAZER_SRC_CHERRY_BLAZER_PRIVATE_MATRIX_PROPERTIES_HH_
 #define CHERRY_BLAZER_SRC_CHERRY_BLAZER_PRIVATE_MATRIX_PROPERTIES_HH_
 
-#include "detail/util.hh"
+#include "detail/detail.hh"
 
 #include <boost/io/ios_state.hpp>
 
