@@ -6,3 +6,4 @@ add_subdirectory(cherry_blazer)
 
 add_subdirectory(projectile)
 add_subdirectory(clock)
+add_subdirectory(silhouette)
