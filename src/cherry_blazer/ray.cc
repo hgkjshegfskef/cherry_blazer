@@ -24,6 +24,7 @@ Ray transform(Ray const& ray, Transformation const& tform) noexcept {
     case Transformation::Kind::Shearing:
         return {tform.mat * ray.origin, tform.mat * ray.direction};
     }
+    __builtin_unreachable();
 }
 
 } // namespace cherry_blazer
