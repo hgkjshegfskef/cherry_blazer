@@ -78,8 +78,6 @@ class Matrix<Precision, Dimension, Dimension>
             mat(1, 0) = sine;
             mat(1, 1) = cosine;
             return mat;
-        default:
-            __builtin_unreachable();
         }
         __builtin_unreachable();
     }
