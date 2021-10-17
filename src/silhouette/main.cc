@@ -14,6 +14,7 @@
 #include <cherry_blazer/vector_operations.hh>
 
 #include <cerrno>
+#include <exception>
 #include <iostream>
 #include <numbers>
 #include <ostream>
@@ -115,7 +116,7 @@ int main() {
         }("image.ppm");
     } catch (std::system_error const& e) {
         std::cerr << e.what() << " (" << e.code() << ")" << std::endl;
-        throw;
+        std::terminate();
     }
 
     std::string const image_contents = canvas.as_ppm();
