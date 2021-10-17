@@ -55,6 +55,7 @@ class Matrix<Precision, Dimension, Dimension>
     // https://en.wikipedia.org/wiki/Rotation_matrix
     // Rotation around X, Y, or Z axis.
     [[nodiscard]] static constexpr auto rotation(Axis const& axis, Precision const& radians) {
+        static_assert(Dimension == 4, "Only for 3D.");
         auto const sine = std::sin(radians);
         auto const cosine = std::cos(radians);
         auto mat = identity();

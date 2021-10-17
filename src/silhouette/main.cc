@@ -1,3 +1,4 @@
+#include <cherry_blazer/axis.hh>
 #include <cherry_blazer/canvas.hh>
 #include <cherry_blazer/color.hh>
 #include <cherry_blazer/intersection.hh>
@@ -5,6 +6,7 @@
 #include <cherry_blazer/point.hh>
 #include <cherry_blazer/point_operations.hh>
 #include <cherry_blazer/ray.hh>
+#include <cherry_blazer/shearing.hh>
 #include <cherry_blazer/sphere.hh>
 #include <cherry_blazer/square_matrix.hh>
 #include <cherry_blazer/util.hh>
@@ -13,17 +15,25 @@
 
 #include <cerrno>
 #include <iostream>
+#include <numbers>
 #include <ostream>
 #include <string>
 #include <system_error>
 
+using cherry_blazer::Axis;
 using cherry_blazer::Canvas;
 using cherry_blazer::Color;
+using cherry_blazer::Mat4d;
 using cherry_blazer::Point2d;
 using cherry_blazer::Point3d;
 using cherry_blazer::Ray;
 using cherry_blazer::Sphere;
+using cherry_blazer::Transformation;
+using cherry_blazer::Vec3d;
+using cherry_blazer::Shear::X;
 using cherry_blazer::util::lerp;
+
+using namespace std::numbers;
 
 int main() {
     // Take a ray, and a sphere, and a canvas behind the sphere. Then penetrate sphere with the ray
@@ -53,7 +63,26 @@ int main() {
 
     Canvas canvas{canvas_pixels, canvas_pixels};
     Color color{1., 0., 0}; // red
+
+    // Default sphere
     Sphere shape;
+
+    // Some experiments with the sphere transformations:
+
+    // Shrink it along the y-axis
+    //    Sphere shape{{Mat4d::scaling(Vec3d{1., 0.5, 1.}), Transformation::Kind::Scaling}};
+
+    // Shrink it along the x-axis
+    //    Sphere shape{{Mat4d::scaling(Vec3d{0.5, 1., 1.}), Transformation::Kind::Scaling}};
+
+    // Shrink it, and rotate it
+    //    Sphere shape{{Mat4d::rotation(Axis::Z, pi_v<double> / 4.) *
+    //    Mat4d::scaling(Vec3d{0.5, 1., 1.}),
+    //                  Transformation::Kind::Scaling}};
+
+    // Shrink it, and skew it
+    //    Sphere shape{{Mat4d::shearing(X::AgainstY{}) * Mat4d::scaling(Vec3d{0.5, 1., 1.}),
+    //                  Transformation::Kind::Scaling}};
 
     // For each row of pixels in the canvas
     for (auto y{0U}; y < unsigned(canvas_pixels - 1.); ++y) {
@@ -69,9 +98,8 @@ int main() {
 
             Ray r{ray_origin, normalize(position - ray_origin)};
             auto intersections = intersect(shape, r);
-            if (hit(intersections) != nullptr) {
+            if (hit(intersections) != nullptr)
                 canvas(x, y) = color;
-            }
         }
     }
 
