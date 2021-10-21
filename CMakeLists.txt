@@ -31,10 +31,8 @@ option(CHERRY_BLAZER_CI "Set ON if building in CI" OFF)
 
 option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
 add_library(cherry_blazer_flags_debug INTERFACE)
-target_compile_options(cherry_blazer_flags_debug INTERFACE -g3 -gsplit-dwarf
-                                                           -fno-omit-frame-pointer)
+target_compile_options(cherry_blazer_flags_debug INTERFACE -g3 -fno-omit-frame-pointer)
 target_compile_definitions(cherry_blazer_flags_debug INTERFACE CHERRY_BLAZER_DEBUG)
-target_link_options(cherry_blazer_flags_debug INTERFACE LINKER:--gdb-index)
 
 option(CHERRY_BLAZER_NDEBUG "Disable asserts" OFF)
 add_library(cherry_blazer_flags_ndebug INTERFACE)
@@ -49,6 +47,11 @@ add_library(cherry_blazer_flags_asan INTERFACE)
 target_compile_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address
                                                           -fno-omit-frame-pointer)
 target_link_options(cherry_blazer_flags_asan INTERFACE -fsanitize=address)
+
+option(CHERRY_BLAZER_SPLIT_DWARF "Split DWARF in debug mode" OFF)
+add_library(cherry_blazer_flags_split_dwarf INTERFACE)
+target_compile_options(cherry_blazer_flags_split_dwarf INTERFACE -gsplit-dwarf)
+target_link_options(cherry_blazer_flags_split_dwarf INTERFACE LINKER:--gdb-index)
 
 option(CHERRY_BLAZER_LTO "Enable LTO" OFF)
 
@@ -167,6 +170,10 @@ endif()
 
 if(CHERRY_BLAZER_ASAN)
     target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_asan)
+endif()
+
+if(CHERRY_BLAZER_SPLIT_DWARF)
+    target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_split_dwarf)
 endif()
 
 # ##################################################################################################
