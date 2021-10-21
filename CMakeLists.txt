@@ -31,8 +31,10 @@ option(CHERRY_BLAZER_CI "Set ON if building in CI" OFF)
 
 option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
 add_library(cherry_blazer_flags_debug INTERFACE)
-target_compile_options(cherry_blazer_flags_debug INTERFACE -g3 -fno-omit-frame-pointer)
+target_compile_options(cherry_blazer_flags_debug INTERFACE -g3 -gsplit-dwarf
+                                                           -fno-omit-frame-pointer)
 target_compile_definitions(cherry_blazer_flags_debug INTERFACE CHERRY_BLAZER_DEBUG)
+target_link_options(cherry_blazer_flags_debug INTERFACE LINKER:--gdb-index)
 
 option(CHERRY_BLAZER_NDEBUG "Disable asserts" OFF)
 add_library(cherry_blazer_flags_ndebug INTERFACE)
