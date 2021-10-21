@@ -31,7 +31,7 @@ option(CHERRY_BLAZER_CI "Set ON if building in CI" OFF)
 
 option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
 add_library(cherry_blazer_flags_debug INTERFACE)
-target_compile_options(cherry_blazer_flags_debug INTERFACE -g -fno-omit-frame-pointer)
+target_compile_options(cherry_blazer_flags_debug INTERFACE -g3 -fno-omit-frame-pointer)
 target_compile_definitions(cherry_blazer_flags_debug INTERFACE CHERRY_BLAZER_DEBUG)
 
 option(CHERRY_BLAZER_NDEBUG "Disable asserts" OFF)
@@ -132,7 +132,7 @@ endif()
 
 if(CHERRY_BLAZER_DEBUG)
     if(NOT CHERRY_BLAZER_OPTIMIZE)
-        target_compile_options(cherry_blazer_flags_debug INTERFACE -O0)
+        target_compile_options(cherry_blazer_flags_debug INTERFACE -Og)
         target_link_libraries(cherry_blazer_flags INTERFACE cherry_blazer_flags_debug)
     else()
         # Optimization flags will clash.
