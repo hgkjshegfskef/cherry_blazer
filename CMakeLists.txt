@@ -224,8 +224,8 @@ set(cmake_definitions -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}')
 cherry_blazer_dependency_download(markable "${cmake_definitions}")
 
 add_library(markable INTERFACE)
-target_include_directories(markable INTERFACE SYSTEM
-                                              "${CMAKE_SOURCE_DIR}/_deps/markable-src/include")
+target_include_directories(markable SYSTEM
+                           INTERFACE "${CMAKE_SOURCE_DIR}/_deps/markable-src/include")
 add_library(ak_toolkit::markable ALIAS markable)
 
 # ##################################################################################################
