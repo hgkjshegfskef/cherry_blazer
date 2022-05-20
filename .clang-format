@@ -11,7 +11,7 @@ IncludeCategories:
   - Regex: '<([A-Za-z0-9\Q/-_\E])+>'
     Priority: 4
   # Headers in <> from specific external libraries.
-  - Regex: '<(gtest|boost)\/'
+  - Regex: '<(gtest|boost|fmt)\/'
     Priority: 3
   # Headers in <> with extension.
   - Regex: '<([A-Za-z0-9.\Q/-_\E])+>'

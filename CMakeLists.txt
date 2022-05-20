@@ -108,19 +108,19 @@ if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
         cherry_blazer_flags
         INTERFACE
             -Wcast-align=strict # https://stackoverflow.com/a/25795795/10986054
-                                # https://trust-in-soft.com/blog/2020/04/06/gcc-always-assumes-aligned-pointer-accesses/
+            # https://trust-in-soft.com/blog/2020/04/06/gcc-always-assumes-aligned-pointer-accesses/
             -Wshadow=compatible-local # don't warn about parameters and incompatible local types
     )
 elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     target_compile_options(
         cherry_blazer_flags
-        INTERFACE
-            -Wcast-align # clang doesn't have =strict
-            -Wshadow # clang doesn't warn about parameters needlessly
-            -fconstexpr-steps=4294967295 # uint32_t max, because clang doesn't optimize constexpr.
-                                         # if this doesn't work (I mean, /when/ this stops working),
-                                         # one can patch clang to use uint64.
-            -fconstexpr-backtrace-limit=0 # to see what code led to "too many steps" above
+        INTERFACE -Wcast-align # clang doesn't have =strict
+                  -Wshadow # clang doesn't warn about parameters needlessly
+                  -fconstexpr-steps=4294967295 # uint32_t max, because clang doesn't optimize
+                                               # constexpr.
+                  # if this doesn't work (I mean, /when/ this stops working), one can patch clang to
+                  # use uint64.
+                  -fconstexpr-backtrace-limit=0 # to see what code led to "too many steps" above
     )
     add_compile_options(-stdlib=libc++) # feature parity with compiler
     add_link_options(-stdlib=libc++ -lc++abi)
@@ -193,6 +193,19 @@ endif()
 list(APPEND CMAKE_MESSAGE_CONTEXT "googletest")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-src"
                  "${CMAKE_CURRENT_SOURCE_DIR}/_deps/googletest-build")
+list(POP_BACK CMAKE_MESSAGE_CONTEXT)
+
+# ##################################################################################################
+# fmt
+
+set(cmake_definitions -DCHERRY_BLAZER_SOURCE_DIR='${CMAKE_CURRENT_SOURCE_DIR}')
+cherry_blazer_dependency_download(fmt "${cmake_definitions}")
+
+option(FMT_TEST OFF)
+
+list(APPEND CMAKE_MESSAGE_CONTEXT "fmt")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/_deps/fmt-src"
+                 "${CMAKE_CURRENT_SOURCE_DIR}/_deps/fmt-build")
 list(POP_BACK CMAKE_MESSAGE_CONTEXT)
 
 # ##################################################################################################
