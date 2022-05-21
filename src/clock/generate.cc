@@ -46,23 +46,25 @@ int main() {
     constexpr auto offset = canvas_size / 2;
 
     Canvas canvas{canvas_size + 1, canvas_size + 1};
+    Color const black{0., 0., 0.};
     Color const white{255., 255., 255.};
     Color const green{0., 255., 0.};
+    canvas.fill(white);
 
     auto const translation_matrix{Matrix<T, D, D>::translation(Matrix{0., -1., 0.})};
     auto const scaling_matrix{Matrix<T, D, D>::scaling(Matrix{radius, radius, radius})};
 
     decltype(clock_origin) last_point;
     for (auto i{0U}; i <= 12; ++i) {
-        auto const point = Matrix<T, D, D>::rotation(Axis::Z, i * pi_v<T> / 6) * scaling_matrix *
-                           translation_matrix * clock_origin;
+        auto const rotation_matrix = Matrix<T, D, D>::rotation(Axis::Z, i * pi_v<T> / 6);
+        auto const point = rotation_matrix * scaling_matrix * translation_matrix * clock_origin;
         if (i != 0) {
             auto const x = point[0] + offset;
             auto const y = point[1] + offset;
             fmt::print("{:02d}: x: {:<7.3f} y: {:<7.3f}\n", i, x, y);
-            canvas(x, y) = white;
+            canvas(x, y) = green;
             if (i != 1) {
-                canvas(last_point[0] + offset, last_point[1] + offset) = green;
+                canvas(last_point[0] + offset, last_point[1] + offset) = black;
             }
             last_point = point;
         }
@@ -80,10 +82,10 @@ int main() {
     }
 
     for (auto i{13U}; i <= 24; ++i) {
-        canvas(last_point[0] + offset, last_point[1] + offset) = green;
-        auto const point = Matrix<T, D, D>::rotation(Axis::Z, i * pi_v<T> / 6) * scaling_matrix *
-                           translation_matrix * clock_origin;
-        canvas(point[0] + offset, point[1] + offset) = white;
+        auto const rotation_matrix = Matrix<T, D, D>::rotation(Axis::Z, i * pi_v<T> / 6);
+        auto const point = rotation_matrix * scaling_matrix * translation_matrix * clock_origin;
+        canvas(last_point[0] + offset, last_point[1] + offset) = black;
+        canvas(point[0] + offset, point[1] + offset) = green;
         last_point = point;
 
         std::ofstream image_file;
