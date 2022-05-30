@@ -18,7 +18,7 @@ add_executable(
     ray_test.cc
     sphere_test.cc
     vector_test.cc)
-target_link_libraries(cherry_blazer_test PRIVATE libcherryblazer GTest::gtest_main
+target_link_libraries(cherry_blazer_test PRIVATE libcherryblazer GTest::gtest GTest::gtest_main
                                                  cherry_blazer_test_flags)
 
 include(GoogleTest)

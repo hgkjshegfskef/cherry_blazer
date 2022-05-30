@@ -23,6 +23,3 @@ target_include_directories(
 
 target_link_libraries(libcherryblazer PUBLIC cherry_blazer_flags m Boost::headers
                                              ak_toolkit::markable)
-if(BUILD_TESTING OR CHERRY_BLAZER_TEST)
-    target_link_libraries(libcherryblazer PUBLIC GTest::gtest_main)
-endif()
