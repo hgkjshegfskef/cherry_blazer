@@ -62,6 +62,7 @@ using Vector = // NOLINT(readability-identifier-naming)
 // In C++20 we have class template argument deduction consider aliases (which significantly improves
 // usability with Vector type alias). This is implemented in GCC 10, yet to be implemented by Clang,
 // as of Clang 12. https://wg21.link/P1814R0 : __cpp_deduction_guides >= 201907
+// TODO: doesn't work in GCC 12, why?
 template <typename... VectorComponents>
 Matrix(VectorComponents...)
     -> Matrix<typename std::common_type_t<VectorComponents...>, sizeof...(VectorComponents), 1>;
