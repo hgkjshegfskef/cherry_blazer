@@ -54,7 +54,7 @@ int main() {
     auto const translation_matrix{Matrix<T, D, D>::translation(Matrix{0., -1., 0.})};
     auto const scaling_matrix{Matrix<T, D, D>::scaling(Matrix{radius, radius, radius})};
 
-    decltype(clock_origin) last_point;
+    decltype(clock_origin) last_point{};
     for (auto i{0U}; i <= 12; ++i) {
         auto const rotation_matrix = Matrix<T, D, D>::rotation(Axis::Z, i * pi_v<T> / 6);
         auto const point = rotation_matrix * scaling_matrix * translation_matrix * clock_origin;
