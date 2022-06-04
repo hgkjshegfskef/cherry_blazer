@@ -51,8 +51,8 @@ int main() {
     Color const green{0., 255., 0.};
     canvas.fill(white);
 
-    auto const translation_matrix{Matrix<T, D, D>::translation(Matrix{0., -1., 0.})};
-    auto const scaling_matrix{Matrix<T, D, D>::scaling(Matrix{radius, radius, radius})};
+    auto const translation_matrix{Matrix<T, D, D>::translation(Vector{0., -1., 0.})};
+    auto const scaling_matrix{Matrix<T, D, D>::scaling(Vector{radius, radius, radius})};
 
     decltype(clock_origin) last_point{};
     for (auto i{0U}; i <= 12; ++i) {

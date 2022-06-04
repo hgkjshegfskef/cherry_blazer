@@ -26,8 +26,8 @@ using cherry_blazer::Mat4d;
 using cherry_blazer::Matrix;
 using cherry_blazer::Point;
 using cherry_blazer::ShearDirection;
-// using cherry_blazer::Vec4d;
-// using cherry_blazer::Vector;
+using cherry_blazer::Vec3d;
+using cherry_blazer::Vector;
 using cherry_blazer::Shear::X;
 using cherry_blazer::Shear::Y;
 using cherry_blazer::Shear::Z;
@@ -114,9 +114,9 @@ TEST(MatrixTest, MatrixTimesMatrix) { // NOLINT
 TEST(MatrixTest, MatrixTimesVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Matrix mat{
         {1., 2., 3., 4.}, {2., 4., 4., 2.}, {8., 6., 4., 1.}, {0., 0., 0., 1.}};
-    CHERRY_BLAZER_CONSTEXPR Matrix vec{1., 2., 3.};
+    CHERRY_BLAZER_CONSTEXPR Vector vec{1., 2., 3.};
     CHERRY_BLAZER_CONSTEXPR auto result = mat * vec;
-    EXPECT_EQ(result, (Matrix{18., 24., 33.}));
+    EXPECT_EQ(result, (Vec3d{18., 24., 33.}));
 }
 
 TEST(MatrixTest, MatrixIdentityMatrix) { // NOLINT
@@ -141,9 +141,9 @@ TEST(MatrixTest, MatrixTimesIdentityMatrix) { // NOLINT
 
 TEST(MatrixTest, IdentityMatrixTimesVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Matrix identity = Matrix<double, 4, 4>::identity();
-    CHERRY_BLAZER_CONSTEXPR Matrix vec{1., 2., 3.};
+    CHERRY_BLAZER_CONSTEXPR Vector vec{1., 2., 3.};
     CHERRY_BLAZER_CONSTEXPR auto result = identity * vec;
-    EXPECT_EQ(result, (Matrix{1., 2., 3.}));
+    EXPECT_EQ(result, (Vec3d{1., 2., 3.}));
 }
 
 TEST(MatrixTest, TransposeMatrix) { // NOLINT

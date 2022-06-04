@@ -27,7 +27,7 @@ class Matrix<Precision, OuterDimension, 1>
     Matrix() = default;
 
     template <typename... VectorComponents>
-    constexpr explicit Matrix(VectorComponents... components) {
+    constexpr explicit Matrix(VectorComponents&&... components) {
         constexpr auto dimension = sizeof...(components);
         static_assert(2 <= dimension && dimension <= 3,
                       "Vector must be constructed with either 2 or 3 components.");
@@ -54,27 +54,29 @@ class Matrix<Precision, OuterDimension, 1>
     }
 };
 
-// Vector and Matrix names can be used interchangeably (for semantic usability).
-template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimension = 1>
-using Vector = // NOLINT(readability-identifier-naming)
-    Matrix<Precision, OuterDimension, InnerDimension>;
+template <typename Precision, std::size_t OuterDimension>
+class Vector : public Matrix<Precision, OuterDimension, 1> {
+  public:
+    Vector() = default;
+    using Matrix<Precision, OuterDimension, 1>::Matrix;
+};
 
-// In C++20 we have class template argument deduction consider aliases (which significantly improves
-// usability with Vector type alias). This is implemented in GCC 10, yet to be implemented by Clang,
-// as of Clang 12. https://wg21.link/P1814R0 : __cpp_deduction_guides >= 201907
-// TODO: doesn't work in GCC 12, why?
-template <typename... VectorComponents>
-Matrix(VectorComponents...)
-    -> Matrix<typename std::common_type_t<VectorComponents...>, sizeof...(VectorComponents), 1>;
+// template <typename... VectorComponents>
+// Matrix(VectorComponents&&...)
+//     -> Matrix<typename std::common_type_t<std::decay_t<VectorComponents>...>,
+//               sizeof...(VectorComponents), 1>;
 
-using Vec2f = Matrix<float, 2, 1>;  // NOLINT(readability-identifier-naming)
-using Vec3f = Matrix<float, 3, 1>;  // NOLINT(readability-identifier-naming)
-using Vec2d = Matrix<double, 2, 1>; // NOLINT(readability-identifier-naming)
-using Vec3d = Matrix<double, 3, 1>; // NOLINT(readability-identifier-naming)
+template <typename First, typename... Rest,
+          typename = std::enable_if_t<(std::is_same_v<First, Rest> && ...)>>
+Vector(First, Rest...) -> Vector<First, 1 + sizeof...(Rest)>;
 
-// This is actually a Vector, but it cannot be named.
-extern template class Matrix<float, 3, 1>;
-extern template class Matrix<double, 3, 1>;
+using Vec2f = Vector<float, 2>;  // NOLINT(readability-identifier-naming)
+using Vec3f = Vector<float, 3>;  // NOLINT(readability-identifier-naming)
+using Vec2d = Vector<double, 2>; // NOLINT(readability-identifier-naming)
+using Vec3d = Vector<double, 3>; // NOLINT(readability-identifier-naming)
+
+extern template class Vector<float, 3>;
+extern template class Vector<double, 3>;
 
 } // namespace cherry_blazer
 

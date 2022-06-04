@@ -86,7 +86,7 @@ TEST(PointTest, PointMinusPoint) { // NOLINT
 // Point += Vector
 TEST(PointTest, PointPlusEqualsVector) { // NOLINT
     Point p{3., -2., 5.};
-    CHERRY_BLAZER_CONSTEXPR Matrix v{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{-2., 3., 1.};
     p += v;
     EXPECT_EQ(p, (Point3d{1., 1., 6.}));
 }
@@ -94,7 +94,7 @@ TEST(PointTest, PointPlusEqualsVector) { // NOLINT
 // Point + Vector = Point
 TEST(PointTest, PointPlusVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point p{3., -2., 5.};
-    CHERRY_BLAZER_CONSTEXPR Matrix v{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{-2., 3., 1.};
     CHERRY_BLAZER_CONSTEXPR Point p2 = p + v;
     EXPECT_EQ(p2, (Point3d{1., 1., 6.}));
 }
@@ -102,7 +102,7 @@ TEST(PointTest, PointPlusVector) { // NOLINT
 // Point -= Vector
 TEST(PointTest, PointMinusEqualsVector) { // NOLINT
     Point p{3., 2., 1.};
-    CHERRY_BLAZER_CONSTEXPR Matrix v{5., 6., 7.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{5., 6., 7.};
     p -= v;
     EXPECT_EQ(p, (Point3d{-2., -4., -6.}));
 }
@@ -110,7 +110,7 @@ TEST(PointTest, PointMinusEqualsVector) { // NOLINT
 // Point - Vector = Point
 TEST(PointTest, PointMinusVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point p{3., 2., 1.};
-    CHERRY_BLAZER_CONSTEXPR Matrix v{5., 6., 7.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{5., 6., 7.};
     CHERRY_BLAZER_CONSTEXPR Point p2 = p - v;
     EXPECT_EQ(p2, (Point3d{-2., -4., -6.}));
 }

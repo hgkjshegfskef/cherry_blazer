@@ -2,7 +2,6 @@
 
 namespace cherry_blazer {
 
-// This is actually a Vector, but it cannot be named.
-template class Matrix<double, 3, 1>;
+template class Vector<double, 3>;
 
 } // namespace cherry_blazer
