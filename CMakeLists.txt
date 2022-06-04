@@ -150,6 +150,12 @@ endif()
 
 if(CHERRY_BLAZER_LTO)
     if("${CMAKE_CXX_COMPILER_ID}" MATCHES "GNU")
+        if(CHERRY_BLAZER_LLD)
+            message(
+                FATAL_ERROR
+                    "lld cannot handle GCC LTO. See https://github.com/llvm/llvm-project/issues/41791"
+            )
+        endif()
         target_compile_options(cherry_blazer_flags INTERFACE -flto=auto -fwhole-program
                                                              -fno-fat-lto-objects)
         target_link_options(cherry_blazer_flags INTERFACE -flto=auto -fwhole-program
