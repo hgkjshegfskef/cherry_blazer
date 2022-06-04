@@ -22,4 +22,4 @@ target_include_directories(
     INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/.." "${CMAKE_CURRENT_BINARY_DIR}/..")
 
 target_link_libraries(libcherryblazer PUBLIC cherry_blazer_flags m Boost::headers
-                                             ak_toolkit::markable)
+                                             ak_toolkit::markable fmt::fmt)

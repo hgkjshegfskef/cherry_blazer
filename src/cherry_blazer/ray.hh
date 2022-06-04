@@ -13,6 +13,7 @@ struct Ray {
     Point3d origin;
     Vec3d direction;
 
+    Ray() noexcept = default;
     Ray(Point3d const& origin, Vec3d const& direction) noexcept;
 
     [[nodiscard]] Point3d position(double time) const noexcept;

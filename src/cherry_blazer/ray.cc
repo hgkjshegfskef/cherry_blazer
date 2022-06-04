@@ -4,7 +4,8 @@
 #include "point_operations.hh"
 #include "vector_operations.hh"
 
-#include <stdexcept>
+#include <fmt/ostream.h>
+#include <fmt/printf.h>
 
 namespace cherry_blazer {
 
@@ -24,7 +25,8 @@ Ray transform(Ray const& ray, Transformation const& tform) noexcept {
     case Transformation::Kind::Shearing:
         return {tform.mat * ray.origin, tform.mat * ray.direction};
     }
-    __builtin_unreachable();
+    fmt::print(std::cerr, "ERROR: Unexpected enum: {}\n", tform.kind);
+    return {};
 }
 
 } // namespace cherry_blazer
