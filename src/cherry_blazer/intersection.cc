@@ -34,17 +34,16 @@ std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
     auto const c = dot(from_sphere_to_transformed_ray, from_sphere_to_transformed_ray) - 1.;
     auto const discriminant = b * b - 4. * a * c;
 
-    if (discriminant < 0.)
-        return {};
-
     auto const two_a = 2. * a;
-
     if (detail::almost_equal(discriminant, 0.)) {
         return {{-b / two_a, sphere}};
     }
 
-    auto const sqrt_discriminant = std::sqrt(discriminant);
+    if (discriminant < 0.) {
+        return {};
+    }
 
+    auto const sqrt_discriminant = std::sqrt(discriminant);
     return {{(-b - sqrt_discriminant) / two_a, sphere}, {(-b + sqrt_discriminant) / two_a, sphere}};
 }
 
