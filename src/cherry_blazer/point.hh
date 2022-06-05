@@ -5,6 +5,7 @@
 #include <boost/assert.hpp>
 
 #include <cstddef>
+#include <ostream>
 
 namespace cherry_blazer {
 
