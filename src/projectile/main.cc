@@ -29,19 +29,11 @@ std::ofstream open_file(std::string const& file) {
 
 int main() {
     // Projectile starts one unit above the origin. Velocity is normalized to 1 unit/tick.
-#if __cpp_deduction_guides >= 201907
     Projectile proj{Point{0., 1., 0.}, normalize(Vector{1., 1.8, 0.}) * 11.25};
-#else
-    Projectile proj{Point{0., 1., 0.}, normalize(Matrix{1., 1.8, 0.}) * 11.25};
-#endif
 
     // gravity -0.1 unit/tick, and wind is -0.01 unit/tick.
     // NOLINTNEXTLINE(readability-magic-numbers)
-#if __cpp_deduction_guides >= 201907
     Environment env{Vector{0., -0.1, 0.}, Vector{-0.01, 0., 0.}};
-#else
-    Environment env{Matrix{0., -0.1, 0.}, Matrix{-0.01, 0., 0.}};
-#endif
 
     Canvas canvas{900, 550}; // NOLINT(readability-magic-numbers)
     Color red{255, 0, 0};

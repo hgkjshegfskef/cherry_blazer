@@ -14,14 +14,8 @@ using cherry_blazer::Point;
 using cherry_blazer::Ray;
 using cherry_blazer::Sphere;
 using cherry_blazer::Transformation;
-
-namespace {
-#if __cpp_deduction_guides >= 201907
-using Vec = cherry_blazer::Vec3d; // NOLINT(readability-identifier-naming)
-#else
-using Vec = cherry_blazer::Matrix<double, 3, 1>; // NOLINT(readability-identifier-naming)
-#endif
-} // namespace
+using cherry_blazer::Vec3d;
+using cherry_blazer::Vector;
 
 TEST(SphereTest, SphereIsConstructible) { // NOLINT
     [[maybe_unused]] Sphere sphere;
@@ -44,7 +38,7 @@ TEST(SphereTest, SphereIdEqualsNotEquals) { // NOLINT
 }
 
 TEST(SphereTest, RayIntersectsSphereAtTwoPoints) { // NOLINT
-    Ray ray{Point{0., 0., -5.}, Vec{0., 0., 1.}};
+    Ray ray{Point{0., 0., -5.}, Vector{0., 0., 1.}};
 
     auto const intersections = intersect(Sphere{}, ray);
 
@@ -54,7 +48,7 @@ TEST(SphereTest, RayIntersectsSphereAtTwoPoints) { // NOLINT
 }
 
 TEST(SphereTest, RayIntersectsSphereAtOnePoint) { // NOLINT
-    Ray ray{Point{0., 1., -5.}, Vec{0., 0., 1.}};
+    Ray ray{Point{0., 1., -5.}, Vector{0., 0., 1.}};
 
     auto const intersections = intersect(Sphere{}, ray);
 
@@ -63,7 +57,7 @@ TEST(SphereTest, RayIntersectsSphereAtOnePoint) { // NOLINT
 }
 
 TEST(SphereTest, RayDoesntIntersectSphere) { // NOLINT
-    Ray ray{Point{0., 2., -5.}, Vec{0., 0., 1.}};
+    Ray ray{Point{0., 2., -5.}, Vector{0., 0., 1.}};
 
     auto const intersections = intersect(Sphere{}, ray);
 
@@ -71,7 +65,7 @@ TEST(SphereTest, RayDoesntIntersectSphere) { // NOLINT
 }
 
 TEST(SphereTest, RayOriginatesInsideSphereAndIntersectsAtTwoPoints) { // NOLINT
-    Ray ray{Point{0., 0., 0.}, Vec{0., 0., 1.}};
+    Ray ray{Point{0., 0., 0.}, Vector{0., 0., 1.}};
 
     auto const intersections = intersect(Sphere{}, ray);
 
@@ -81,7 +75,7 @@ TEST(SphereTest, RayOriginatesInsideSphereAndIntersectsAtTwoPoints) { // NOLINT
 }
 
 TEST(SphereTest, RayOriginatesBehindSphereAndIntersectsAtTwoPoints) { // NOLINT
-    Ray ray{Point{0., 0., 5.}, Vec{0., 0., 1.}};
+    Ray ray{Point{0., 0., 5.}, Vector{0., 0., 1.}};
 
     auto const intersections = intersect(Sphere{}, ray);
 
@@ -98,15 +92,15 @@ TEST(SphereTest, SphereDefaultTransformation) { // NOLINT
 }
 
 TEST(SphereTest, SphereSetTransformation) { // NOLINT
-    Sphere sphere{{Mat4d::translation(Vec{2., 3., 4.}), Transformation::Kind::Translation}};
+    Sphere sphere{{Mat4d::translation(Vector{2., 3., 4.}), Transformation::Kind::Translation}};
 
-    EXPECT_EQ(sphere.transformation.mat, (Mat4d::translation(Vec{2., 3., 4.})));
+    EXPECT_EQ(sphere.transformation.mat, (Mat4d::translation(Vec3d{2., 3., 4.})));
     EXPECT_EQ(sphere.transformation.kind, Transformation::Kind::Translation);
 }
 
 TEST(SphereTest, RayIntersectsScaledSphere) { // NOLINT
-    Ray ray{Point{0., 0., -5.}, Vec{0., 0., 1.}};
-    Sphere sphere{{Mat4d::scaling(Vec{2., 2., 2.}), Transformation::Kind::Scaling}};
+    Ray ray{Point{0., 0., -5.}, Vector{0., 0., 1.}};
+    Sphere sphere{{Mat4d::scaling(Vector{2., 2., 2.}), Transformation::Kind::Scaling}};
 
     auto const intersections = intersect(sphere, ray);
 
@@ -116,8 +110,8 @@ TEST(SphereTest, RayIntersectsScaledSphere) { // NOLINT
 }
 
 TEST(SphereTest, RayIntersectsTranslatedSphere) { // NOLINT
-    Ray ray{Point{0., 0., -5.}, Vec{0., 0., 1.}};
-    Sphere sphere{{Mat4d::translation(Vec{5., 0., 0.}), Transformation::Kind::Translation}};
+    Ray ray{Point{0., 0., -5.}, Vector{0., 0., 1.}};
+    Sphere sphere{{Mat4d::translation(Vector{5., 0., 0.}), Transformation::Kind::Translation}};
 
     auto const intersections = intersect(sphere, ray);
 

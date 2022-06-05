@@ -12,21 +12,14 @@ using cherry_blazer::Point3d;
 using cherry_blazer::Ray;
 using cherry_blazer::Transformation;
 using cherry_blazer::Vec3d;
-
-namespace {
-#if __cpp_deduction_guides >= 201907
-using Vec = cherry_blazer::Vec3d; // NOLINT(readability-identifier-naming)
-#else
-using Vec = cherry_blazer::Matrix<double, 3, 1>; // NOLINT(readability-identifier-naming)
-#endif
-} // namespace
+using cherry_blazer::Vector;
 
 TEST(RayTest, RayIsConstructible) { // NOLINT
-    [[maybe_unused]] Ray const ray{Point{1., 2., 3.}, Vec{4., 5., 6.}};
+    [[maybe_unused]] Ray const ray{Point{1., 2., 3.}, Vector{4., 5., 6.}};
 }
 
 TEST(RayTest, RayPosition) { // NOLINT
-    Ray const ray{Point{2., 3., 4.}, Vec{1., 0., 0.}};
+    Ray const ray{Point{2., 3., 4.}, Vector{1., 0., 0.}};
 
     auto const position1 = ray.position(0.);
     auto const position2 = ray.position(1.);
@@ -40,9 +33,9 @@ TEST(RayTest, RayPosition) { // NOLINT
 }
 
 TEST(RayTest, RayTranslation) { // NOLINT
-    Ray const ray{Point{1., 2., 3.}, Vec{0., 1., 0.}};
-    auto const t =
-        Transformation{Mat4d::translation(Vec{3., 4., 5.}), Transformation::Kind::Translation};
+    Ray const ray{Point{1., 2., 3.}, Vector{0., 1., 0.}};
+    Transformation const t{Mat4d::translation(Vector{3., 4., 5.}),
+                           Transformation::Kind::Translation};
 
     auto const transformed_ray = transform(ray, t);
 
@@ -51,8 +44,8 @@ TEST(RayTest, RayTranslation) { // NOLINT
 }
 
 TEST(RayTest, RayScaling) { // NOLINT
-    Ray const ray{Point{1., 2., 3.}, Vec{0., 1., 0.}};
-    auto const t = Transformation{Mat4d::scaling(Vec{2., 3., 4.}), Transformation::Kind::Scaling};
+    Ray const ray{Point{1., 2., 3.}, Vector{0., 1., 0.}};
+    Transformation const t{Mat4d::scaling(Vector{2., 3., 4.}), Transformation::Kind::Scaling};
 
     auto const transformed_ray = transform(ray, t);
 

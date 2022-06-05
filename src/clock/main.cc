@@ -42,28 +42,16 @@ int main() {
     constexpr auto D = decltype(clock_origin)::size + 1; // NOLINT(readability-identifier-naming)
     constexpr auto clock_radius = 40.;
 
-#if __cpp_deduction_guides >= 201907
     std::vector const translation_matrices{Matrix<T, D, D>::translation(Vector{0., 1., 0.}),
                                            Matrix<T, D, D>::translation(Vector{1., 0., 0.}),
                                            Matrix<T, D, D>::translation(Vector{0., -1., 0.}),
                                            Matrix<T, D, D>::translation(Vector{-1., 0., 0.})};
-#else
-    std::vector const translation_matrices{Matrix<T, D, D>::translation(Matrix{0., 1., 0.}),
-                                           Matrix<T, D, D>::translation(Matrix{1., 0., 0.}),
-                                           Matrix<T, D, D>::translation(Matrix{0., -1., 0.}),
-                                           Matrix<T, D, D>::translation(Matrix{-1., 0., 0.})};
-#endif
 
     std::vector const rotation_matrices{Matrix<T, D, D>::rotation(Axis::Z, pi_v<T> / 3),
                                         Matrix<T, D, D>::rotation(Axis::Z, pi_v<T> / 6)};
 
-#if __cpp_deduction_guides >= 201907
     auto const scaling_matrix =
         Matrix<T, D, D>::scaling(Vector{clock_radius, clock_radius, clock_radius});
-#else
-    auto const scaling_matrix =
-        Matrix<T, D, D>::scaling(Matrix{clock_radius, clock_radius, clock_radius});
-#endif
 
     std::vector<decltype(clock_origin)> translated_points;
     translated_points.reserve(translation_matrices.size() + translation_matrices.size());
