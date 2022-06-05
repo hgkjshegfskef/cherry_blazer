@@ -43,12 +43,12 @@ TEST(VectorTest, VectorCopyConstructable) { // NOLINT
 }
 
 // Vector can be constructed from 2 Points
-// TEST(VectorTest, VectorCtorTwoPoints) { // NOLINT
-//     Point p1{3, -2, 5};
-//     Point p2{-2, 3, 1};
-//     Vec3d v{p1, p2};
-//     EXPECT_EQ(v, (Vec3d{-5, 5, -4}));
-// }
+TEST(VectorTest, VectorCtorTwoPoints) { // NOLINT
+    CHERRY_BLAZER_CONSTEXPR Point p1{3., -2., 5.};
+    CHERRY_BLAZER_CONSTEXPR Point p2{-2., 3., 1.};
+    CHERRY_BLAZER_CONSTEXPR Vector v{p1, p2};
+    EXPECT_EQ(v, (Vec3d{-5., 5., -4.}));
+}
 
 // -Vector
 TEST(VectorTest, VectorNegate) { // NOLINT

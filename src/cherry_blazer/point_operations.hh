@@ -1,6 +1,7 @@
 #pragma once
 
 #include "point.hh"
+#include "vector.hh"
 
 #include <boost/assert.hpp>
 

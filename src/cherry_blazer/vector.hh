@@ -6,7 +6,9 @@
 
 namespace cherry_blazer {
 
+// Forward declarations
 template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimension> class Matrix;
+template <typename Precision, std::size_t Dimension> class Point;
 
 // Nx1 matrix, a.k.a. Vector.
 template <typename Precision, std::size_t OuterDimension>
@@ -26,7 +28,15 @@ class Matrix<Precision, OuterDimension, 1>
 
     Matrix() = default;
 
-    template <typename... VectorComponents>
+    template <typename... VectorComponents,
+              typename = std::enable_if_t<
+                  // Do not shadow Vector::Vector(Point const&, Point const&)
+                  not std::is_same_v<std::common_type_t<VectorComponents...>,
+                                     std::decay_t<Point<Precision, OuterDimension>>> and
+                  // Do not shadow Matrix::Matrix(Matrix const&) and Matrix::Matrix(Matrix&&)
+                  not(sizeof...(VectorComponents) == 1 and
+                      std::is_same_v<std::common_type_t<VectorComponents...>,
+                                     std::decay_t<Matrix<Precision, OuterDimension, 1>>>)>>
     constexpr explicit Matrix(VectorComponents&&... components) {
         constexpr auto dimension = sizeof...(components);
         static_assert(2 <= dimension && dimension <= 3,
@@ -59,6 +69,9 @@ class Vector : public Matrix<Precision, OuterDimension, 1> {
   public:
     Vector() = default;
     using Matrix<Precision, OuterDimension, 1>::Matrix;
+
+    constexpr Vector(Point<Precision, OuterDimension> const& start,
+                     Point<Precision, OuterDimension> const& end) noexcept;
 };
 
 template <typename First, typename... Rest,
@@ -72,6 +85,21 @@ using Vec3d = Vector<double, 3>; // NOLINT(readability-identifier-naming)
 
 extern template class Vector<float, 3>;
 extern template class Vector<double, 3>;
+
+} // namespace cherry_blazer
+
+// Due to circular dependencies, properly include Point only now to implement
+// Vector::Vector(Point const&, Point const&)
+
+#include "point.hh"
+#include "point_operations.hh"
+
+namespace cherry_blazer {
+
+template <typename Precision, std::size_t Dimension>
+constexpr Vector<Precision, Dimension>::Vector(Point<Precision, Dimension> const& start,
+                                               Point<Precision, Dimension> const& end) noexcept
+    : Vector(end - start) {}
 
 } // namespace cherry_blazer
 
