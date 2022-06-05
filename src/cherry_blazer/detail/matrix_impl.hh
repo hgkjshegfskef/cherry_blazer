@@ -9,12 +9,10 @@ namespace cherry_blazer::detail {
 
 template <std::size_t, typename T> using enumerate = T;
 
-// Problem: need to be able to pass variadic pack of variadic packs of arguments with compile-time
-// known length of every pack to Matrix ctor.
-// Solution: this class.
-// Special thanks to: wreien#0241, who wrote the first implementation with index_sequence.
 template <typename Precision, typename NthInnerArrayIndexSequence, std::size_t InnerDimension>
 class MatrixImpl;
+
+// TODO: document this
 template <typename Precision, std::size_t... NthInnerArrayPack, std::size_t InnerDimension>
 class MatrixImpl<Precision, std::index_sequence<NthInnerArrayPack...>, InnerDimension> {
   public:

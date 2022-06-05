@@ -61,11 +61,6 @@ class Vector : public Matrix<Precision, OuterDimension, 1> {
     using Matrix<Precision, OuterDimension, 1>::Matrix;
 };
 
-// template <typename... VectorComponents>
-// Matrix(VectorComponents&&...)
-//     -> Matrix<typename std::common_type_t<std::decay_t<VectorComponents>...>,
-//               sizeof...(VectorComponents), 1>;
-
 template <typename First, typename... Rest,
           typename = std::enable_if_t<(std::is_same_v<First, Rest> && ...)>>
 Vector(First, Rest...) -> Vector<First, 1 + sizeof...(Rest)>;
