@@ -27,7 +27,7 @@ std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
         transform(ray, {inverse(sphere.transformation.mat), sphere.transformation.kind});
 
     // Create vector from the sphere center towards ray origin.
-    auto const from_sphere_to_transformed_ray = transformed_ray.origin - Point{0., 0., 0.};
+    auto const from_sphere_to_transformed_ray = Vector{Point{0., 0., 0.}, transformed_ray.origin};
 
     auto const a = dot(transformed_ray.direction, transformed_ray.direction);
     auto const b = 2. * dot(transformed_ray.direction, from_sphere_to_transformed_ray);
