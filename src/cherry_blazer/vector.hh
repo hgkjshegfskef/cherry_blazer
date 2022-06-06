@@ -11,20 +11,20 @@ template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimen
 template <typename Precision, std::size_t Dimension> class Point;
 
 // Nx1 matrix, a.k.a. Vector.
-template <typename Precision, std::size_t OuterDimension>
-class Matrix<Precision, OuterDimension, 1>
+template <typename Precision, std::size_t Dimension>
+class Matrix<Precision, Dimension, 1>
     // 2D Vector is always 3-dimensional, 3D Vector is always 4-dimensional, with the last component
     // set to 1, even though their types remain 2,1 and 3,1 respectively. This is useful when a
     // matrix representing an affine transformation (e.g. a 4D matrix) is multiplied by this vector
     // (e.g. 3D vector), which would otherwise need to be augmented to support representation in
     // homogeneous coordinates.
-    : public detail::MatrixBase<Precision, OuterDimension + 1, 1> {
+    : public detail::MatrixBase<Precision, Dimension + 1, 1> {
 
-    using base = detail::MatrixBase<Precision, OuterDimension + 1, 1>;
+    using base = detail::MatrixBase<Precision, Dimension + 1, 1>;
     using typename base::impl;
 
   public:
-    static inline constexpr std::size_t size = OuterDimension;
+    static inline constexpr std::size_t size = Dimension;
 
     Matrix() = default;
 
@@ -32,11 +32,11 @@ class Matrix<Precision, OuterDimension, 1>
               typename = std::enable_if_t<
                   // Do not shadow Vector::Vector(Point const&, Point const&)
                   not std::is_same_v<std::common_type_t<VectorComponents...>,
-                                     std::decay_t<Point<Precision, OuterDimension>>> and
+                                     std::decay_t<Point<Precision, Dimension>>> and
                   // Do not shadow Matrix::Matrix(Matrix const&) and Matrix::Matrix(Matrix&&)
                   not(sizeof...(VectorComponents) == 1 and
                       std::is_same_v<std::common_type_t<VectorComponents...>,
-                                     std::decay_t<Matrix<Precision, OuterDimension, 1>>>)>>
+                                     std::decay_t<Matrix<Precision, Dimension, 1>>>)>>
     constexpr explicit Matrix(VectorComponents&&... components) {
         constexpr auto dimension = sizeof...(components);
         static_assert(2 <= dimension && dimension <= 3,
@@ -54,24 +54,24 @@ class Matrix<Precision, OuterDimension, 1>
 
     constexpr typename base::reference operator[](typename base::size_type pos) noexcept {
         // TODO: replace with https://github.com/gpakosz/PPK_ASSERT
-        BOOST_VERIFY(pos < OuterDimension + 1);
+        BOOST_VERIFY(pos < Dimension + 1);
         return impl::mat_[pos];
     }
     [[nodiscard]] constexpr typename base::const_reference
     operator[](typename base::size_type pos) const noexcept {
-        BOOST_VERIFY(pos < OuterDimension + 1);
+        BOOST_VERIFY(pos < Dimension + 1);
         return impl::mat_[pos];
     }
 };
 
-template <typename Precision, std::size_t OuterDimension>
-class Vector : public Matrix<Precision, OuterDimension, 1> {
+template <typename Precision, std::size_t Dimension>
+class Vector : public Matrix<Precision, Dimension, 1> {
   public:
     Vector() = default;
-    using Matrix<Precision, OuterDimension, 1>::Matrix;
+    using Matrix<Precision, Dimension, 1>::Matrix;
 
-    constexpr Vector(Point<Precision, OuterDimension> const& start,
-                     Point<Precision, OuterDimension> const& end) noexcept;
+    constexpr Vector(Point<Precision, Dimension> const& start,
+                     Point<Precision, Dimension> const& end) noexcept;
 };
 
 template <typename First, typename... Rest,
