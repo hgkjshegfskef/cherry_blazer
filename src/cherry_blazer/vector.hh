@@ -1,4 +1,7 @@
-#pragma once
+// Use ifdefs instead of pragma in this file, because due to circular dependencies IDE thinks there
+// is redefinition.
+#ifndef CHERRY_BLAZER_VECTOR_HH
+#define CHERRY_BLAZER_VECTOR_HH
 
 #include "detail/matrix_base.hh"
 
@@ -10,34 +13,36 @@ namespace cherry_blazer {
 template <typename Precision, std::size_t OuterDimension, std::size_t InnerDimension> class Matrix;
 template <typename Precision, std::size_t Dimension> class Point;
 
-// Nx1 matrix, a.k.a. Vector.
+// Nx1 matrix specialization, used later for Vector.
 template <typename Precision, std::size_t Dimension>
 class Matrix<Precision, Dimension, 1>
-    // 2D Vector is always 3-dimensional, 3D Vector is always 4-dimensional, with the last component
-    // set to 1, even though their types remain 2,1 and 3,1 respectively. This is useful when a
-    // matrix representing an affine transformation (e.g. a 4D matrix) is multiplied by this vector
-    // (e.g. 3D vector), which would otherwise need to be augmented to support representation in
-    // homogeneous coordinates.
+    // 2D Vector is always 3-dimensional, 3D Vector is always 4-dimensional.
     : public detail::MatrixBase<Precision, Dimension + 1, 1> {
-
     using base = detail::MatrixBase<Precision, Dimension + 1, 1>;
+};
+
+template <typename Precision, std::size_t Dimension>
+class Vector : public Matrix<Precision, Dimension, 1> {
+
+    using base = Matrix<Precision, Dimension, 1>;
     using typename base::impl;
 
   public:
-    static inline constexpr std::size_t size = Dimension;
+    Vector() = default;
 
-    Matrix() = default;
+    constexpr Vector(Point<Precision, Dimension> const& start,
+                     Point<Precision, Dimension> const& end) noexcept;
 
     template <typename... VectorComponents,
               typename = std::enable_if_t<
-                  // Do not shadow Vector::Vector(Point const&, Point const&)
+                  // Do not shadow Vector's ctor from Points.
                   not std::is_same_v<std::common_type_t<VectorComponents...>,
                                      std::decay_t<Point<Precision, Dimension>>> and
-                  // Do not shadow Matrix::Matrix(Matrix const&) and Matrix::Matrix(Matrix&&)
+                  // Do not shadow Vector's copy and move ctors.
                   not(sizeof...(VectorComponents) == 1 and
                       std::is_same_v<std::common_type_t<VectorComponents...>,
-                                     std::decay_t<Matrix<Precision, Dimension, 1>>>)>>
-    constexpr explicit Matrix(VectorComponents&&... components) {
+                                     std::decay_t<Vector<Precision, Dimension>>>)>>
+    constexpr explicit Vector(VectorComponents&&... components) noexcept {
         constexpr auto dimension = sizeof...(components);
         static_assert(2 <= dimension && dimension <= 3,
                       "Vector must be constructed with either 2 or 3 components.");
@@ -62,16 +67,6 @@ class Matrix<Precision, Dimension, 1>
         BOOST_VERIFY(pos < Dimension + 1);
         return impl::mat_[pos];
     }
-};
-
-template <typename Precision, std::size_t Dimension>
-class Vector : public Matrix<Precision, Dimension, 1> {
-  public:
-    Vector() = default;
-    using Matrix<Precision, Dimension, 1>::Matrix;
-
-    constexpr Vector(Point<Precision, Dimension> const& start,
-                     Point<Precision, Dimension> const& end) noexcept;
 };
 
 template <typename First, typename... Rest,
@@ -102,5 +97,7 @@ constexpr Vector<Precision, Dimension>::Vector(Point<Precision, Dimension> const
     : Vector(end - start) {}
 
 } // namespace cherry_blazer
+
+#endif // CHERRY_BLAZER_VECTOR_HH
 
 #include "matrix_properties.hh"

@@ -36,8 +36,7 @@ class Matrix<Precision, Dimension, Dimension>
     // https://en.wikipedia.org/wiki/Affine_transformation#Image_transformation
 
     // https://en.wikipedia.org/wiki/Translation_(geometry)
-    [[nodiscard]] static constexpr auto
-    translation(Matrix<Precision, Dimension - 1, 1> const& vec) {
+    [[nodiscard]] static constexpr auto translation(Vector<Precision, Dimension - 1> const& vec) {
         auto mat = identity();
         for (auto row{0U}; row < Dimension; ++row)
             mat(row, Dimension - 1) = vec[row];
@@ -45,7 +44,7 @@ class Matrix<Precision, Dimension, Dimension>
     }
 
     // https://en.wikipedia.org/wiki/Scaling_(geometry)
-    [[nodiscard]] static constexpr auto scaling(Matrix<Precision, Dimension - 1, 1> const& vec) {
+    [[nodiscard]] static constexpr auto scaling(Vector<Precision, Dimension - 1> const& vec) {
         auto mat = identity();
         for (auto row{0U}; row < Dimension; ++row)
             mat(row, row) = vec[row];
