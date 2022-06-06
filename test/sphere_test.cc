@@ -52,8 +52,9 @@ TEST(SphereTest, RayIntersectsSphereAtOnePoint) { // NOLINT
 
     auto const intersections = intersect(Sphere{}, ray);
 
-    EXPECT_EQ(intersections.size(), 1);
+    EXPECT_EQ(intersections.size(), 2);
     EXPECT_EQ(intersections[0].t, 5.);
+    EXPECT_EQ(intersections[1].t, 5.);
 }
 
 TEST(SphereTest, RayDoesntIntersectSphere) { // NOLINT

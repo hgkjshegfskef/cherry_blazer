@@ -36,9 +36,11 @@ std::vector<Intersection> intersect(Sphere const& sphere, Ray const& ray) {
 
     auto const two_a = 2. * a;
     if (detail::almost_equal(discriminant, 0.)) {
-        return {{-b / two_a, sphere}};
+        auto const result = -b / two_a;
+        return {{result, sphere}, {result, sphere}};
     }
 
+    // Only now check for no solutions, since near zero result (above) can be negative as well.
     if (discriminant < 0.) {
         return {};
     }
