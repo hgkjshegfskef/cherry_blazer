@@ -1,4 +1,5 @@
 #include <cherry_blazer/config.hh>
+#include <cherry_blazer/coord.hh>
 #include <cherry_blazer/point.hh>
 #include <cherry_blazer/point_operations.hh>
 #include <cherry_blazer/vector.hh>
@@ -7,6 +8,7 @@
 
 #include <string>
 
+using cherry_blazer::Coord;
 using cherry_blazer::Matrix;
 using cherry_blazer::Point;
 using cherry_blazer::Point3d;
@@ -34,6 +36,50 @@ TEST(PointTest, PointCopyConstructable) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point p1{1., 2., 3.};
     CHERRY_BLAZER_CONSTEXPR Point p2{p1};
     EXPECT_EQ(p2, (Point3d{1., 2., 3.}));
+}
+
+// Point has operator[] for runtime indexing and Coord enum
+TEST(PointTest, PointSubscriptOperator) {
+    Point point{1., 2., 3.};
+
+    auto const& x = point[Coord::X];
+    EXPECT_EQ(x, 1.);
+
+    auto const& y = point[Coord::Y];
+    EXPECT_EQ(y, 2.);
+
+    auto const& z = point[Coord::Z];
+    EXPECT_EQ(z, 3.);
+}
+
+// Point has get<> for compile-time indexing
+TEST(PointTest, PointGetMember) {
+    Point point{1., 2., 3.};
+
+    auto const& x = point.get<Coord::X>();
+    EXPECT_EQ(x, 1.);
+
+    auto const& y = point.get<Coord::Y>();
+    EXPECT_EQ(y, 2.);
+
+    auto const& z = point.get<Coord::Z>();
+    EXPECT_EQ(z, 3.);
+}
+
+// Point has generic get<> for compile-time indexing
+TEST(PointTest, PointGetGeneric) {
+    Point point{1., 2., 3.};
+
+    auto const& x = get<Coord::X>(point);
+    EXPECT_EQ(x, 1.);
+
+    auto const& y = get<Coord::Y>(point);
+    EXPECT_EQ(y, 2.);
+
+    auto const& z = get<Coord::Z>(point);
+    EXPECT_EQ(z, 3.);
+
+    // auto const& w = get<Coord::W>(point); // OK: won't compile: index out of bounds
 }
 
 // Point == Point

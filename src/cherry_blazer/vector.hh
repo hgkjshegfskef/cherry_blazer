@@ -67,7 +67,29 @@ class Vector : public Matrix<Precision, Dimension, 1> {
         BOOST_VERIFY(pos < Dimension + 1);
         return impl::mat_[pos];
     }
+
+    template <typename base::size_type Idx> constexpr typename base::reference get() noexcept {
+        static_assert(0 <= Idx && Idx < Dimension, "Vector index is out of bounds.");
+        return std::get<Idx>(impl::mat_);
+    }
+    template <typename base::size_type Idx>
+    [[nodiscard]] constexpr typename base::const_reference get() const noexcept {
+        static_assert(0 <= Idx && Idx < Dimension, "Vector index is out of bounds.");
+        return std::get<Idx>(impl::mat_);
+    }
 };
+
+template <std::size_t Idx, typename Precision, std::size_t Dimension>
+constexpr typename Vector<Precision, Dimension>::reference
+get(Vector<Precision, Dimension>& vec) noexcept {
+    return vec.template get<Idx>();
+}
+
+template <std::size_t Idx, typename Precision, std::size_t Dimension>
+constexpr typename Vector<Precision, Dimension>::const_reference
+get(Vector<Precision, Dimension> const& vec) noexcept {
+    return vec.template get<Idx>();
+}
 
 template <typename First, typename... Rest,
           typename = std::enable_if_t<(std::is_same_v<First, Rest> && ...)>>

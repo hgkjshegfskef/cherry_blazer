@@ -20,6 +20,8 @@ template <typename Precision, std::size_t Dimension> class Point {
     static inline constexpr std::size_t size = Dimension;
 
     using value_type = Precision;
+    using reference = typename underlying_type::reference;
+    using const_reference = typename underlying_type::const_reference;
 
     Point() = default;
 
@@ -46,6 +48,17 @@ template <typename Precision, std::size_t Dimension> class Point {
         return vec_[pos];
     }
 
+    template <typename underlying_type::size_type Idx>
+    constexpr typename underlying_type::reference get() noexcept {
+        static_assert(0 <= Idx && Idx < Dimension, "Point index is out of bounds.");
+        return vec_.template get<Idx>();
+    }
+    template <typename underlying_type::size_type Idx>
+    [[nodiscard]] constexpr typename underlying_type::const_reference get() const noexcept {
+        static_assert(0 <= Idx && Idx < Dimension, "Point index is out of bounds.");
+        return vec_.template get<Idx>();
+    }
+
     friend constexpr auto operator==(Point const& lhs, Point const& rhs) noexcept {
         return lhs.vec_ == rhs.vec_;
     }
@@ -58,6 +71,18 @@ template <typename Precision, std::size_t Dimension> class Point {
         return os << p.vec_;
     }
 };
+
+template <std::size_t Idx, typename Precision, std::size_t Dimension>
+constexpr typename Point<Precision, Dimension>::reference
+get(Point<Precision, Dimension>& point) noexcept {
+    return point.template get<Idx>();
+}
+
+template <std::size_t Idx, typename Precision, std::size_t Dimension>
+constexpr typename Point<Precision, Dimension>::const_reference
+get(Point<Precision, Dimension> const& point) noexcept {
+    return point.template get<Idx>();
+}
 
 template <typename... VectorComponents>
 Point(VectorComponents...)

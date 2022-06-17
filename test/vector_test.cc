@@ -1,4 +1,5 @@
 #include <cherry_blazer/config.hh>
+#include <cherry_blazer/coord.hh>
 #include <cherry_blazer/point.hh>
 #include <cherry_blazer/vector.hh>
 #include <cherry_blazer/vector_operations.hh>
@@ -7,6 +8,7 @@
 
 // Everything marked as (=ERROR) is tested to not compile in vector_test.cmake.
 
+using cherry_blazer::Coord;
 using cherry_blazer::Point;
 using cherry_blazer::Point3d;
 using cherry_blazer::Vec3d;
@@ -48,6 +50,50 @@ TEST(VectorTest, VectorCtorTwoPoints) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Point p2{-2., 3., 1.};
     CHERRY_BLAZER_CONSTEXPR Vector v{p1, p2};
     EXPECT_EQ(v, (Vec3d{-5., 5., -4.}));
+}
+
+// Vector has operator[] for runtime indexing and Coord enum
+TEST(VectorTest, VectorSubscriptOperator) {
+    Vector vec{1., 2., 3.};
+
+    auto const& x = vec[Coord::X];
+    EXPECT_EQ(x, 1.);
+
+    auto const& y = vec[Coord::Y];
+    EXPECT_EQ(y, 2.);
+
+    auto const& z = vec[Coord::Z];
+    EXPECT_EQ(z, 3.);
+}
+
+// Vector has get<> for compile-time indexing
+TEST(VectorTest, VectorGetMember) {
+    Vector vec{1., 2., 3.};
+
+    auto const& x = vec.get<Coord::X>();
+    EXPECT_EQ(x, 1.);
+
+    auto const& y = vec.get<Coord::Y>();
+    EXPECT_EQ(y, 2.);
+
+    auto const& z = vec.get<Coord::Z>();
+    EXPECT_EQ(z, 3.);
+}
+
+// Vector has generic get<> for compile-time indexing
+TEST(VectorTest, VectorGetGeneric) {
+    Vector vec{1., 2., 3.};
+
+    auto const& x = get<Coord::X>(vec);
+    EXPECT_EQ(x, 1.);
+
+    auto const& y = get<Coord::Y>(vec);
+    EXPECT_EQ(y, 2.);
+
+    auto const& z = get<Coord::Z>(vec);
+    EXPECT_EQ(z, 3.);
+
+    // auto const& w = get<Coord::W>(vec); // OK: won't compile: index out of bounds
 }
 
 // -Vector
