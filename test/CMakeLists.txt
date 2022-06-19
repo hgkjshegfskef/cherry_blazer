@@ -12,10 +12,15 @@ add_executable(
     canvas_test.cc
     color_test.cc
     intersection_test.cc
+    light_test.cc
+    lighting_test.cc
+    material_test.cc
     matrix_test.cc
     matrix_transformations_test.cc
+    normal_test.cc
     point_test.cc
     ray_test.cc
+    reflect_test.cc
     sphere_test.cc
     vector_test.cc)
 target_link_libraries(cherry_blazer_test PRIVATE libcherryblazer GTest::gtest GTest::gtest_main

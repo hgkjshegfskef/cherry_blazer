@@ -33,12 +33,13 @@ template <typename Precision, std::size_t Dimension>
                                        Point<Precision, Dimension> const& rhs) noexcept {
     Vector<Precision, Dimension> result;
 
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         result[i] = lhs[i] - rhs[i];
+    }
 
-    result[Dimension] = static_cast<Precision>(1);
+    // Last coordinate of the Vector is 0.
+    result[Dimension] = static_cast<Precision>(0);
 
-    BOOST_VERIFY(result[Dimension] == static_cast<Precision>(1));
     return result;
 }
 
@@ -49,10 +50,10 @@ template <typename Precision, std::size_t Dimension>
 constexpr auto& operator+=(Point<Precision, Dimension>& lhs,
                            Vector<Precision, Dimension> const& rhs) noexcept {
     // Implemented in Vector and here, to omit unnecessary inclusion of whole vector_operations.hh
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         lhs[i] += rhs[i];
+    }
 
-    BOOST_VERIFY(lhs[Dimension] == static_cast<Precision>(1));
     return lhs;
 }
 
@@ -60,20 +61,17 @@ constexpr auto& operator+=(Point<Precision, Dimension>& lhs,
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto operator+(Point<Precision, Dimension> lhs,
                                        Vector<Precision, Dimension> const& rhs) noexcept {
-    lhs += rhs;
-
-    BOOST_VERIFY(lhs[Dimension] == static_cast<Precision>(1));
-    return lhs;
+    return lhs += rhs;
 }
 
 // Point -= Vector
 template <typename Precision, std::size_t Dimension>
 constexpr auto& operator-=(Point<Precision, Dimension>& lhs,
                            Vector<Precision, Dimension> const& rhs) noexcept {
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         lhs[i] -= rhs[i];
+    }
 
-    BOOST_VERIFY(lhs[Dimension] == static_cast<Precision>(1));
     return lhs;
 }
 
@@ -81,10 +79,7 @@ constexpr auto& operator-=(Point<Precision, Dimension>& lhs,
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto operator-(Point<Precision, Dimension> lhs,
                                        Vector<Precision, Dimension> const& rhs) noexcept {
-    lhs -= rhs;
-
-    BOOST_VERIFY(lhs[Dimension] == static_cast<Precision>(1));
-    return lhs;
+    return lhs -= rhs;
 }
 
 } // namespace cherry_blazer

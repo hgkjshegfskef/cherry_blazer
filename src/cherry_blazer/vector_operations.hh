@@ -1,4 +1,5 @@
 #pragma once
+/// \file
 
 #include "point.hh"
 #include "vector.hh"
@@ -8,88 +9,108 @@
 
 namespace cherry_blazer {
 
-// -Vector
+/// \brief -Vector.
+/// Unary minus to negate the Vector.
+/// \return Vector.
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto operator-(Vector<Precision, Dimension> const& v) noexcept {
-    std::remove_cvref_t<decltype(v)> result;
+    Vector<Precision, Dimension> result;
 
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         result[i] = -v[i];
-    result[Dimension] = static_cast<Precision>(1);
+    }
 
-    BOOST_VERIFY(result[Dimension] == static_cast<Precision>(1));
+    // Last coordinate of the Vector is 0.
+    result[Dimension] = static_cast<Precision>(0);
+
     return result;
 }
 
-// Vector*scalar
+/// \brief Vector * scalar.
+/// Multiply Vector by a scalar.
+/// \return Vector.
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto operator*(Vector<Precision, Dimension> const& v,
                                        Precision scalar) noexcept {
-    std::remove_cvref_t<decltype(v)> result;
+    Vector<Precision, Dimension> result;
 
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         result[i] = v[i] * scalar;
-    result[Dimension] = static_cast<Precision>(1);
+    }
 
-    BOOST_VERIFY(result[Dimension] == static_cast<Precision>(1));
+    // Last coordinate of the Vector is 0.
+    result[Dimension] = static_cast<Precision>(0);
+
     return result;
 }
 
-// scalar*Vector
+/// \brief scalar * Vector.
+/// Multiply Vector by a scalar.
+/// \return Vector.
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto operator*(Precision scalar,
                                        Vector<Precision, Dimension> const& v) noexcept {
     return v * scalar;
 }
 
-// Vector/scalar
+/// \brief Vector / scalar.
+/// Divide Vector by a scalar.
+/// \return Vector.
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto operator/(Vector<Precision, Dimension> const& v,
                                        Precision scalar) noexcept {
-    std::remove_cvref_t<decltype(v)> result;
+    Vector<Precision, Dimension> result;
 
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         result[i] = v[i] / scalar;
-    result[Dimension] = static_cast<Precision>(1);
+    }
 
-    BOOST_VERIFY(result[Dimension] == static_cast<Precision>(1));
+    // Last coordinate of the Vector is 0.
+    result[Dimension] = static_cast<Precision>(0);
+
     return result;
 }
 
 // scalar/Vector (= ERROR)
 
-// Vector += Vector (= Vector)
+/// \brief Vector += Vector (= Vector).
+/// Add Vector to Vector.
+/// \return Reference to Vector.
 template <typename Precision, std::size_t Dimension>
 constexpr auto& operator+=(Vector<Precision, Dimension>& lhs,
                            Vector<Precision, Dimension> const& rhs) noexcept {
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         lhs[i] += rhs[i];
-    lhs[Dimension] = static_cast<Precision>(1);
+    }
 
-    BOOST_VERIFY(lhs[Dimension] == static_cast<Precision>(1));
     return lhs;
 }
 
-// Vector -= Vector (= Vector)
+/// \brief Vector -= Vector (= Vector).
+/// Subtract Vector from Vector.
+/// \return Reference to Vector.
 template <typename Precision, std::size_t Dimension>
 constexpr auto& operator-=(Vector<Precision, Dimension>& lhs,
                            Vector<Precision, Dimension> const& rhs) noexcept {
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         lhs[i] -= rhs[i];
-    lhs[Dimension] = static_cast<Precision>(1);
+    }
 
-    BOOST_VERIFY(lhs[Dimension] == static_cast<Precision>(1));
     return lhs;
 }
 
-// Vector + Vector = Vector
+/// \brief Vector + Vector = Vector.
+/// Add Vector to Vector.
+/// \return Vector.
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto operator+(Vector<Precision, Dimension> lhs,
                                        Vector<Precision, Dimension> const& rhs) noexcept {
     return lhs += rhs;
 }
 
-// Vector - Vector = Vector
+/// \brief Vector - Vector = Vector.
+/// Subtract Vector from Vector.
+/// \return Vector.
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto operator-(Vector<Precision, Dimension> lhs,
                                        Vector<Precision, Dimension> const& rhs) noexcept {
@@ -100,15 +121,17 @@ template <typename Precision, std::size_t Dimension>
 
 // Vector += Point (= ERROR)
 
-// Vector + Point = Point
+/// \brief Vector + Point = Point.
+/// Add Vector and Point.
+/// \return Point.
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto operator+(Vector<Precision, Dimension> const& lhs,
                                        Point<Precision, Dimension> rhs) noexcept {
     // Implemented in Point and here, to omit unnecessary inclusion of whole point_operations.hh
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         rhs[i] += lhs[i];
+    }
 
-    BOOST_VERIFY(rhs[Dimension] == static_cast<Precision>(1));
     return rhs;
 }
 
@@ -121,22 +144,25 @@ template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto magnitude(Vector<Precision, Dimension> const& v) noexcept {
     Precision result{};
 
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         result += v[i] * v[i];
+    }
 
     return std::sqrt(result); // TODO: not constexpr
 }
 
 template <typename Precision, std::size_t Dimension>
 [[nodiscard]] constexpr auto normalize(Vector<Precision, Dimension> const& v) noexcept {
-    std::remove_cvref_t<decltype(v)> result;
+    Vector<Precision, Dimension> result;
 
     /*constexpr*/ auto const mag = magnitude(v);
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         result[i] = v[i] / mag;
-    result[Dimension] = static_cast<Precision>(1);
+    }
 
-    BOOST_VERIFY(result[Dimension] == static_cast<Precision>(1));
+    // Last coordinate of the Vector is 0.
+    result[Dimension] = static_cast<Precision>(0);
+
     return result;
 }
 
@@ -145,15 +171,16 @@ template <typename Precision, std::size_t Dimension>
                                  Vector<Precision, Dimension> const& v2) noexcept {
     Precision result{};
 
-    for (auto i{0U}; i < Dimension; ++i)
+    for (std::size_t i = 0; i < Dimension; ++i) {
         result += v1[i] * v2[i];
+    }
 
     return result;
 }
 
-template <typename Precision, std::size_t Dimension>
-[[nodiscard]] constexpr std::enable_if_t<Dimension == 3, Vector<Precision, Dimension>>
-cross(Vector<Precision, Dimension> const& v1, Vector<Precision, Dimension> const& v2) noexcept {
+template <typename Precision, std::size_t Dimension, typename = std::enable_if_t<Dimension == 3>>
+[[nodiscard]] constexpr auto cross(Vector<Precision, Dimension> const& v1,
+                                   Vector<Precision, Dimension> const& v2) noexcept {
     return Vector{v1[1] * v2[2] - v1[2] * v2[1], v1[2] * v2[0] - v1[0] * v2[2],
                   v1[0] * v2[1] - v1[1] * v2[0]};
 }

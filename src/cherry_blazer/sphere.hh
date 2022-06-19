@@ -1,5 +1,6 @@
 #pragma once
 
+#include "material.hh"
 #include "transformation.hh"
 
 #include <memory>
@@ -10,8 +11,9 @@ namespace cherry_blazer {
 class Sphere {
   public:
     Transformation transformation;
+    Material material;
 
-    Sphere() : transformation{}, id_{++id_counter} {}
+    Sphere() : transformation{}, material{}, id_{++id_counter} {}
     Sphere(Transformation const& transformation);
 
     [[nodiscard]] unsigned id() const;

@@ -3,8 +3,10 @@ add_library(
     canvas.cc
     color.cc
     intersection.cc
+    lighting.cc
     mat4d.cc
     mat4f.cc
+    material.cc
     point3d.cc
     point3f.cc
     ppm.cc
@@ -23,3 +25,6 @@ target_include_directories(
 
 target_link_libraries(libcherryblazer PUBLIC cherry_blazer_flags m Boost::headers
                                              ak_toolkit::markable fmt::fmt)
+
+set(DOXYGEN_OUTPUT_DIRECTORY "${${PROJECT_NAME}_SOURCE_DIR}")
+doxygen_add_docs(docs COMMENT "Generating docs")

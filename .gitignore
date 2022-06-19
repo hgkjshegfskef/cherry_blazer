@@ -1,4 +1,5 @@
 CMakeUserPresets.json
+html/
 image*.ppm
 animation.gif
 _deps/

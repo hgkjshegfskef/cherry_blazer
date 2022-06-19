@@ -21,8 +21,18 @@ class Matrix<Precision, Dimension, 1>
     using base = detail::MatrixBase<Precision, Dimension + 1, 1>;
 };
 
+/// \brief Vector represents a geometric vector.
+///
+/// \tparam Precision Single or double floating-point precision.
+/// \tparam Dimension Size of the vector, 2D or 3D.
 template <typename Precision, std::size_t Dimension>
 class Vector : public Matrix<Precision, Dimension, 1> {
+
+    static_assert(std::is_floating_point_v<Precision>, "Precision must be either float or double.");
+
+    // 2D and 3D Vectors suffice for our needs, restricting the size leads to less bugs.
+    static_assert(2 <= Dimension && Dimension <= 3,
+                  "Class must be constructed with either 2 or 3 components.");
 
     using base = Matrix<Precision, Dimension, 1>;
     using typename base::impl;
@@ -43,11 +53,9 @@ class Vector : public Matrix<Precision, Dimension, 1> {
                       std::is_same_v<std::common_type_t<VectorComponents...>,
                                      std::decay_t<Vector<Precision, Dimension>>>)>>
     constexpr explicit Vector(VectorComponents&&... components) noexcept {
-        constexpr auto dimension = sizeof...(components);
-        static_assert(2 <= dimension && dimension <= 3,
-                      "Vector must be constructed with either 2 or 3 components.");
         impl::mat_ = {components...};
-        impl::mat_[dimension] = static_cast<Precision>(1);
+        // Last coordinate of the Vector is 0.
+        impl::mat_[sizeof...(components)] = static_cast<Precision>(0);
     }
 
     constexpr typename base::reference at(typename base::size_type pos) {
@@ -120,6 +128,30 @@ constexpr Vector<Precision, Dimension>::Vector(Point<Precision, Dimension> const
 
 } // namespace cherry_blazer
 
-#endif // CHERRY_BLAZER_VECTOR_HH
-
+// Inherit properties from Matrix.
 #include "matrix_properties.hh"
+
+namespace cherry_blazer {
+
+// TODO: print_debug()
+// Use custom operator<<.
+template <typename Precision, std::size_t Dimension>
+std::ostream& operator<<(std::ostream& os, Vector<Precision, Dimension> const& vec) {
+    boost::io::ios_precision_saver ips{os};
+    os.precision(
+        std::numeric_limits<typename Vector<Precision, Dimension>::value_type>::max_digits10);
+
+    os << "[";
+    for (std::size_t i = 0; i < Dimension - 1; ++i) {
+        os << vec[i] << ", ";
+    }
+    os << vec[Dimension - 1] << "]";
+
+    ips.restore();
+
+    return os;
+}
+
+} // namespace cherry_blazer
+
+#endif // CHERRY_BLAZER_VECTOR_HH

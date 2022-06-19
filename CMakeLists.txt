@@ -31,7 +31,7 @@ option(CHERRY_BLAZER_CI "Set ON if building in CI" OFF)
 
 option(CHERRY_BLAZER_DEBUG "Enable debug symbols" OFF)
 add_library(cherry_blazer_flags_debug INTERFACE)
-target_compile_options(cherry_blazer_flags_debug INTERFACE -g3 -fno-omit-frame-pointer)
+target_compile_options(cherry_blazer_flags_debug INTERFACE -ggdb3 -fno-omit-frame-pointer)
 target_compile_definitions(cherry_blazer_flags_debug INTERFACE CHERRY_BLAZER_DEBUG)
 
 option(CHERRY_BLAZER_NDEBUG "Disable asserts" OFF)
@@ -254,6 +254,10 @@ target_include_directories(markable SYSTEM
                            INTERFACE "${CMAKE_SOURCE_DIR}/_deps/markable-src/include")
 add_library(ak_toolkit::markable ALIAS markable)
 
+# ##################################################################################################
+# doxygen
+
+find_package(Doxygen REQUIRED dot)
 # ##################################################################################################
 
 add_subdirectory(src)

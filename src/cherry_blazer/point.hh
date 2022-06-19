@@ -25,8 +25,17 @@ template <typename Precision, std::size_t Dimension> class Point {
 
     Point() = default;
 
-    template <typename... VectorComponents>
-    constexpr explicit Point(VectorComponents... components) : vec_{components...} {}
+    template <typename... PointComponents,
+              typename = std::enable_if_t<
+                  // Do not shadow Point's copy and move ctors.
+                  not(sizeof...(PointComponents) == 1 and
+                      std::is_same_v<std::common_type_t<PointComponents...>,
+                                     std::decay_t<Point<Precision, Dimension>>>)>>
+    constexpr explicit Point(PointComponents&&... components) noexcept
+        : vec_{std::forward<PointComponents>(components)...} {
+        // Last coordinate of the Point is 1.
+        vec_[Dimension] = static_cast<Precision>(1);
+    }
 
     constexpr typename underlying_type::reference at(typename underlying_type::size_type pos) {
         return vec_.at(pos);

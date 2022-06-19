@@ -27,8 +27,11 @@ class Matrix<Precision, Dimension, Dimension>
     // https://en.wikipedia.org/wiki/Identity_matrix
     [[nodiscard]] static constexpr auto identity() {
         Matrix<Precision, Dimension, Dimension> identity_matrix{};
-        for (auto i{0U}; i < Dimension; ++i)
+
+        for (auto i{0U}; i < Dimension; ++i) {
             identity_matrix(i, i) = static_cast<Precision>(1);
+        }
+
         return identity_matrix;
     }
 
@@ -38,16 +41,22 @@ class Matrix<Precision, Dimension, Dimension>
     // https://en.wikipedia.org/wiki/Translation_(geometry)
     [[nodiscard]] static constexpr auto translation(Vector<Precision, Dimension - 1> const& vec) {
         auto mat = identity();
-        for (auto row{0U}; row < Dimension; ++row)
+
+        for (std::size_t row{}; row < Dimension - 1; ++row) {
             mat(row, Dimension - 1) = vec[row];
+        }
+
         return mat;
     }
 
     // https://en.wikipedia.org/wiki/Scaling_(geometry)
     [[nodiscard]] static constexpr auto scaling(Vector<Precision, Dimension - 1> const& vec) {
         auto mat = identity();
-        for (auto row{0U}; row < Dimension; ++row)
+
+        for (std::size_t row{}; row < Dimension - 1; ++row) {
             mat(row, row) = vec[row];
+        }
+
         return mat;
     }
 

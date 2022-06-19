@@ -1,14 +1,17 @@
 #include <cherry_blazer/intersection.hh>
 #include <cherry_blazer/matrix_operations.hh>
+#include <cherry_blazer/point.hh>
 #include <cherry_blazer/point_operations.hh>
 #include <cherry_blazer/ray.hh>
 #include <cherry_blazer/sphere.hh>
+#include <cherry_blazer/vector.hh>
 
 #include <gtest/gtest.h>
 
 #include <memory>
 
 using cherry_blazer::Mat4d;
+using cherry_blazer::Material;
 using cherry_blazer::Matrix;
 using cherry_blazer::Point;
 using cherry_blazer::Ray;
@@ -117,4 +120,20 @@ TEST(SphereTest, RayIntersectsTranslatedSphere) { // NOLINT
     auto const intersections = intersect(sphere, ray);
 
     EXPECT_EQ(intersections.size(), 0);
+}
+
+TEST(SphereTest, SphereHasDefaultMaterial) {
+    Sphere sphere;
+    Material material;
+
+    EXPECT_EQ(sphere.material, material);
+}
+
+TEST(SphereTest, SphereCanBeAssignedMaterial) {
+    Sphere sphere;
+    Material material{.ambient = 1.};
+
+    sphere.material = material;
+
+    EXPECT_EQ(sphere.material, material);
 }

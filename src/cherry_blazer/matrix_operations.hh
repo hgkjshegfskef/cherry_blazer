@@ -22,10 +22,10 @@ operator*(Matrix<Precision, OuterDimension, CompatibleDimension> const& lhs,
 
     Matrix<Precision, OuterDimension, InnerDimension> result;
 
-    for (auto row{0U}; row < OuterDimension; ++row) {
-        for (auto col{0U}; col < InnerDimension; ++col) {
-            result(row, col) = static_cast<Precision>(0);
-            for (auto inner{0U}; inner < CompatibleDimension; ++inner)
+    for (std::size_t row{}; row < OuterDimension; ++row) {
+        for (std::size_t col{}; col < InnerDimension; ++col) {
+            result(row, col) = {};
+            for (std::size_t inner{}; inner < CompatibleDimension; ++inner)
                 result(row, col) += lhs(row, inner) * rhs(inner, col);
         }
     }
@@ -39,15 +39,18 @@ template <typename Precision, std::size_t OuterDimension, std::size_t Compatible
 operator*(Matrix<Precision, OuterDimension, CompatibleDimension> const& lhs,
           Vector<Precision, CompatibleDimension - 1> const& rhs) noexcept {
 
-    std::remove_cvref_t<decltype(rhs)> result;
+    Vector<Precision, CompatibleDimension - 1> result;
 
-    for (auto row{0U}; row < OuterDimension; ++row) {
-        result[row] = static_cast<Precision>(0);
-        for (auto inner{0U}; inner < CompatibleDimension; ++inner)
+    for (std::size_t row{}; row < OuterDimension; ++row) {
+        result[row] = {};
+        for (std::size_t inner{}; inner < CompatibleDimension; ++inner) {
             result[row] += lhs(row, inner) * rhs[inner];
+        }
     }
 
-    BOOST_VERIFY(result[CompatibleDimension - 1] == static_cast<Precision>(1));
+    // Resore last coordinate.
+    result[CompatibleDimension - 1] = static_cast<Precision>(0);
+
     return result;
 }
 
@@ -61,15 +64,18 @@ operator*(Matrix<Precision, OuterDimension, CompatibleDimension> const& lhs,
     // rewrite multiplication procedure once again. This is so far the only place where redundant
     // code is needed.
 
-    std::remove_cvref_t<decltype(rhs)> result;
+    Point<Precision, CompatibleDimension - 1> result;
 
-    for (auto row{0U}; row < OuterDimension; ++row) {
-        result[row] = static_cast<Precision>(0);
-        for (auto inner{0U}; inner < CompatibleDimension; ++inner)
+    for (std::size_t row{}; row < OuterDimension; ++row) {
+        result[row] = {};
+        for (std::size_t inner{}; inner < CompatibleDimension; ++inner) {
             result[row] += lhs(row, inner) * rhs[inner];
+        }
     }
 
-    BOOST_VERIFY(result[CompatibleDimension - 1] == static_cast<Precision>(1));
+    // Resore last coordinate.
+    result[CompatibleDimension - 1] = static_cast<Precision>(1);
+
     return result;
 }
 

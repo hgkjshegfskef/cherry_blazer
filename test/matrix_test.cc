@@ -1,4 +1,5 @@
 #include <cherry_blazer/config.hh>
+#include <cherry_blazer/coord.hh>
 #include <cherry_blazer/matrix.hh>
 #include <cherry_blazer/matrix_operations.hh>
 #include <cherry_blazer/point.hh>
@@ -20,6 +21,7 @@
 using namespace std::string_literals;
 
 using cherry_blazer::Axis;
+using cherry_blazer::Coord;
 using cherry_blazer::Mat2d;
 using cherry_blazer::Mat3d;
 using cherry_blazer::Mat4d;
@@ -116,7 +118,11 @@ TEST(MatrixTest, MatrixTimesVector) { // NOLINT
         {1., 2., 3., 4.}, {2., 4., 4., 2.}, {8., 6., 4., 1.}, {0., 0., 0., 1.}};
     CHERRY_BLAZER_CONSTEXPR Vector vec{1., 2., 3.};
     CHERRY_BLAZER_CONSTEXPR auto result = mat * vec;
-    EXPECT_EQ(result, (Vec3d{18., 24., 33.}));
+
+    EXPECT_DOUBLE_EQ(result[Coord::X], 14.);
+    EXPECT_DOUBLE_EQ(result[Coord::Y], 22.);
+    EXPECT_DOUBLE_EQ(result[Coord::Z], 32.);
+    EXPECT_DOUBLE_EQ(result[Coord::W], 0.);
 }
 
 TEST(MatrixTest, MatrixIdentityMatrix) { // NOLINT
@@ -143,7 +149,11 @@ TEST(MatrixTest, IdentityMatrixTimesVector) { // NOLINT
     CHERRY_BLAZER_CONSTEXPR Matrix identity = Matrix<double, 4, 4>::identity();
     CHERRY_BLAZER_CONSTEXPR Vector vec{1., 2., 3.};
     CHERRY_BLAZER_CONSTEXPR auto result = identity * vec;
-    EXPECT_EQ(result, (Vec3d{1., 2., 3.}));
+
+    EXPECT_DOUBLE_EQ(result[Coord::X], 1.);
+    EXPECT_DOUBLE_EQ(result[Coord::Y], 2.);
+    EXPECT_DOUBLE_EQ(result[Coord::Z], 3.);
+    EXPECT_DOUBLE_EQ(result[Coord::W], 0.);
 }
 
 TEST(MatrixTest, TransposeMatrix) { // NOLINT

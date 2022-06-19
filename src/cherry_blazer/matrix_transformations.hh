@@ -131,5 +131,3 @@ class Scaling : public Transformation<Scaling<Precision, Dimension>, Precision, 
 };
 
 } // namespace cherry_blazer
-
-#endif // CHERRY_BLAZER_SRC_CHERRY_BLAZER_MATRIX_TRANSFORMATIONS_HH_
