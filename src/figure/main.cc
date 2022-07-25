@@ -76,7 +76,7 @@ int main() {
 
     // Default sphere
     Sphere shape;
-    //    shape.material.color = {1., 1., 1.};
+    shape.material.color = {1., 0.2, 1.};
 
     // Light setup
     Point3d light_position{-10., 10., -10.}; // above and to the left of eye
@@ -127,10 +127,8 @@ int main() {
             auto intersections = intersect(shape, ray);
             if (auto* hit_point = hit(intersections); hit_point) {
                 auto point = ray.position(hit_point->t);
-                auto normal_vector = normal(hit_point->object, point);
-                auto eye_vector = -ray.direction;
-                auto color =
-                    lighting(hit_point->object.material, light, point, eye_vector, normal_vector);
+                auto color = lighting(hit_point->object.material, light, point, -ray.direction,
+                                      normal(hit_point->object, point));
                 canvas(x, y) = color;
             }
         }
