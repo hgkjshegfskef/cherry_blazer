@@ -26,7 +26,7 @@ jobs:
           g++-11 --version
       - name: "Dependencies: install system packages"
         run: |
-          sudo apt-get -y install ninja-build clang-12 clang-tidy-12 llvm-12-dev libclang-12-dev
+          sudo apt-get -y install ninja-build clang-12 clang-tidy-12 llvm-12-dev libclang-12-dev graphviz
       - name: "Dependencies: build include-what-you-use"
         run: |
           git clone https://github.com/include-what-you-use/include-what-you-use.git
