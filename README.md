@@ -179,3 +179,56 @@ Vector(First, Rest...) -> Vector<First, 1 + sizeof...(Rest)>;
 At the same time, vector is just like point: except that their last homogeneous
 coordinate differs. Therefore, point is implemented with the help of vector, by
 composition.
+
+# Building and testing
+
+It's enough to run the CMake configuration and the build steps. The scripts will download all the necessary external dependencies into `_deps`, shared between all build directories. For example:
+
+* gcc debug
+
+```
+cmake -S . -B cmake-build-gcc-debug-dev -GNinja \
+    -DCHERRY_BLAZER_DEBUG=1 \
+    -DCHERRY_BLAZER_NDEBUG=0 \
+    -DCHERRY_BLAZER_OPTIMIZE=0 \
+    -DCHERRY_BLAZER_ASAN=1 \
+    -DCHERRY_BLAZER_TEST=1 \
+    -DCHERRY_BLAZER_LLD=1 \
+    -DCHERRY_BLAZER_LTO=0 \
+    -DCHERRY_BLAZER_USE_RANGES=1
+
+cmake --build cmake-build-gcc-debug-dev -- -v && ./cmake-build-gcc-debug-dev/bin/cherry_blazer_test --gtest_brief=1 --gtest_color=1
+```
+* gcc release
+
+```
+cmake -S . -B cmake-build-gcc-release-dev -GNinja \
+    -DCHERRY_BLAZER_DEBUG=1 \
+    -DCHERRY_BLAZER_NDEBUG=1 \
+    -DCHERRY_BLAZER_OPTIMIZE=1 \
+    -DCHERRY_BLAZER_ASAN=0 \
+    -DCHERRY_BLAZER_TEST=1 \
+    -DCHERRY_BLAZER_LLD=1 \
+    -DCHERRY_BLAZER_LTO=1 \
+    -DCHERRY_BLAZER_USE_RANGES=1
+
+cmake --build cmake-build-gcc-release-dev -- -v && ./cmake-build-gcc-release-dev/bin/cherry_blazer_test --gtest_brief=1 --gtest_color=1
+```
+
+
+* clang debug (with libc++) (no support for ranges as of 12)
+
+```
+CXX=clang++ cmake -S . -B cmake-build-clang-debug-dev -GNinja \
+    -D_CMAKE_TOOLCHAIN_PREFIX=llvm- \
+    -DCHERRY_BLAZER_DEBUG=1 \
+    -DCHERRY_BLAZER_NDEBUG=0 \
+    -DCHERRY_BLAZER_OPTIMIZE=0 \
+    -DCHERRY_BLAZER_ASAN=1 \
+    -DCHERRY_BLAZER_TEST=1 \
+    -DCHERRY_BLAZER_LLD=1 \
+    -DCHERRY_BLAZER_LTO=0 \
+    -DCHERRY_BLAZER_USE_RANGES=0
+
+cmake --build cmake-build-clang-debug-dev -- -v && ./cmake-build-clang-debug-dev/bin/cherry_blazer_test --gtest_brief=1 --gtest_color=1
+```
